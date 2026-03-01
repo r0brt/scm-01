@@ -1,4 +1,4 @@
-# ADR-0001: Architecture Style
+# ADR-0001: Architekturstil
 
 ## Status
 
@@ -8,32 +8,32 @@ Accepted
 
 2026-03-01
 
-## Decision
+## Entscheidung
 
-Use a modular monolith as the initial architecture style, with clear internal module boundaries and explicit contracts to enable optional future extraction.
+Als initialer Architekturstil wird ein modularer Monolith mit klaren internen Modulgrenzen und expliziten Verträgen verwendet, um eine optionale spätere Extraktion zu ermöglichen.
 
-## Context
+## Kontext
 
-The project starts as a solo implementation with strict reproducibility, contract validation, and documentation requirements. Early delivery needs low operational complexity while preserving a path to evolve deployment boundaries later.
+Das Projekt startet als Solo-Umsetzung mit strengen Anforderungen an Reproduzierbarkeit, Vertragsvalidierung und Dokumentation. Für frühe Meilensteine ist geringe Betriebs- und Integrationskomplexität entscheidend, bei gleichzeitiger Evolvierbarkeit.
 
-## Consequences
+## Konsequenzen
 
-Positive:
+Positiv:
 
-- Faster implementation and testing with fewer distributed-system concerns.
-- Simpler local setup and debugging for milestone-driven delivery.
-- Stronger consistency for contract-first validation and persistence logic.
+- Schnellere Implementierung und Tests mit weniger verteilten Fehlermodi.
+- Einfacheres lokales Setup und Debugging für milestone-basierte Lieferung.
+- Höhere Konsistenz für Contract-First-Validierung und Persistenzlogik.
 
-Negative:
+Negativ:
 
-- Service-level independent scaling is deferred.
-- Module boundaries must be actively maintained to avoid tight coupling.
+- Unabhängige Skalierung auf Service-Ebene wird zunächst vertagt.
+- Modulgrenzen müssen aktiv gepflegt werden, um Kopplung zu vermeiden.
 
-## Alternatives Considered
+## Betrachtete Alternativen
 
-- Microservices from day one.
-- Layered monolith without explicit module boundaries.
+- Microservices von Beginn an.
+- Geschichteter Monolith ohne explizite Modulgrenzen.
 
-## Why Microservices Are Not Chosen Initially
+## Warum initial keine Microservices
 
-Microservices add operational overhead (network boundaries, deployment orchestration, distributed observability, failure modes) that is not justified at current project size and team capacity (solo). The immediate priority is correctness, reproducibility, and contract reliability, which can be achieved more effectively with a modular monolith baseline.
+Microservices verursachen zusätzlichen operativen Aufwand (Netzwerkgrenzen, Deployment-Orchestrierung, verteilte Observability, zusätzliche Ausfallmodi), der bei aktueller Projektgröße und Teamkonstellation (solo) nicht gerechtfertigt ist. Die kurzfristigen Prioritäten Korrektheit, Reproduzierbarkeit und Contract-Reliability werden mit einem modularen Monolithen effektiver erreicht.

@@ -1,3 +1,3 @@
-# 06 Runtime View
+# 06 Laufzeitsicht
 
-Placeholder: runtime scenarios will be documented once API flows are implemented (e.g., submit analysis, validate/repair, persist, retrieve).
+Platzhalter: Laufzeitszenarien werden dokumentiert, sobald API-Flows implementiert sind (z. B. Analyse starten, validieren/repairen, persistieren, abrufen).

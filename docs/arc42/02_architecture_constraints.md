@@ -1,19 +1,19 @@
-# 02 Architecture Constraints
+# 02 Randbedingungen
 
-## Technical Constraints
+## Technische Randbedingungen
 
-- Backend stack: Python + FastAPI.
-- Persistence baseline: SQLAlchemy 2 + Alembic + PostgreSQL.
-- Frontend baseline: React + Vite + TypeScript.
-- Python tooling: `uv`; frontend tooling: `npm`.
+- Backend-Stack: Python + FastAPI.
+- Persistenz-Basis: SQLAlchemy 2 + Alembic + PostgreSQL.
+- Frontend-Basis: React + Vite + TypeScript.
+- Python-Tooling: `uv`; Frontend-Tooling: `npm`.
 
-## Process Constraints
+## Prozess-Randbedingungen
 
-- Contract-first development for analysis payloads.
-- Docs-as-code with arc42 + ADR updates for architecture-impacting changes.
-- Mandatory tests and reproducible commands for each milestone.
+- Contract-First-Entwicklung für Analyse-Payloads.
+- Docs-as-code mit arc42- und ADR-Updates bei architekturrelevanten Änderungen.
+- Verbindliche Tests und reproduzierbare Commands pro Meilenstein.
 
-## Organizational Constraints
+## Organisatorische Randbedingungen
 
-- Solo project workflow with short-lived branches.
-- Small scoped changes preferred over large batches.
+- Solo-Projekt-Workflow mit kurzlebigen Branches.
+- Kleine, klar abgegrenzte Changes statt großer Pakete.

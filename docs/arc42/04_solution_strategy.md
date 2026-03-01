@@ -1,21 +1,21 @@
-# 04 Solution Strategy
+# 04 Lösungsstrategie
 
-## Core Strategy
+## Kernstrategie
 
-1. Build a modular monolith first for speed, consistency, and simpler operations.
-2. Use contract-first JSON schema for analysis outputs.
-3. Enforce schema validation before persistence.
-4. Apply bounded repair loop for invalid model output (max 2 retries).
-5. Persist immutable run records and full traceability fields.
+1. Zuerst ein modularer Monolith für schnelle, konsistente und betrieblich einfache Umsetzung.
+2. Contract-First-JSON-Schema für Analyseausgaben.
+3. Schema-Validierung strikt vor Persistenz.
+4. Begrenzter Repair-Loop bei ungültigen Modellausgaben (max. 2 Retries).
+5. Unveränderliche Run-Datensätze mit vollständiger Traceability persistieren.
 
-## Reliability and Traceability
+## Reliability und Traceability
 
-Each analysis run stores at minimum:
+Jeder Analyse-Run speichert mindestens:
 
 - `prompt_version`
 - `model_id`
 - `run_status`
 - `validation_status`
-- `error_code` (when failed)
+- `error_code` (bei Fehlschlag)
 
-No silent fallback heuristics are allowed.
+Stille Fallback-Heuristiken sind nicht erlaubt.

@@ -1,17 +1,17 @@
 # Social Cleanup Machine
 
-This repository currently contains the conception pack for the project.
+Dieses Repository enthält derzeit das Concept-/Conception-Pack des Projekts.
 
-## Documentation Navigation
+## Dokumentations-Navigation
 
 - Product Requirements: [`docs/prd.md`](docs/prd.md)
-- Delivery Roadmap: [`PLAN.md`](PLAN.md)
-- Working Agreement: [`AGENTS.md`](AGENTS.md)
-- Architecture Documentation (arc42): [`docs/arc42/README.md`](docs/arc42/README.md)
-- Architecture Decisions (ADRs): [`docs/adr/`](docs/adr/)
-- Diagrams: [`docs/diagrams/README.md`](docs/diagrams/README.md)
+- Umsetzungsplan: [`PLAN.md`](PLAN.md)
+- Arbeitsvereinbarung: [`AGENTS.md`](AGENTS.md)
+- Architekturdokumentation (arc42): [`docs/arc42/README.md`](docs/arc42/README.md)
+- Architekturentscheidungen (ADRs): [`docs/adr/`](docs/adr/)
+- Diagramme: [`docs/diagrams/README.md`](docs/diagrams/README.md)
 
-## Current Scope
+## Aktueller Scope
 
-Only concept and architecture artifacts are included in this change set.
-No application code (backend, frontend, database migrations) is added yet.
+Dieses Change Set enthält nur Konzept- und Architekturartefakte.
+Es wird noch kein Anwendungscode (Backend, Frontend, Migrationen) bereitgestellt.

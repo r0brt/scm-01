@@ -1,17 +1,17 @@
-# 01 Introduction and Goals
+# 01 Einführung und Ziele
 
-## Purpose
+## Zweck
 
-Social Cleanup Machine analyzes social media text and returns a structured analysis across six dimensions, with reproducible processing and traceable run metadata.
+Social Cleanup Machine analysiert Social-Media-Text und liefert eine strukturierte Auswertung über sechs Dimensionen, mit reproduzierbarer Verarbeitung und nachvollziehbarer Run-Metadatenhaltung.
 
-## Stakeholders
+## Stakeholder
 
-- End users: submit text and inspect analysis results.
-- Maintainer: evolves architecture and operations with low risk.
-- Evaluators (course context): verify reproducibility, correctness, and documented decisions.
+- Endnutzer: geben Text ein und prüfen Analyseergebnisse.
+- Maintainer: entwickelt Architektur und Betrieb mit geringem Risiko weiter.
+- Evaluatoren (Kurskontext): prüfen Reproduzierbarkeit, Korrektheit und dokumentierte Entscheidungen.
 
-## Top Goals
+## Top-Ziele
 
-1. Reliable contract-based analysis results.
-2. Reproducible execution and testability.
-3. Incremental delivery from modular monolith baseline.
+1. Verlässliche, vertragsbasierte Analyseergebnisse.
+2. Reproduzierbare Ausführung und Testbarkeit.
+3. Inkrementelle Lieferung auf Basis eines modularen Monolithen.

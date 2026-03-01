@@ -1,14 +1,14 @@
-# Diagrams
+# Diagramme
 
-Store architecture and data-flow diagrams here.
+Hier werden Architektur- und Datenflussdiagramme abgelegt.
 
-Recommended formats:
+Empfohlene Formate:
 
-- PlantUML (`.puml`) for architecture and sequence diagrams
-- Mermaid (`.mmd` or markdown code blocks) for lightweight diagrams
+- PlantUML (`.puml`) für Architektur- und Sequenzdiagramme
+- Mermaid (`.mmd` oder Markdown-Codeblöcke) für leichte Diagramme
 
-Guidelines:
+Leitlinien:
 
-- Keep source files versioned in this folder.
-- Reference diagrams from arc42 chapters.
-- Prefer text-based diagrams over binary assets for diffs and reviews.
+- Quelltexte der Diagramme in diesem Ordner versionieren.
+- Diagramme aus arc42-Kapiteln referenzieren.
+- Textbasierte Diagramme gegenüber Binärdateien bevorzugen (Diffs/Reviews).

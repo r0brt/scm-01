@@ -1,3 +1,3 @@
-# 08 Cross-cutting Concepts
+# 08 Querschnittliche Konzepte
 
-Placeholder: cross-cutting concerns will include validation pipeline, error taxonomy, logging/correlation, configuration, and security assumptions.
+Platzhalter: Querschnittsthemen umfassen Validierungspipeline, Fehlertaxonomie, Logging/Correlation, Konfiguration und Sicherheitsannahmen.
