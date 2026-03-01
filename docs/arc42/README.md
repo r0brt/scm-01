@@ -4,18 +4,18 @@ Dieser Ordner enthält die Architekturdokumentation im arc42-Format.
 
 ## Inhaltsverzeichnis
 
-1. [Einführung und Ziele](01_introduction_and_goals.md)
-2. [Randbedingungen](02_architecture_constraints.md)
-3. [Systemkontext und -abgrenzung](03_system_scope_and_context.md)
-4. [Lösungsstrategie](04_solution_strategy.md)
-5. [Bausteinsicht](05_building_block_view.md)
-6. [Laufzeitsicht](06_runtime_view.md)
-7. [Verteilungssicht](07_deployment_view.md)
-8. [Querschnittliche Konzepte](08_concepts.md)
-9. [Architekturentscheidungen](09_architecture_decisions.md)
-10. [Qualitätsszenarien](10_quality_scenarios.md)
-11. [Technische Risiken](11_technical_risks.md)
-12. [Glossar](12_glossary.md)
+1. [Einführung und Ziele](01_einfuehrung_und_ziele.md)
+2. [Randbedingungen](02_randbedingungen.md)
+3. [Systemkontext und -abgrenzung](03_systemkontext_und_abgrenzung.md)
+4. [Lösungsstrategie](04_loesungsstrategie.md)
+5. [Bausteinsicht](05_bausteinsicht.md)
+6. [Laufzeitsicht](06_laufzeitsicht.md)
+7. [Verteilungssicht](07_verteilungssicht.md)
+8. [Querschnittliche Konzepte](08_querschnittliche_konzepte.md)
+9. [Architekturentscheidungen](09_architekturentscheidungen.md)
+10. [Qualitätsszenarien](10_qualitaetsszenarien.md)
+11. [Technische Risiken](11_technische_risiken.md)
+12. [Glossar](12_glossar.md)
 
 ## Pflegehinweise
 
