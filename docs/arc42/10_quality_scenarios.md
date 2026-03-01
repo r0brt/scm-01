@@ -1,3 +1,3 @@
-# 10 Quality Scenarios
+# 10 Qualitätsszenarien
 
-Placeholder: quality scenarios will formalize measurable targets for correctness, reliability, maintainability, and reproducibility.
+Platzhalter: Qualitätsszenarien konkretisieren messbare Ziele für Korrektheit, Zuverlässigkeit, Wartbarkeit und Reproduzierbarkeit.

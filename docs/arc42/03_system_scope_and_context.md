@@ -1,19 +1,19 @@
-# 03 System Scope and Context
+# 03 Systemkontext und -abgrenzung
 
-## System Scope
+## Systemabgrenzung
 
-The system accepts user-provided social media text, executes a structured analysis workflow, validates contract compliance, and stores/retrieves analysis runs.
+Das System nimmt vom Nutzer bereitgestellten Social-Media-Text entgegen, führt eine strukturierte Analyse-Pipeline aus, validiert Vertragskonformität und speichert/lädt Analyse-Runs.
 
-## Context Diagram (Textual)
+## Kontextdiagramm (textuell)
 
-- Actor `User` interacts with the `Frontend UI` to submit text and review runs.
-- `Frontend UI` calls the `Backend API` via HTTP/JSON.
-- `Backend API` persists run data and metadata in `PostgreSQL`.
-- `Backend API` calls an external `LLM Provider API` through an internal adapter.
-- `LLM Provider API` is outside system control and treated as an external dependency.
+- Akteur `User` interagiert mit dem `Frontend UI`, um Text einzureichen und Runs einzusehen.
+- `Frontend UI` ruft das `Backend API` via HTTP/JSON auf.
+- `Backend API` persistiert Run-Daten und Metadaten in `PostgreSQL`.
+- `Backend API` ruft ein externes `LLM Provider API` über einen internen Adapter auf.
+- `LLM Provider API` liegt außerhalb der Systemgrenzen und ist eine externe Abhängigkeit.
 
-## External Interfaces (Concept Level)
+## Externe Schnittstellen (Konzeptstand)
 
-- UI to API: REST endpoints over JSON.
-- API to DB: ORM + SQL migrations.
-- API to LLM Provider: provider SDK/HTTP behind adapter port.
+- UI zu API: REST-Endpunkte über JSON.
+- API zu DB: ORM + SQL-Migrationen.
+- API zu LLM-Provider: Provider-SDK/HTTP hinter Adapter-Port.

@@ -1,7 +1,7 @@
-# 09 Architecture Decisions
+# 09 Architekturentscheidungen
 
-Architecture decisions are documented as ADRs in [`docs/adr/`](../adr/).
+Architekturentscheidungen werden als ADRs in [`docs/adr/`](../adr/) dokumentiert.
 
-Current ADRs:
+Aktuelle ADRs:
 
-- [ADR-0001: Architecture Style](../adr/0001-architecture-style.md)
+- [ADR-0001: Architekturstil](../adr/0001-architecture-style.md)

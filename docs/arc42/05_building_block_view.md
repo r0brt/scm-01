@@ -1,15 +1,15 @@
-# 05 Building Block View
+# 05 Bausteinsicht
 
-## Level 1 Decomposition
+## Level-1-Zerlegung
 
-- `Frontend UI` (planned): user input, result visualization, run history access.
-- `Backend API` (planned): orchestration, validation, persistence, retrieval endpoints.
-- `PostgreSQL` (planned): analysis runs and metadata storage.
-- `LLM Provider` (external): text analysis generation via adapter integration.
+- `Frontend UI` (geplant): Texteingabe, Ergebnisdarstellung, Zugriff auf Run-Historie.
+- `Backend API` (geplant): Orchestrierung, Validierung, Persistenz, Retrieval-Endpunkte.
+- `PostgreSQL` (geplant): Speicherung von Analyse-Runs und Metadaten.
+- `LLM Provider` (extern): Erzeugung von Analyseinhalten über Adapter-Integration.
 
-## Responsibilities (Concept)
+## Verantwortlichkeiten (Konzept)
 
-- UI handles presentation and user interactions.
-- API enforces contracts, orchestrates workflow, and maps errors.
-- DB ensures durable, queryable run history.
-- LLM provider supplies generated analysis content under strict contract checks.
+- UI übernimmt Präsentation und Nutzerinteraktion.
+- API erzwingt Verträge, orchestriert die Pipeline und mappt Fehler.
+- DB stellt dauerhafte, abfragbare Run-Historie sicher.
+- LLM-Provider liefert generierte Analyseinhalte unter strikten Contract-Checks.

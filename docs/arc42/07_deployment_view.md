@@ -1,3 +1,3 @@
-# 07 Deployment View
+# 07 Verteilungssicht
 
-Placeholder: initial deployment view will cover containerized UI + API + PostgreSQL via Docker Compose.
+Platzhalter: Die initiale Deployment-Sicht beschreibt containerisiertes UI + API + PostgreSQL via Docker Compose.

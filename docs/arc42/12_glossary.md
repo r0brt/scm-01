@@ -1,3 +1,3 @@
-# 12 Glossary
+# 12 Glossar
 
-Placeholder: project terms and domain definitions will be maintained here to keep wording consistent across PRD, arc42, and ADRs.
+Platzhalter: Projektbegriffe und Domänendefinitionen werden hier gepflegt, um konsistente Terminologie über PRD, arc42 und ADRs sicherzustellen.

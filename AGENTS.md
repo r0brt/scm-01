@@ -118,6 +118,10 @@ Arc42 update triggers (minimum):
 * LLM integration details (adapter, prompt versioning, reliability guardrails)
 * cross-cutting concerns (logging, correlation IDs, validation/repair, security assumptions)
 
+Arc42 language rule:
+
+* arc42 documentation under `docs/arc42/` must be written in German.
+
 ## 8. Contracts & Versioning (critical)
 
 ### 8.1 JSON Schema (LLM output)
@@ -213,4 +217,3 @@ A change is done only if:
 * No premature microservices split.
 * No “big refactor while adding features”.
 * No flaky tests to “look good”.
-

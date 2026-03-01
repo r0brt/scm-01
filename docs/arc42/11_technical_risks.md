@@ -1,3 +1,3 @@
-# 11 Technical Risks
+# 11 Technische Risiken
 
-Placeholder: technical risks and mitigation strategies will be captured as implementation and integration progress.
+Platzhalter: Technische Risiken und Gegenmaßnahmen werden mit fortschreitender Implementierung und Integration gepflegt.
