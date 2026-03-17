@@ -18,6 +18,15 @@ Traceability: Jeder Meilenstein referenziert PRD-Elemente (FR/NFR/AC).
 **Ziel:** Arbeitsfähiger Skeleton-Stand + lokale Reproduzierbarkeit.
 **Deliverables:**
 
+* **Environment & Version Baseline (Pflicht, zuerst):**
+  * Versionspolicy: konservative LTS-/Stable-Baseline auswählen, danach in M0 exakte Patch-Versionen pinnen und Lockfiles committen.
+  * Verantwortung:
+    * Human: Installation von Maschinen-Tooling/Runtime (`uv`, Python, Node, optional Docker/Compose).
+    * Projekt/Codex: Projektabhängigkeiten und Lockfiles pinnen sowie reproduzierbare Commands definieren.
+  * M0-Artefakte:
+    * Runtime-Marker (`.python-version`, `.nvmrc` oder äquivalent)
+    * Lockfiles für Backend/Frontend
+    * README-Abschnitt mit benötigten Versionen sowie Install-/Verify-Commands
 * Backend skeleton (FastAPI) + `/health`
 * Test harness (`pytest`)
 * Frontend skeleton (falls schon vorhanden: build/test lauffähig)
@@ -28,6 +37,9 @@ Traceability: Jeder Meilenstein referenziert PRD-Elemente (FR/NFR/AC).
 
 * `cd backend && uv run pytest -q`
 * (falls frontend) `cd frontend && npm run build`
+* Runtime-Versionen sind dokumentiert und über Verify-Commands prüfbar (z. B. `uv --version`, `python --version`, `node --version`, `npm --version`)
+* Lockfiles sind vorhanden (Backend/Frontend)
+* Bootstrap-Commands laufen auf der gepinnten Toolchain reproduzierbar
 
 **Out of Scope:** DB, LLM, Docker, CI.
 
