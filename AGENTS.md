@@ -182,14 +182,61 @@ Direct pushes to `main`:
 
 * not allowed (including docs). Always use a branch.
 
-## 11.1 Push & PR Workflow (solo, Codex-managed)
+## 11.1 Push, PR & Change Workflow (solo, Codex-managed)
 
 * Never work on `main`: no coding, no commits, no pushes on `main`.
 * Always create/use a short-lived branch first (`feat/*`, `fix/*`, `docs/*`, `refactor/*`, `test/*`).
+* Keep each branch scoped to one deliverable only (one milestone item or one clearly bounded documentation/process change).
 * Push only when relevant tests/checks are green for the touched scope.
 * `git` workflow is mandatory (`git switch -c ...`, `git add`, `git commit`, `git push`).
-* `gh` is optional: if available, open a Draft PR; otherwise open the GitHub compare URL manually and create the PR in the web UI.
+* `gh` is optional: if available, open a Draft PR for meaningful changes; otherwise open the GitHub compare URL manually and create the PR in the web UI.
+* Meaningful or behavior-changing changes should go through a PR.
+* Small, non-semantic documentation edits may be merged locally without a PR if the Self-Review Checklist is completed and the merge into `main` is fast-forward only.
 * PR size guideline: target <= 200 changed LOC; hard cap <= 400 LOC, except mechanical-only changes (e.g., renames/format-only).
+
+For every change, use the following workflow:
+
+1. Sync `main` first:
+   * `git switch main`
+   * `git pull --ff-only`
+
+2. Create a short-lived branch from `main`:
+   * `docs/<slug>` for documentation/process changes
+   * `feat/<slug>` for new functionality
+   * `fix/<slug>` for bug fixes
+   * `refactor/<slug>` for internal restructuring
+   * `test/<slug>` for test-only changes
+
+3. Implement only the scoped change for that branch.
+
+4. Before committing, verify consistency with the repository source-of-truth documents:
+   * `AGENTS.md` for workflow/governance
+   * `PLAN.md` for milestone alignment
+   * `docs/prd.md` for product intent
+   * relevant `docs/arc42/` chapters if architecture, API, persistence, deployment, or cross-cutting concerns changed
+
+5. Run the smallest relevant checks for the touched scope:
+   * docs-only changes: self-review and consistency check
+   * backend changes: relevant lint/tests
+   * frontend changes: relevant build/tests
+   * schema/contract changes: contract tests are mandatory
+
+6. Commit with a precise message describing the change intent.
+
+7. Integrate the branch:
+   * meaningful or behavior-changing changes should go through a PR
+   * tiny, non-semantic documentation changes may be merged locally without a PR
+   * local merges into `main` without a PR must use fast-forward only:
+     * `git switch main`
+     * `git merge --ff-only <branch>`
+
+8. After merge, push `main` and delete merged branches when no longer needed.
+
+Rules:
+* No direct edits on `main`.
+* No merge to `main` without completing the Self-Review Checklist.
+* Do not mix unrelated changes in one branch.
+* Treat changes to `AGENTS.md`, `PLAN.md`, and `docs/prd.md` as high-impact documentation changes, not as casual doc edits.
 
 ## 12. Self-Review Checklist (mandatory for every change)
 
