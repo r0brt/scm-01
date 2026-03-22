@@ -27,3 +27,9 @@ In M4 werden mindestens ungueltige Requests und unbekannte Analyse-IDs explizit 
 Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sondern ueber einen expliziten Adapter-Port. Dadurch bleiben Stub-, Test- und spaetere Provider-Implementierungen austauschbar.
 
 Prompts werden versioniert unter `prompts/v1/` abgelegt. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt.
+
+## Betriebs- und Konfigurationskonzept
+
+Der lokale Standardbetrieb erfolgt ab M8 ueber Docker Compose. Konfiguration wird dabei ausschliesslich ueber Umgebungsvariablen injiziert; fuer den MVP sind insbesondere `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` und `SCM_DATABASE_URL` relevant.
+
+Die API verwendet PostgreSQL im Compose-Betrieb als einziges Zielsystem und fuehrt Datenbankschema-Aenderungen nicht implizit ueber ORM-Erzeugung aus, sondern explizit ueber `alembic upgrade head` beim Containerstart. Dadurch bleibt der Container-Start reproduzierbar und das Schema im laufenden System entspricht der versionierten Migration-Historie.

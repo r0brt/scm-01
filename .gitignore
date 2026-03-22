@@ -1,3 +1,4 @@
 .worktrees/
 __pycache__/
 backend/e2e.db
+.env

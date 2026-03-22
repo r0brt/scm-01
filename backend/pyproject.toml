@@ -5,16 +5,17 @@ description = "Backend skeleton for Social Cleanup Machine"
 readme = "../README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
+  "alembic>=1.16,<2",
   "fastapi>=0.115,<0.116",
+  "jsonschema>=4.23,<5",
+  "psycopg[binary]>=3.2,<3.3",
   "sqlalchemy>=2.0,<2.1",
   "uvicorn>=0.34,<0.35",
 ]
 
 [dependency-groups]
 dev = [
-  "alembic>=1.16,<2",
   "httpx>=0.28,<0.29",
-  "jsonschema>=4.23,<5",
   "pytest>=8.3,<9",
   "ruff>=0.11,<0.12",
 ]
