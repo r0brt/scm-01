@@ -8,11 +8,20 @@ PROMPT_PATH = ROOT / "prompts" / "v1" / "analysis.md"
 
 
 class OpenAIAnalysisGenerator:
-    def __init__(self, *, model_id: str = "gpt-5.4-mini", api_key_env: str = "OPENAI_API_KEY") -> None:
+    """Placeholder adapter for a future OpenAI-backed analysis generator."""
+
+    def __init__(
+        self,
+        *,
+        model_id: str = "gpt-5.4-mini",
+        api_key_env: str = "OPENAI_API_KEY",
+    ) -> None:
+        """Initialize the adapter with the configured model and API key env var."""
         self.model_id = model_id
         self.api_key_env = api_key_env
 
     def generate_analysis(self, text: str) -> AnalysisGenerationResult:
+        """Load the versioned prompt and return a placeholder analysis payload."""
         api_key = os.getenv(self.api_key_env)
         if not api_key:
             raise RuntimeError(f"Missing required environment variable: {self.api_key_env}")

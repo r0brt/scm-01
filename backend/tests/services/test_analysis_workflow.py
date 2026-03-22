@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from app.db.base import Base
 from app.db.session import create_engine, create_session_factory
 from app.services.analysis_workflow import create_analysis_run
@@ -26,6 +24,7 @@ class FakeAdapter:
 
 
 def make_session():
+    """Create an in-memory session for workflow tests."""
     engine = create_engine("sqlite+pysqlite:///:memory:")
     Base.metadata.create_all(engine)
     session_factory = create_session_factory(engine)

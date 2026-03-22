@@ -9,7 +9,9 @@ from app.services.validation import validate_analysis_payload
 DEFAULT_ANALYSIS_GENERATOR = StubAnalysisGenerator()
 
 
-def _normalize_generation_result(generation: AnalysisGenerationResult | dict) -> AnalysisGenerationResult:
+def _normalize_generation_result(
+    generation: AnalysisGenerationResult | dict,
+) -> AnalysisGenerationResult:
     if isinstance(generation, AnalysisGenerationResult):
         return generation
 
@@ -23,6 +25,7 @@ def _normalize_generation_result(generation: AnalysisGenerationResult | dict) ->
 def create_analysis_run(
     session: Session, text: str, *, adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR
 ):
+    """Generate, validate, and persist a new analysis run."""
     generation = _normalize_generation_result(adapter.generate_analysis(text))
     validation = validate_analysis_payload(generation.payload)
     analysis_json = validation.analysis.model_dump() if validation.analysis is not None else None
@@ -44,6 +47,7 @@ def create_analysis_run(
 
 
 def get_analysis_run_or_404(session: Session, run_id: int):
+    """Return a run by id or raise the public 404 API error."""
     run = get_run(session, run_id)
     if run is None:
         raise ApiError(
@@ -56,11 +60,13 @@ def get_analysis_run_or_404(session: Session, run_id: int):
 
 
 def list_analysis_runs(session: Session):
+    """Return persisted analysis runs in repository order."""
     return list_runs(session)
 
 
 def rerun_analysis(
     session: Session, run_id: int, *, adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR
 ):
+    """Create a fresh run from the input text of an existing run."""
     run = get_analysis_run_or_404(session, run_id)
     return create_analysis_run(session, run.input_text, adapter=adapter)

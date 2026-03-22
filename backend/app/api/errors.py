@@ -6,6 +6,8 @@ from fastapi.responses import JSONResponse
 
 
 class ApiError(Exception):
+    """Application error mapped to the public API error contract."""
+
     def __init__(
         self, *, status_code: int, code: str, message: str, details: dict | None = None
     ) -> None:
@@ -19,6 +21,7 @@ class ApiError(Exception):
 def build_error_response(
     *, status_code: int, code: str, message: str, details: dict | None = None
 ) -> JSONResponse:
+    """Build a standardized JSON API error response."""
     return JSONResponse(
         status_code=status_code,
         content={
@@ -33,6 +36,7 @@ def build_error_response(
 
 
 async def api_error_handler(_: Request, exc: ApiError) -> JSONResponse:
+    """Convert an application error into the public error contract."""
     return build_error_response(
         status_code=exc.status_code,
         code=exc.code,
@@ -44,6 +48,7 @@ async def api_error_handler(_: Request, exc: ApiError) -> JSONResponse:
 async def request_validation_error_handler(
     _: Request, exc: RequestValidationError
 ) -> JSONResponse:
+    """Map FastAPI request validation errors to the public error contract."""
     return build_error_response(
         status_code=422,
         code="INVALID_REQUEST",

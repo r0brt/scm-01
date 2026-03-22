@@ -17,6 +17,8 @@ MODEL_VALIDATION_FAILED = "MODEL_VALIDATION_FAILED"
 
 @dataclass(slots=True)
 class ValidationResult:
+    """Result of validating an analysis payload against contract and model."""
+
     run_status: str
     validation_status: str
     attempts: int
@@ -26,6 +28,7 @@ class ValidationResult:
 
 
 def load_analysis_schema() -> dict[str, Any]:
+    """Load the analysis JSON Schema from the versioned schema directory."""
     return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
@@ -45,6 +48,7 @@ def _schema_error_details(payload: dict[str, Any]) -> list[dict[str, Any]]:
 def validate_analysis_payload(
     payload: dict[str, Any], *, attempts: int = 0
 ) -> ValidationResult:
+    """Validate a payload against schema and Pydantic model constraints."""
     schema_errors = _schema_error_details(payload)
     if schema_errors:
         return ValidationResult(

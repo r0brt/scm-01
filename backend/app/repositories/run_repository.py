@@ -21,6 +21,7 @@ def create_run(
     error_code: str | None,
     error_reason: str | None,
 ) -> RunRecord:
+    """Persist and return a new analysis run."""
     run = RunRecord(
         input_text=input_text,
         analysis_json=analysis_json,
@@ -41,9 +42,11 @@ def create_run(
 
 
 def get_run(session: Session, run_id: int) -> RunRecord | None:
+    """Return a single run by id or ``None`` if it does not exist."""
     return session.get(RunRecord, run_id)
 
 
 def list_runs(session: Session) -> list[RunRecord]:
+    """Return analysis runs ordered from newest to oldest."""
     statement = select(RunRecord).order_by(RunRecord.created_at.desc(), RunRecord.id.desc())
     return list(session.scalars(statement))
