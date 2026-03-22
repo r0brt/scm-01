@@ -28,3 +28,11 @@ def test_analyse_model_rejects_invalid_payload() -> None:
 
     with pytest.raises(ValidationError):
         Analyse.model_validate(payload)
+
+
+def test_analyse_model_rejects_empty_punkt_item() -> None:
+    payload = load_json(FIXTURES / "valid" / "analysis_minimal.json")
+    payload["beobachtungen"]["punkte"] = [""]
+
+    with pytest.raises(ValidationError):
+        Analyse.model_validate(payload)
