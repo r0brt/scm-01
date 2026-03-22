@@ -13,8 +13,13 @@ Dieses Repository enthält derzeit das Concept-/Conception-Pack des Projekts.
 
 ## Aktueller Scope
 
-Dieses Change Set enthält das Backend-Skeleton sowie Konzept- und Architekturartefakte.
-Das Backend-Skeleton ist vorhanden, aber der Scope bleibt bewusst klein.
+Dieses Repository enthält inzwischen Backend-, Persistenz-, API- und Frontend-Bausteine des Projekts.
+Der aktuelle Stand umfasst:
+
+- FastAPI-Backend mit Analyse-, Run- und Rerun-API
+- SQLAlchemy/Alembic-basierte Persistenz
+- versionierte Prompts und LLM-Adapter-Schnittstelle
+- React/Vite-Frontend unter `frontend/`
 
 ### Backend Bootstrap
 
@@ -60,3 +65,12 @@ uv run --python 3.13 pytest -q
 ### Node-Version für M0
 
 Für M0 auf Node `22 LTS` wechseln (gemäss `.nvmrc`), bevor Frontend-Scaffolding/Build ausgeführt wird.
+
+## Frontend Quick Start
+
+```bash
+cd frontend
+npm install
+npm run test -- --run
+npm run build
+```

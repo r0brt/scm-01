@@ -1,0 +1,167 @@
+:root {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: #f6f2e8;
+  background:
+    radial-gradient(circle at top right, rgba(255, 127, 80, 0.24), transparent 24rem),
+    linear-gradient(180deg, #10212a 0%, #0a141a 55%, #071015 100%);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.page-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.hero-panel,
+.runs-panel,
+.pipeline-panel {
+  background: rgba(7, 16, 21, 0.68);
+  border: 1px solid rgba(246, 242, 232, 0.12);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(18px);
+}
+
+.hero-panel {
+  padding: 2rem;
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f8a56b;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Space Grotesk", "Avenir Next", sans-serif;
+}
+
+.lede {
+  max-width: 56rem;
+  color: rgba(246, 242, 232, 0.74);
+}
+
+.composer {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.composer textarea {
+  width: 100%;
+  border: 1px solid rgba(246, 242, 232, 0.12);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(246, 242, 232, 0.06);
+  color: inherit;
+}
+
+.composer button,
+.panel-header button,
+.run-item {
+  background: #f8a56b;
+  color: #10212a;
+  padding: 0.85rem 1.15rem;
+}
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 22rem 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.runs-panel,
+.pipeline-panel {
+  padding: 1.25rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.runs-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.run-item {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.run-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: rgba(246, 242, 232, 0.74);
+}
+
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.level-card {
+  border-radius: 1.25rem;
+  padding: 1rem;
+  background: linear-gradient(180deg, rgba(248, 165, 107, 0.16), rgba(246, 242, 232, 0.04));
+  border: 1px solid rgba(248, 165, 107, 0.22);
+}
+
+.level-card ul {
+  padding-left: 1.1rem;
+  margin-bottom: 0;
+}
+
+.error-banner {
+  color: #ffbcb0;
+}
+
+@media (max-width: 960px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-shell {
+    padding: 1rem;
+  }
+}
