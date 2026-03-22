@@ -8,6 +8,8 @@ from app.api.errors import ApiError, api_error_handler, request_validation_error
 from app.api.schemas import AnalysisCreateRequest, AnalysisRunResponse
 from app.db.base import Base
 from app.db.session import create_engine, create_session_factory, get_database_url
+from app.llm.base import AnalysisGenerator
+from app.llm.stub import StubAnalysisGenerator
 from app.services.analysis_workflow import (
     create_analysis_run,
     get_analysis_run_or_404,
@@ -16,8 +18,14 @@ from app.services.analysis_workflow import (
 )
 
 
-def create_app(*, database_url: str | None = None, initialize_schema: bool = False) -> FastAPI:
+def create_app(
+    *,
+    database_url: str | None = None,
+    initialize_schema: bool = False,
+    analysis_adapter: AnalysisGenerator | None = None,
+) -> FastAPI:
     app = FastAPI()
+    adapter = analysis_adapter or StubAnalysisGenerator()
 
     engine = create_engine(database_url or get_database_url())
     session_factory = create_session_factory(engine)
@@ -43,7 +51,9 @@ def create_app(*, database_url: str | None = None, initialize_schema: bool = Fal
     def create_analysis(
         request: AnalysisCreateRequest, session: Session = Depends(get_db)
     ) -> AnalysisRunResponse:
-        return AnalysisRunResponse.model_validate(create_analysis_run(session, request.text))
+        return AnalysisRunResponse.model_validate(
+            create_analysis_run(session, request.text, adapter=adapter)
+        )
 
     @app.get("/api/v1/analyses", response_model=list[AnalysisRunResponse])
     def get_analyses(session: Session = Depends(get_db)) -> list[AnalysisRunResponse]:
@@ -63,7 +73,9 @@ def create_app(*, database_url: str | None = None, initialize_schema: bool = Fal
     def rerun_existing_analysis(
         analysis_id: int, session: Session = Depends(get_db)
     ) -> AnalysisRunResponse:
-        return AnalysisRunResponse.model_validate(rerun_analysis(session, analysis_id))
+        return AnalysisRunResponse.model_validate(
+            rerun_analysis(session, analysis_id, adapter=adapter)
+        )
 
     return app
 
