@@ -25,6 +25,7 @@ def create_app(
     initialize_schema: bool = False,
     analysis_adapter: AnalysisGenerator | None = None,
 ) -> FastAPI:
+    """Create and configure the FastAPI application."""
     app = FastAPI()
     adapter = analysis_adapter or StubAnalysisGenerator()
     should_initialize_schema = initialize_schema or os.getenv("SCM_INITIALIZE_SCHEMA") == "1"

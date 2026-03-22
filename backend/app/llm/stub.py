@@ -5,7 +5,10 @@ STUB_PROMPT_VERSION = "stub-v1"
 
 
 class StubAnalysisGenerator:
+    """Generate deterministic placeholder analyses for local and test use."""
+
     def generate_analysis(self, text: str) -> AnalysisGenerationResult:
+        """Return a contract-valid placeholder analysis for the given text."""
         summary = f"Stub-Analyse fuer: {text}"
         point = f"Ableitung aus Input: {text}"
         payload = {

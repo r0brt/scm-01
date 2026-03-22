@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import DateTime, Float, JSON, String, Text, func
+from sqlalchemy import JSON, DateTime, Float, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
 
 class RunRecord(Base):
+    """Persisted analysis run including payload, report, and metadata."""
+
     __tablename__ = "runs"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
