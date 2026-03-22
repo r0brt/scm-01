@@ -1,0 +1,28 @@
+[project]
+name = "scm-backend"
+version = "0.1.0"
+description = "Backend skeleton for Social Cleanup Machine"
+readme = "../README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "fastapi>=0.115,<0.116",
+  "uvicorn>=0.34,<0.35",
+]
+
+[dependency-groups]
+dev = [
+  "httpx>=0.28,<0.29",
+  "pytest>=8.3,<9",
+  "ruff>=0.11,<0.12",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
