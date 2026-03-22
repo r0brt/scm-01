@@ -30,4 +30,7 @@ def test_analysis_schema_rejects_payload_with_missing_level() -> None:
 
     errors = list(validator.iter_errors(payload))
 
-    assert errors
+    assert any(
+        error.validator == "required" and "massnahmen" in error.message
+        for error in errors
+    )
