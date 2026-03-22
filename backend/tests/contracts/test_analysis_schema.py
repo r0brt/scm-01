@@ -50,8 +50,12 @@ def test_analysis_schema_rejects_unknown_top_level_field() -> None:
     payload = load_json(FIXTURES / "invalid" / "unknown_top_level_field.json")
 
     validator = Draft202012Validator(schema)
+    errors = list(validator.iter_errors(payload))
 
-    assert list(validator.iter_errors(payload))
+    assert any(
+        error.validator == "additionalProperties" and list(error.path) == []
+        for error in errors
+    )
 
 
 def test_analysis_schema_rejects_empty_punkte() -> None:
@@ -59,8 +63,13 @@ def test_analysis_schema_rejects_empty_punkte() -> None:
     payload = load_json(FIXTURES / "invalid" / "empty_punkte.json")
 
     validator = Draft202012Validator(schema)
+    errors = list(validator.iter_errors(payload))
 
-    assert list(validator.iter_errors(payload))
+    assert any(
+        error.validator == "minItems"
+        and list(error.path) == ["beobachtungen", "punkte"]
+        for error in errors
+    )
 
 
 def test_analysis_schema_rejects_non_string_punkt() -> None:
@@ -68,8 +77,13 @@ def test_analysis_schema_rejects_non_string_punkt() -> None:
     payload = load_json(FIXTURES / "invalid" / "non_string_punkt.json")
 
     validator = Draft202012Validator(schema)
+    errors = list(validator.iter_errors(payload))
 
-    assert list(validator.iter_errors(payload))
+    assert any(
+        error.validator == "type"
+        and list(error.path) == ["beobachtungen", "punkte", 0]
+        for error in errors
+    )
 
 
 def test_analysis_schema_rejects_missing_zusammenfassung() -> None:
@@ -77,5 +91,9 @@ def test_analysis_schema_rejects_missing_zusammenfassung() -> None:
     payload = load_json(FIXTURES / "invalid" / "missing_zusammenfassung.json")
 
     validator = Draft202012Validator(schema)
+    errors = list(validator.iter_errors(payload))
 
-    assert list(validator.iter_errors(payload))
+    assert any(
+        error.validator == "required" and list(error.path) == ["beobachtungen"]
+        for error in errors
+    )
