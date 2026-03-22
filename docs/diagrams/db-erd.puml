@@ -1,0 +1,22 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity "runs" as runs {
+  *id : integer <<PK>>
+  --
+  input_text : text
+  analysis_json : json nullable
+  validation_report : json
+  detected_language : varchar(8)
+  language_confidence : float
+  model_id : varchar(255)
+  prompt_version : varchar(64)
+  run_status : varchar(32)
+  validation_status : varchar(32)
+  error_code : varchar(64) nullable
+  error_reason : text nullable
+  created_at : timestamp
+}
+
+@enduml
