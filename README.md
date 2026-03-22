@@ -72,6 +72,7 @@ Für M0 auf Node `22 LTS` wechseln (gemäss `.nvmrc`), bevor Frontend-Scaffoldin
 cd frontend
 npm install
 npm run test -- --run
+npm run test:e2e
 npm run build
 ```
 
@@ -91,3 +92,14 @@ Erreichbarkeit nach `up`:
 
 - Frontend: `http://127.0.0.1:4173`
 - Backend-Health: `http://127.0.0.1:8000/health`
+
+## Finale Verifikation (M9)
+
+```bash
+cd backend && uv run pytest -q
+cd frontend && npm run test -- --run
+cd frontend && npm run build
+docker compose up -d
+docker compose ps
+docker compose down
+```
