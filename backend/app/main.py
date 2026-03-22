@@ -1,3 +1,4 @@
+import os
 from collections.abc import Iterator
 
 from fastapi import Depends, FastAPI, status
@@ -26,10 +27,11 @@ def create_app(
 ) -> FastAPI:
     app = FastAPI()
     adapter = analysis_adapter or StubAnalysisGenerator()
+    should_initialize_schema = initialize_schema or os.getenv("SCM_INITIALIZE_SCHEMA") == "1"
 
     engine = create_engine(database_url or get_database_url())
     session_factory = create_session_factory(engine)
-    if initialize_schema:
+    if should_initialize_schema:
         Base.metadata.create_all(engine)
 
     def get_db() -> Iterator[Session]:
