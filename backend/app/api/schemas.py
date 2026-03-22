@@ -1,0 +1,26 @@
+from datetime import datetime
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class AnalysisCreateRequest(BaseModel):
+    text: str = Field(min_length=1)
+
+
+class AnalysisRunResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    input_text: str
+    analysis_json: dict[str, Any] | None
+    validation_report: dict[str, Any]
+    detected_language: str
+    language_confidence: float
+    model_id: str
+    prompt_version: str
+    run_status: str
+    validation_status: str
+    error_code: str | None
+    error_reason: str | None
+    created_at: datetime
