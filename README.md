@@ -13,7 +13,7 @@ Dieses Repository enthält derzeit das Concept-/Conception-Pack des Projekts.
 
 ## Aktueller Scope
 
-Dieses Change Set enthält nur Konzept- und Architekturartefakte.
+Dieses Change Set enthält das Backend-Skeleton sowie Konzept- und Architekturartefakte.
 Das Backend-Skeleton ist vorhanden, aber der Scope bleibt bewusst klein.
 
 ### Backend Bootstrap
