@@ -5,9 +5,32 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 
 
+class FakeAdapter:
+    def generate_analysis(self, text: str):
+        return {
+            "payload": {
+                "beobachtungen": {"zusammenfassung": text, "punkte": [f"{text}-beobachtung"]},
+                "erklaerungen": {"zusammenfassung": text, "punkte": [f"{text}-erklaerung"]},
+                "emotionen": {"zusammenfassung": text, "punkte": [f"{text}-emotion"]},
+                "zuschreibungen": {"zusammenfassung": text, "punkte": [f"{text}-zuschreibung"]},
+                "schlussfolgerungen": {
+                    "zusammenfassung": text,
+                    "punkte": [f"{text}-schlussfolgerung"],
+                },
+                "massnahmen": {"zusammenfassung": text, "punkte": [f"{text}-massnahme"]},
+            },
+            "model_id": "fake-api-model",
+            "prompt_version": "v-fake",
+        }
+
+
 def make_client(tmp_path: Path) -> TestClient:
     database_url = f"sqlite+pysqlite:///{tmp_path / 'api.db'}"
-    app = create_app(database_url=database_url, initialize_schema=True)
+    app = create_app(
+        database_url=database_url,
+        initialize_schema=True,
+        analysis_adapter=FakeAdapter(),
+    )
     return TestClient(app)
 
 
@@ -21,8 +44,8 @@ def test_post_analyses_creates_and_persists_run(tmp_path: Path) -> None:
     assert payload["input_text"] == "Wohnungsnot in der Stadt"
     assert payload["run_status"] == "completed"
     assert payload["validation_status"] == "valid"
-    assert payload["prompt_version"] == "stub-v1"
-    assert payload["model_id"] == "stub-analysis-generator"
+    assert payload["prompt_version"] == "v-fake"
+    assert payload["model_id"] == "fake-api-model"
     assert payload["analysis_json"]["beobachtungen"]["punkte"]
     assert payload["validation_report"]["checks"][0]["stage"] == "schema"
 

@@ -21,3 +21,9 @@ Schemaaenderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern ueber 
 Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine generierte `correlation_id`.
 
 In M4 werden mindestens ungueltige Requests und unbekannte Analyse-IDs explizit ueber diesen Vertrag beantwortet. Dadurch bleibt das Verhalten fuer Frontend und spaetere Integrationen stabil, auch wenn sich interne Implementierungen aendern.
+
+## LLM-Adapter und Prompt-Versionierung
+
+Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sondern ueber einen expliziten Adapter-Port. Dadurch bleiben Stub-, Test- und spaetere Provider-Implementierungen austauschbar.
+
+Prompts werden versioniert unter `prompts/v1/` abgelegt. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt.
