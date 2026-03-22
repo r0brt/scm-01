@@ -16,7 +16,7 @@ SCM ist ein Instrument zur strukturellen Klärung komplexer gesellschaftlicher P
 
 ## 3. Ziele (Outcomes)
 
-* **G1 — Strukturierte Entflechtung:** Ein Problemtext wird in sechs Ebenen zerlegt, sodass Vermischungen sichtbar werden.
+* **G1 — Strukturierte Entflechtung:** Ein Problemtext wird in sechs Ebenen zerlegt, sodass Vermischungen sichtbar werden. Die Ebenen heissen fix: `beobachtungen`, `erklaerungen`, `emotionen`, `zuschreibungen`, `schlussfolgerungen`, `massnahmen`.
 * **G2 — Reproduzierbarkeit:** Analyse erfolgt in einer geführten, überprüfbaren Verarbeitungskette (nicht als einmalige Chat-Antwort).
 * **G3 — Weiterverarbeitbarkeit:** Resultate sind maschinenlesbar (JSON) und persistierbar.
 * **G4 — Didaktische Darstellung:** Die Ebenen werden als Filter-/Reinigungsstrecke visuell nachvollziehbar dargestellt.
@@ -143,7 +143,7 @@ Zu speichern:
 
 ## 14. Abnahmekriterien (Acceptance)
 
-* **AC1:** 6 Ebenen vorhanden und korrekt benannt (bei valid).
+* **AC1:** 6 Ebenen vorhanden und korrekt benannt (`beobachtungen`, `erklaerungen`, `emotionen`, `zuschreibungen`, `schlussfolgerungen`, `massnahmen`) (bei valid).
 * **AC2:** JSON ist schema-valide oder als `failed` markiert + Report gespeichert.
 * **AC3:** UI zeigt Pipeline mit allen Ebenen oder klaren Fehlzustand.
 * **AC4:** Analysen sind in DB persistiert und abrufbar.
