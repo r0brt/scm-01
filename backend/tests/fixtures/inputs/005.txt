@@ -1,0 +1,1 @@
+Le rapport affiche des chiffres différents selon le navigateur utilisé.

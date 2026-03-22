@@ -1,0 +1,1 @@
+Die Suche liefert Ergebnisse, aber die Sortierung wirkt zufällig und inkonsistent.

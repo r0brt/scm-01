@@ -1,0 +1,1 @@
+Die mobile Ansicht ist lesbar, aber die Schaltflächen überlappen sich im Footer.

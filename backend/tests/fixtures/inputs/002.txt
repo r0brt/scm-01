@@ -1,0 +1,1 @@
+Le bouton de validation ne répond pas quand je clique dessus sur mobile.

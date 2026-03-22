@@ -97,3 +97,11 @@ def test_analysis_schema_rejects_missing_zusammenfassung() -> None:
         error.validator == "required" and list(error.path) == ["beobachtungen"]
         for error in errors
     )
+
+
+def test_input_fixture_set_contains_at_least_twenty_texts() -> None:
+    inputs_dir = ROOT / "backend" / "tests" / "fixtures" / "inputs"
+
+    text_files = sorted(inputs_dir.glob("*.txt"))
+
+    assert len(text_files) >= 20

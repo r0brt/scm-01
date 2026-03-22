@@ -1,0 +1,1 @@
+Die App startet sehr langsam und zeigt danach nur einen leeren Bildschirm.

@@ -1,0 +1,1 @@
+When I paste text with emojis, the editor trims the last sentence.
