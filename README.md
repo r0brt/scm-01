@@ -14,7 +14,18 @@ Dieses Repository enthält derzeit das Concept-/Conception-Pack des Projekts.
 ## Aktueller Scope
 
 Dieses Change Set enthält nur Konzept- und Architekturartefakte.
-Es wird noch kein Anwendungscode (Backend, Frontend, Migrationen) bereitgestellt.
+Das Backend-Skeleton ist vorhanden, aber der Scope bleibt bewusst klein.
+
+### Backend Bootstrap
+
+Das Backend zielt auf Python `3.13` gemäß Repository-Baseline.
+
+```bash
+cd backend
+uv run uvicorn app.main:app --reload
+uv run pytest -q
+uv run ruff check .
+```
 
 ## Environment Baseline (M0)
 
