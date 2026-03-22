@@ -1,0 +1,1 @@
+Bei schwacher Verbindung werden Bilder geladen, aber Texte bleiben leer.

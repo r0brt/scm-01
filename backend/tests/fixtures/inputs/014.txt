@@ -1,0 +1,1 @@
+Le champ adresse accepte des valeurs invalides sans afficher d'avertissement.

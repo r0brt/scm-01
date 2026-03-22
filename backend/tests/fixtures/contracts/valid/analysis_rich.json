@@ -1,0 +1,26 @@
+{
+  "beobachtungen": {
+    "zusammenfassung": "Kurzbeschreibung der Beobachtungen.",
+    "punkte": ["Beobachtung eins.", "Beobachtung zwei."]
+  },
+  "erklaerungen": {
+    "zusammenfassung": "Kurzbeschreibung der Erklaerungen.",
+    "punkte": ["Erklaerung eins.", "Erklaerung zwei."]
+  },
+  "emotionen": {
+    "zusammenfassung": "Kurzbeschreibung der Emotionen.",
+    "punkte": ["Emotion eins.", "Emotion zwei."]
+  },
+  "zuschreibungen": {
+    "zusammenfassung": "Kurzbeschreibung der Zuschreibungen.",
+    "punkte": ["Zuschreibung eins.", "Zuschreibung zwei."]
+  },
+  "schlussfolgerungen": {
+    "zusammenfassung": "Kurzbeschreibung der Schlussfolgerungen.",
+    "punkte": ["Schlussfolgerung eins.", "Schlussfolgerung zwei."]
+  },
+  "massnahmen": {
+    "zusammenfassung": "Kurzbeschreibung der Massnahmen.",
+    "punkte": ["Massnahme eins.", "Massnahme zwei."]
+  }
+}

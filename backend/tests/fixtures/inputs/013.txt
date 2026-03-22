@@ -1,0 +1,1 @@
+Der Support sagt, der Fehler tritt nur bei sehr langen Eingaben auf.

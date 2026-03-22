@@ -1,0 +1,1 @@
+L'application plante dès que j'ouvre la page de paramètres avec un compte invité.
