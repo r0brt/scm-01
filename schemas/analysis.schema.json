@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scm.local/schemas/analysis.schema.json",
+  "title": "SCM Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "beobachtungen",
+    "erklaerungen",
+    "emotionen",
+    "zuschreibungen",
+    "schlussfolgerungen",
+    "massnahmen"
+  ],
+  "properties": {
+    "beobachtungen": { "$ref": "#/$defs/ebene" },
+    "erklaerungen": { "$ref": "#/$defs/ebene" },
+    "emotionen": { "$ref": "#/$defs/ebene" },
+    "zuschreibungen": { "$ref": "#/$defs/ebene" },
+    "schlussfolgerungen": { "$ref": "#/$defs/ebene" },
+    "massnahmen": { "$ref": "#/$defs/ebene" }
+  },
+  "$defs": {
+    "ebene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zusammenfassung", "punkte"],
+      "properties": {
+        "zusammenfassung": {
+          "type": "string",
+          "minLength": 1
+        },
+        "punkte": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
