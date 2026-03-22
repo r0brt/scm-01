@@ -3,7 +3,6 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = ROOT / "schemas" / "analysis.schema.json"
 FIXTURES = ROOT / "backend" / "tests" / "fixtures" / "contracts"

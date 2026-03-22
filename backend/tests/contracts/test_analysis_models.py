@@ -6,7 +6,6 @@ from pydantic import ValidationError
 
 from app.models.analysis import Analyse
 
-
 ROOT = Path(__file__).resolve().parents[3]
 FIXTURES = ROOT / "backend" / "tests" / "fixtures" / "contracts"
 
