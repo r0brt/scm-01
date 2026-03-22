@@ -7,3 +7,11 @@ Fuer M3 ist die Persistenz im Backend bereits relational modelliert. Die API sch
 Ab M5 bleibt die API weiterhin der einzige Einstiegspunkt fuer Analysen, delegiert die eigentliche Analyseerzeugung aber an einen austauschbaren LLM-Adapter. Fuer lokale und Test-Nutzung kann ein Stub-Adapter ohne Netz aktiv bleiben; produktiv ist eine OpenAI-basierte Implementierung vorgesehen.
 
 Mit M6 ist nun auch das Frontend als eigenstaendiger Baustein vorhanden. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermoeglicht den Export des aktuell gewaehlten Runs als JSON.
+
+Mit M8 ist der lokale Zielbetrieb ueber `docker compose` konkretisiert. Die Verteilung besteht aus drei Containern:
+
+- `frontend`: Nginx liefert das gebaute React/Vite-Frontend aus und leitet `/api` an die API weiter
+- `api`: FastAPI/Uvicorn-Anwendung; fuehrt beim Start zuerst `alembic upgrade head` aus
+- `db`: PostgreSQL als relationale Persistenz fuer Analyse-Runs
+
+Die Kommunikation bleibt bewusst einfach: Browserzugriffe gehen gegen das Frontend; interne API-Aufrufe laufen im Compose-Netz zwischen `frontend` und `api`, Datenbankzugriffe zwischen `api` und `db`.

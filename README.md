@@ -74,3 +74,20 @@ npm install
 npm run test -- --run
 npm run build
 ```
+
+## Docker Compose (M8)
+
+Der lokale Zielbetrieb besteht aus drei Containern: `frontend`, `api` und `db`.
+Das Frontend wird statisch via Nginx ausgeliefert und leitet `/api` an das Backend weiter. Die API fuehrt beim Start automatisch `alembic upgrade head` gegen PostgreSQL aus.
+
+```bash
+cp .env.example .env
+docker compose up --build -d
+docker compose ps
+docker compose down
+```
+
+Erreichbarkeit nach `up`:
+
+- Frontend: `http://127.0.0.1:4173`
+- Backend-Health: `http://127.0.0.1:8000/health`
