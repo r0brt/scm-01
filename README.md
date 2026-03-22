@@ -18,13 +18,13 @@ Das Backend-Skeleton ist vorhanden, aber der Scope bleibt bewusst klein.
 
 ### Backend Bootstrap
 
-Das Backend zielt auf Python `3.13` gemäß Repository-Baseline.
+Das Backend zielt auf Python `3.13` gemäß Repository-Baseline; die Quick-Start-Befehle setzen deshalb Python `3.13` explizit voraus.
 
 ```bash
 cd backend
-uv run uvicorn app.main:app --reload
-uv run pytest -q
-uv run ruff check .
+uv run --python 3.13 uvicorn app.main:app --reload
+uv run --python 3.13 pytest -q
+uv run --python 3.13 ruff check .
 ```
 
 ## Environment Baseline (M0)
@@ -59,4 +59,4 @@ uv run --python 3.13 pytest -q
 
 ### Node-Version für M0
 
-Lokal ist aktuell Node `v25.6.1` vorhanden. Für M0 auf `22 LTS` wechseln (gemäss `.nvmrc`), bevor Frontend-Scaffolding/Build ausgeführt wird.
+Für M0 auf Node `22 LTS` wechseln (gemäss `.nvmrc`), bevor Frontend-Scaffolding/Build ausgeführt wird.
