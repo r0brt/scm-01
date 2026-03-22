@@ -34,3 +34,48 @@ def test_analysis_schema_rejects_payload_with_missing_level() -> None:
         error.validator == "required" and "massnahmen" in error.message
         for error in errors
     )
+
+
+def test_analysis_schema_accepts_richer_valid_payload() -> None:
+    schema = load_json(SCHEMA_PATH)
+    payload = load_json(FIXTURES / "valid" / "analysis_rich.json")
+
+    validator = Draft202012Validator(schema)
+
+    assert list(validator.iter_errors(payload)) == []
+
+
+def test_analysis_schema_rejects_unknown_top_level_field() -> None:
+    schema = load_json(SCHEMA_PATH)
+    payload = load_json(FIXTURES / "invalid" / "unknown_top_level_field.json")
+
+    validator = Draft202012Validator(schema)
+
+    assert list(validator.iter_errors(payload))
+
+
+def test_analysis_schema_rejects_empty_punkte() -> None:
+    schema = load_json(SCHEMA_PATH)
+    payload = load_json(FIXTURES / "invalid" / "empty_punkte.json")
+
+    validator = Draft202012Validator(schema)
+
+    assert list(validator.iter_errors(payload))
+
+
+def test_analysis_schema_rejects_non_string_punkt() -> None:
+    schema = load_json(SCHEMA_PATH)
+    payload = load_json(FIXTURES / "invalid" / "non_string_punkt.json")
+
+    validator = Draft202012Validator(schema)
+
+    assert list(validator.iter_errors(payload))
+
+
+def test_analysis_schema_rejects_missing_zusammenfassung() -> None:
+    schema = load_json(SCHEMA_PATH)
+    payload = load_json(FIXTURES / "invalid" / "missing_zusammenfassung.json")
+
+    validator = Draft202012Validator(schema)
+
+    assert list(validator.iter_errors(payload))
