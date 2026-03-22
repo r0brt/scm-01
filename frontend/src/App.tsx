@@ -5,13 +5,51 @@ import "./styles.css";
 import type { AnalysisRun } from "./types";
 
 const LEVELS = [
-  ["beobachtungen", "Beobachtungen"],
-  ["erklaerungen", "Erklaerungen"],
-  ["emotionen", "Emotionen"],
-  ["zuschreibungen", "Zuschreibungen"],
-  ["schlussfolgerungen", "Schlussfolgerungen"],
-  ["massnahmen", "Massnahmen"],
+  ["beobachtungen", "Beobachtungen", "Was liegt als Rohsignal sichtbar vor?"],
+  ["erklaerungen", "Erklaerungen", "Welche Deutungen verbinden die Signale?"],
+  ["emotionen", "Emotionen", "Welche Spannungen und Affekte werden aktiviert?"],
+  ["zuschreibungen", "Zuschreibungen", "Welche Rollen, Schuld oder Identitaeten werden verteilt?"],
+  ["schlussfolgerungen", "Schlussfolgerungen", "Welche Zuspitzung wird daraus abgeleitet?"],
+  ["massnahmen", "Massnahmen", "Welche Handlung wird als Konsequenz vorgeschlagen?"],
 ] as const;
+
+const MACHINE_STAGES = [
+  ["language", "Sprachcheck"],
+  ["analysis", "Analyse"],
+  ["validation", "Validierung"],
+] as const;
+
+function formatLanguage(language: string | null | undefined): string {
+  return language ? language.toUpperCase() : "UNBEKANNT";
+}
+
+function formatConfidence(confidence: number | null | undefined): string {
+  return typeof confidence === "number" ? confidence.toFixed(2) : "--";
+}
+
+function getMachineStatus(run: AnalysisRun | null): {
+  headline: string;
+  tone: "valid" | "repair" | "failed" | "idle";
+} {
+  if (!run) {
+    return { headline: "Maschine bereit", tone: "idle" };
+  }
+
+  if (run.error_code === "LANGUAGE_CONFIDENCE_TOO_LOW" || run.error_code === "UNSUPPORTED_LANGUAGE") {
+    return { headline: "Sprachcheck blockiert", tone: "failed" };
+  }
+
+  if (run.run_status === "failed") {
+    return { headline: "Ausgabe blockiert", tone: "failed" };
+  }
+
+  const hasRepair = run.validation_report.checks.some((check) => check.status === "repaired");
+  if (hasRepair) {
+    return { headline: "Analyse repariert", tone: "repair" };
+  }
+
+  return { headline: "Filtermaschine", tone: "valid" };
+}
 
 export default function App() {
   const [text, setText] = useState("");
@@ -78,9 +116,10 @@ export default function App() {
     <main className="page-shell">
       <section className="hero-panel">
         <p className="eyebrow">Social Cleanup Machine</p>
-        <h1>Analyse-Workspace</h1>
+        <h1>Industrielle Filterstrecke</h1>
         <p className="lede">
-          Problemtext eingeben, Analyse starten, Pipeline lesen und Runs als JSON exportieren.
+          Rohtext einspeisen, Sprache pruefen, Analyse filtern und die sechs Ebenen als
+          sichtbare Maschinenstrecke lesen.
         </p>
         <form className="composer" onSubmit={handleSubmit}>
           <label htmlFor="problemtext">Problemtext</label>
@@ -124,30 +163,77 @@ export default function App() {
 
         <section className="pipeline-panel">
           <div className="panel-header">
-            <h2>Pipeline</h2>
+            <div>
+              <p className="panel-kicker">SCM Core</p>
+              <h2>{getMachineStatus(selectedRun).headline}</h2>
+            </div>
             <button disabled={!selectedRun} onClick={handleExport} type="button">
               JSON exportieren
             </button>
           </div>
           {selectedRun ? (
             <>
-              <div className="run-meta">
-                <span>{selectedRun.model_id}</span>
-                <span>{selectedRun.prompt_version}</span>
-                <span>{selectedRun.validation_status}</span>
+              <div className="machine-summary">
+                <div className={`machine-status machine-status-${getMachineStatus(selectedRun).tone}`}>
+                  <strong>{getMachineStatus(selectedRun).headline}</strong>
+                  <span>{selectedRun.error_reason ?? "Analysefluss aktiv und nachvollziehbar."}</span>
+                </div>
+                <div className="run-meta">
+                  <span>Sprache · {formatLanguage(selectedRun.detected_language)}</span>
+                  <span>Confidence · {formatConfidence(selectedRun.language_confidence)}</span>
+                  <span>Modell · {selectedRun.model_id}</span>
+                  <span>Prompt · {selectedRun.prompt_version}</span>
+                  <span>Status · {selectedRun.validation_status}</span>
+                </div>
               </div>
-              <div className="pipeline-grid">
-                {LEVELS.map(([key, label]) => {
-                  const level = selectedRun.analysis_json?.[key];
+
+              <div className="stage-strip" aria-label="Maschinenstufen">
+                {MACHINE_STAGES.map(([key, label]) => {
+                  const isLanguageFailed =
+                    key === "language" &&
+                    (selectedRun.error_code === "LANGUAGE_CONFIDENCE_TOO_LOW" ||
+                      selectedRun.error_code === "UNSUPPORTED_LANGUAGE");
+                  const isFailedAfterLanguage =
+                    selectedRun.run_status === "failed" && key !== "language";
+                  const stageTone = isLanguageFailed
+                    ? "failed"
+                    : isFailedAfterLanguage
+                      ? "idle"
+                      : "active";
+
                   return (
-                    <article className="level-card" key={key}>
-                      <h3>{label}</h3>
-                      <p>{level?.zusammenfassung ?? "Keine Daten"}</p>
+                    <article className={`stage-node stage-node-${stageTone}`} key={key}>
+                      <p>{label}</p>
+                    </article>
+                  );
+                })}
+              </div>
+
+              {selectedRun.error_code ? (
+                <section className="machine-stop" aria-label="Fehlerzustand">
+                  <strong>{getMachineStatus(selectedRun).headline}</strong>
+                  <p>{selectedRun.error_code}</p>
+                </section>
+              ) : null}
+
+              <div className="pipeline-grid">
+                {LEVELS.map(([key, label, guidingQuestion]) => {
+                  const level = selectedRun.analysis_json?.[key];
+                  const visiblePoints = (level?.punkte ?? []).slice(0, 3);
+                  return (
+                    <article className={`level-card level-card-${key}`} key={key}>
+                      <div className="level-head">
+                        <p className="level-index">Filtermodul</p>
+                        <h3>{label}</h3>
+                        <span>{guidingQuestion}</span>
+                      </div>
+                      <p className="level-summary">{level?.zusammenfassung ?? "Keine Daten"}</p>
                       <ul>
-                        {(level?.punkte ?? []).map((point) => (
+                        {visiblePoints.map((point) => (
                           <li key={point}>{point}</li>
                         ))}
                       </ul>
+                      {!visiblePoints.length ? <p className="level-empty">Modul ohne Ausgabe.</p> : null}
                     </article>
                   );
                 })}

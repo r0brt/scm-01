@@ -9,7 +9,10 @@ from app.api.errors import ApiError, api_error_handler, request_validation_error
 from app.api.schemas import AnalysisCreateRequest, AnalysisRunResponse
 from app.db.base import Base
 from app.db.session import create_engine, create_session_factory, get_database_url
+from app.language.base import LanguageDetector
+from app.language.local_detector import LocalLanguageDetector
 from app.llm.base import AnalysisGenerator
+from app.llm.openai_adapter import OpenAIAnalysisGenerator
 from app.llm.stub import StubAnalysisGenerator
 from app.services.analysis_workflow import (
     create_analysis_run,
@@ -19,15 +22,29 @@ from app.services.analysis_workflow import (
 )
 
 
+def _build_analysis_adapter(analysis_adapter: AnalysisGenerator | None) -> AnalysisGenerator:
+    """Resolve the configured analysis adapter, preferring explicit injection."""
+    if analysis_adapter is not None:
+        return analysis_adapter
+
+    provider = os.getenv("SCM_ANALYSIS_PROVIDER", "stub").strip().lower()
+    if provider == "openai":
+        return OpenAIAnalysisGenerator()
+
+    return StubAnalysisGenerator()
+
+
 def create_app(
     *,
     database_url: str | None = None,
     initialize_schema: bool = False,
     analysis_adapter: AnalysisGenerator | None = None,
+    language_detector: LanguageDetector | None = None,
 ) -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI()
-    adapter = analysis_adapter or StubAnalysisGenerator()
+    adapter = _build_analysis_adapter(analysis_adapter)
+    detector = language_detector or LocalLanguageDetector()
     should_initialize_schema = initialize_schema or os.getenv("SCM_INITIALIZE_SCHEMA") == "1"
 
     engine = create_engine(database_url or get_database_url())
@@ -55,7 +72,12 @@ def create_app(
         request: AnalysisCreateRequest, session: Session = Depends(get_db)
     ) -> AnalysisRunResponse:
         return AnalysisRunResponse.model_validate(
-            create_analysis_run(session, request.text, adapter=adapter)
+            create_analysis_run(
+                session,
+                request.text,
+                adapter=adapter,
+                language_detector=detector,
+            )
         )
 
     @app.get("/api/v1/analyses", response_model=list[AnalysisRunResponse])
@@ -77,7 +99,12 @@ def create_app(
         analysis_id: int, session: Session = Depends(get_db)
     ) -> AnalysisRunResponse:
         return AnalysisRunResponse.model_validate(
-            rerun_analysis(session, analysis_id, adapter=adapter)
+            rerun_analysis(
+                session,
+                analysis_id,
+                adapter=adapter,
+                language_detector=detector,
+            )
         )
 
     return app
