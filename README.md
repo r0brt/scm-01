@@ -18,7 +18,7 @@ Der aktuelle Stand umfasst:
 
 - FastAPI-Backend mit Analyse-, Run- und Rerun-API
 - SQLAlchemy/Alembic-basierte Persistenz
-- versionierte Prompts und LLM-Adapter-Schnittstelle
+- versionierte Prompts, lokale Sprachdetektion und konfigurierbare LLM-Adapter-Schnittstelle
 - React/Vite-Frontend unter `frontend/`
 
 ### Backend Bootstrap
@@ -31,6 +31,18 @@ uv run --python 3.13 uvicorn app.main:app --reload
 uv run --python 3.13 pytest -q
 uv run --python 3.13 ruff check .
 ```
+
+Produktiver Analysepfad lokal:
+
+```bash
+cd backend
+export SCM_ANALYSIS_PROVIDER=openai
+export SCM_OPENAI_MODEL=gpt-5.2
+export OPENAI_API_KEY=...
+uv run --python 3.13 uvicorn app.main:app --reload
+```
+
+Ohne diese Konfiguration bleibt der Stub-Adapter der Default. Die lokale Sprachdetektion laeuft in beiden Faellen vor jeder Analyse und akzeptiert aktuell `de`, `fr` und `en`.
 
 ## Environment Baseline (M0)
 

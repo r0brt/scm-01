@@ -5,6 +5,19 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 
 
+class FakeLanguageDetector:
+    def __init__(self, language: str = "de", confidence: float = 0.95) -> None:
+        self.language = language
+        self.confidence = confidence
+
+    def detect(self, _text: str):
+        return {
+            "language": self.language,
+            "confidence": self.confidence,
+            "error_code": None if self.confidence >= 0.80 else "LANGUAGE_CONFIDENCE_TOO_LOW",
+        }
+
+
 class FakeAdapter:
     def generate_analysis(self, text: str):
         return {
@@ -24,12 +37,18 @@ class FakeAdapter:
         }
 
 
-def make_client(tmp_path: Path) -> TestClient:
+def make_client(
+    tmp_path: Path,
+    *,
+    language: str = "de",
+    confidence: float = 0.95,
+) -> TestClient:
     database_url = f"sqlite+pysqlite:///{tmp_path / 'api.db'}"
     app = create_app(
         database_url=database_url,
         initialize_schema=True,
         analysis_adapter=FakeAdapter(),
+        language_detector=FakeLanguageDetector(language=language, confidence=confidence),
     )
     return TestClient(app)
 
@@ -44,6 +63,8 @@ def test_post_analyses_creates_and_persists_run(tmp_path: Path) -> None:
     assert payload["input_text"] == "Wohnungsnot in der Stadt"
     assert payload["run_status"] == "completed"
     assert payload["validation_status"] == "valid"
+    assert payload["detected_language"] == "de"
+    assert payload["language_confidence"] == 0.95
     assert payload["prompt_version"] == "v-fake"
     assert payload["model_id"] == "fake-api-model"
     assert payload["analysis_json"]["beobachtungen"]["punkte"]
@@ -99,3 +120,32 @@ def test_get_unknown_analysis_returns_error_contract(tmp_path: Path) -> None:
     assert payload["error"]["message"] == "Analysis run not found"
     assert payload["error"]["details"]["analysis_id"] == 9999
     assert payload["error"]["correlation_id"]
+
+
+def test_post_analyses_returns_failed_run_for_low_language_confidence(tmp_path: Path) -> None:
+    client = make_client(tmp_path, confidence=0.32)
+
+    response = client.post("/api/v1/analyses", json={"text": "Haus logement housing"})
+
+    assert response.status_code == 201
+    payload = response.json()
+    assert payload["run_status"] == "failed"
+    assert payload["validation_status"] == "invalid"
+    assert payload["error_code"] == "LANGUAGE_CONFIDENCE_TOO_LOW"
+    assert payload["analysis_json"] is None
+
+
+def test_post_analyses_returns_failed_run_for_unsupported_language(tmp_path: Path) -> None:
+    client = make_client(tmp_path, language="it", confidence=0.98)
+
+    response = client.post(
+        "/api/v1/analyses",
+        json={"text": "La crisi abitativa colpisce molte famiglie."},
+    )
+
+    assert response.status_code == 201
+    payload = response.json()
+    assert payload["run_status"] == "failed"
+    assert payload["validation_status"] == "invalid"
+    assert payload["error_code"] == "UNSUPPORTED_LANGUAGE"
+    assert payload["analysis_json"] is None

@@ -1,12 +1,19 @@
 from sqlalchemy.orm import Session
 
 from app.api.errors import ApiError
+from app.language.base import LanguageDetectionResult, LanguageDetector
+from app.language.local_detector import (
+    SUPPORTED_LANGUAGES,
+    UNSUPPORTED_LANGUAGE,
+    LocalLanguageDetector,
+)
 from app.llm.base import AnalysisGenerationResult, AnalysisGenerator
 from app.llm.stub import StubAnalysisGenerator
 from app.repositories.run_repository import create_run, get_run, list_runs
 from app.services.validation import validate_analysis_payload
 
 DEFAULT_ANALYSIS_GENERATOR = StubAnalysisGenerator()
+DEFAULT_LANGUAGE_DETECTOR = LocalLanguageDetector()
 
 
 def _normalize_generation_result(
@@ -22,10 +29,60 @@ def _normalize_generation_result(
     )
 
 
+def _normalize_language_detection(
+    detection: LanguageDetectionResult | dict,
+) -> LanguageDetectionResult:
+    if isinstance(detection, LanguageDetectionResult):
+        return detection
+
+    return LanguageDetectionResult(
+        language=detection["language"],
+        confidence=detection["confidence"],
+        error_code=detection.get("error_code"),
+    )
+
+
 def create_analysis_run(
-    session: Session, text: str, *, adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR
+    session: Session,
+    text: str,
+    *,
+    adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR,
+    language_detector: LanguageDetector = DEFAULT_LANGUAGE_DETECTOR,
 ):
     """Generate, validate, and persist a new analysis run."""
+    detection = _normalize_language_detection(language_detector.detect(text))
+    language_error = detection.error_code
+    if language_error is None and detection.language not in SUPPORTED_LANGUAGES:
+        language_error = UNSUPPORTED_LANGUAGE
+
+    if language_error is not None:
+        return create_run(
+            session,
+            input_text=text,
+            analysis_json=None,
+            validation_report={
+                "checks": [
+                    {
+                        "stage": "language",
+                        "status": "failed",
+                        "error_code": language_error,
+                        "details": {
+                            "detected_language": detection.language,
+                            "language_confidence": detection.confidence,
+                        },
+                    }
+                ]
+            },
+            detected_language=detection.language,
+            language_confidence=detection.confidence,
+            model_id="not-run",
+            prompt_version="not-run",
+            run_status="failed",
+            validation_status="invalid",
+            error_code=language_error,
+            error_reason="Language detection failed",
+        )
+
     generation = _normalize_generation_result(adapter.generate_analysis(text))
     validation = validate_analysis_payload(generation.payload)
     analysis_json = validation.analysis.model_dump() if validation.analysis is not None else None
@@ -35,8 +92,8 @@ def create_analysis_run(
         input_text=text,
         analysis_json=analysis_json,
         validation_report=validation.report,
-        detected_language="de",
-        language_confidence=1.0,
+        detected_language=detection.language,
+        language_confidence=detection.confidence,
         model_id=generation.model_id,
         prompt_version=generation.prompt_version,
         run_status=validation.run_status,
@@ -65,8 +122,17 @@ def list_analysis_runs(session: Session):
 
 
 def rerun_analysis(
-    session: Session, run_id: int, *, adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR
+    session: Session,
+    run_id: int,
+    *,
+    adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR,
+    language_detector: LanguageDetector = DEFAULT_LANGUAGE_DETECTOR,
 ):
     """Create a fresh run from the input text of an existing run."""
     run = get_analysis_run_or_404(session, run_id)
-    return create_analysis_run(session, run.input_text, adapter=adapter)
+    return create_analysis_run(
+        session,
+        run.input_text,
+        adapter=adapter,
+        language_detector=language_detector,
+    )

@@ -1,46 +1,61 @@
+import json
 import os
 from pathlib import Path
 
 from app.llm.base import AnalysisGenerationResult
 
+try:
+    from openai import OpenAI
+except ImportError:  # pragma: no cover - exercised through runtime guard
+    OpenAI = None
+
 ROOT = Path(__file__).resolve().parents[3]
 PROMPT_PATH = ROOT / "prompts" / "v1" / "analysis.md"
+SCHEMA_PATH = ROOT / "schemas" / "analysis.schema.json"
 
 
 class OpenAIAnalysisGenerator:
-    """Placeholder adapter for a future OpenAI-backed analysis generator."""
+    """Generate SCM analyses via the OpenAI Responses API."""
 
     def __init__(
         self,
+        client=None,
         *,
-        model_id: str = "gpt-5.4-mini",
+        model_id: str = "gpt-5.2",
         api_key_env: str = "OPENAI_API_KEY",
     ) -> None:
         """Initialize the adapter with the configured model and API key env var."""
         self.model_id = model_id
         self.api_key_env = api_key_env
+        self.client = client
 
     def generate_analysis(self, text: str) -> AnalysisGenerationResult:
-        """Load the versioned prompt and return a placeholder analysis payload."""
+        """Call OpenAI with the versioned prompt and strict JSON schema output."""
         api_key = os.getenv(self.api_key_env)
         if not api_key:
             raise RuntimeError(f"Missing required environment variable: {self.api_key_env}")
 
-        prompt_template = PROMPT_PATH.read_text(encoding="utf-8")
+        if self.client is None:
+            if OpenAI is None:
+                raise RuntimeError("The `openai` package is required for the OpenAI adapter.")
+            self.client = OpenAI(api_key=api_key)
 
-        # Real provider wiring is intentionally deferred to a later iteration.
-        # M5 introduces the adapter boundary and prompt loading without using the network in tests.
-        payload = {
-            "beobachtungen": {
-                "zusammenfassung": f"OpenAI adapter placeholder for: {text}",
-                "punkte": [prompt_template.splitlines()[0] or "Prompt loaded"],
+        prompt_template = PROMPT_PATH.read_text(encoding="utf-8")
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        response = self.client.responses.create(
+            model=self.model_id,
+            instructions=prompt_template,
+            input=text,
+            text={
+                "format": {
+                    "type": "json_schema",
+                    "name": "scm_analysis",
+                    "schema": schema,
+                    "strict": True,
+                }
             },
-            "erklaerungen": {"zusammenfassung": "placeholder", "punkte": ["placeholder"]},
-            "emotionen": {"zusammenfassung": "placeholder", "punkte": ["placeholder"]},
-            "zuschreibungen": {"zusammenfassung": "placeholder", "punkte": ["placeholder"]},
-            "schlussfolgerungen": {"zusammenfassung": "placeholder", "punkte": ["placeholder"]},
-            "massnahmen": {"zusammenfassung": "placeholder", "punkte": ["placeholder"]},
-        }
+        )
+        payload = json.loads(response.output_text)
 
         return AnalysisGenerationResult(
             payload=payload,

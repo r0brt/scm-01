@@ -27,3 +27,17 @@
 - Stimulus: Texteingabe und Klick auf `Analyse starten`.
 - Erwartung: Ein neuer Run wird erzeugt und die Pipeline mit den sechs Ebenen wird sichtbar.
 - Nachweis: Playwright-E2E-Test fuer UJ1.
+
+## QS5: Deterministische Sprachvorpruefung
+
+- Szenario: Ein Nutzer sendet einen Text in `de`, `fr`, `en` oder in einer schlecht erkennbaren Mischform.
+- Stimulus: Start eines Analyse-Runs ueber API oder UI.
+- Erwartung: Das System erkennt unterstuetzte Sprachen lokal mit Confidence-Wert; bei `confidence < 0.80` oder nicht unterstuetzter Sprache endet der Run explizit als `failed`.
+- Nachweis: Backend-Tests fuer Sprachdetektion, Workflow und API.
+
+## QS6: Reale Providerintegration ohne Netz in Tests
+
+- Szenario: Die produktive Analyse soll OpenAI verwenden, waehrend Testlaeufe offline und reproduzierbar bleiben.
+- Stimulus: Konfiguration von `SCM_ANALYSIS_PROVIDER=openai` im Laufzeitsystem bzw. Fake-Adapter in Tests.
+- Erwartung: Der Produktionspfad verwendet den OpenAI-Adapter, Tests bleiben ohne externe Netzaufrufe stabil.
+- Nachweis: Adapter- und App-Factory-Tests mit injizierten Fakes sowie dokumentierte Laufzeitkonfiguration.
