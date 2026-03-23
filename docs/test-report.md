@@ -1,6 +1,6 @@
 # Test Report
 
-Stand: 2026-03-22
+Stand: 2026-03-23
 
 ## Ausgefuehrte Commands
 
@@ -13,7 +13,7 @@ uv run pytest -q
 
 Resultat:
 
-- `26 passed`
+- `39 passed in 0.84s`
 
 ### Frontend Unit/UI
 
@@ -24,7 +24,8 @@ npm run test -- --run
 
 Resultat:
 
-- `1 passed`
+- `1 file passed`
+- `2 tests passed`
 
 Hinweis:
 
@@ -39,7 +40,7 @@ npm run build
 
 Resultat:
 
-- `built in 430ms`
+- `built in 324ms`
 
 ### Frontend E2E
 
@@ -55,7 +56,7 @@ Resultat:
 ### Docker Compose
 
 ```bash
-docker compose up -d
+docker compose up --build -d
 docker compose ps
 docker compose down
 ```
@@ -73,6 +74,7 @@ Resultat:
 - API-zu-Persistenz-Integrationsfluss fuer Analyse, Liste, Detail und Rerun
 - UJ1-End-to-End-Nachweis: Texteingabe im Frontend, Analyse ausloesen, Pipeline sichtbar
 - lokaler Compose-Betrieb mit `frontend`, `api` und `db`
+- lokale Sprachdetektion fuer `de`, `fr` und `en` inkl. Fehlerpfaden fuer zu geringe Confidence und nicht unterstuetzte Sprache
 
 ## Bekannte Limitationen
 

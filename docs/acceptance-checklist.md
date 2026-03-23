@@ -1,6 +1,6 @@
 # Abnahmecheckliste
 
-Stand: 2026-03-22
+Stand: 2026-03-23
 
 ## Produkt und Architektur
 
@@ -18,9 +18,9 @@ Stand: 2026-03-22
 - [x] AC3: UI zeigt Pipeline oder klaren Fehlerzustand
 - [x] AC4: Analysen sind persistiert und abrufbar
 - [x] AC5: Unit-/Integrations-Tests reproduzierbar; ein E2E-Test fuer UJ1 vorhanden
-- [ ] AC6: echte Sprachdetektion ist noch nicht umgesetzt; der MVP setzt derzeit statisch `de`
+- [x] AC6: lokale Sprachdetektion fuer `de`, `fr` und `en` ist umgesetzt
 - [x] AC7: API-v1-Endpunkte sind implementiert und dokumentiert
-- [ ] AC8: spezifische Sprachdetektionsfehler sind noch nicht separat implementiert
+- [x] AC8: Sprachdetektionsfehler fuer geringe Confidence und nicht unterstuetzte Sprache sind separat implementiert
 
 ## Reproduzierbare Verifikation
 
@@ -35,5 +35,5 @@ Stand: 2026-03-22
 ## Offene Restpunkte
 
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP
-- [ ] Sprachdetektion gemaess AC6/AC8 ist noch offen
+- [ ] Mehrsprachigkeit ist bewusst auf `de`, `fr` und `en` begrenzt; weitere Sprachen bleiben moegliche Folgearbeit
 - [ ] Breitere E2E-Matrix und produktionsnahe Observability bleiben moegliche Folgearbeit
