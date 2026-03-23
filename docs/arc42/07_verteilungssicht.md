@@ -2,9 +2,9 @@
 
 Die initiale Deployment-Sicht bleibt bei einem containerisierten Setup aus UI, API und PostgreSQL via Docker Compose.
 
-Fuer M3 ist die Persistenz im Backend bereits relational modelliert. Die API schreibt Analyse-Runs in eine `runs`-Tabelle; produktiv ist dafuer PostgreSQL vorgesehen. Die lokalen Persistenztests laufen weiterhin mit SQLite, um den Entwicklungs- und Testloop ohne externe Datenbank schnell zu halten.
+Die Persistenz im Backend ist relational modelliert. Die API schreibt Analyse-Runs in eine `runs`-Tabelle; fuer den lokalen Zielbetrieb und fuer Compose wird PostgreSQL verwendet. Die lokalen Persistenztests laufen weiterhin mit SQLite, um den Entwicklungs- und Testloop ohne externe Datenbank schnell zu halten.
 
-Ab M5 bleibt die API weiterhin der einzige Einstiegspunkt fuer Analysen, delegiert die eigentliche Analyseerzeugung aber an einen austauschbaren LLM-Adapter. Fuer lokale und Test-Nutzung kann ein Stub-Adapter ohne Netz aktiv bleiben; produktiv ist eine OpenAI-basierte Implementierung vorgesehen.
+Die API bleibt der einzige Einstiegspunkt fuer Analysen, delegiert die eigentliche Analyseerzeugung aber an einen austauschbaren LLM-Adapter. Fuer lokale und Test-Nutzung kann ein Stub-Adapter ohne Netz aktiv bleiben; fuer reale Analysen steht eine OpenAI-basierte Implementierung zur Verfuegung.
 
 Mit M6 ist nun auch das Frontend als eigenstaendiger Baustein vorhanden. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermoeglicht den Export des aktuell gewaehlten Runs als JSON.
 

@@ -1,13 +1,11 @@
 # 06 Laufzeitsicht
 
-## Szenario 1: Verfügbarkeitsprüfung des Backend-Skeletons
+## Szenario 1: Verfuegbarkeitspruefung des Backends
 
 1. Ein Client ruft `GET /health` am Backend auf.
 2. Die FastAPI-Anwendung nimmt die Anfrage ohne weitere Abhängigkeiten entgegen.
 3. Das Backend antwortet mit HTTP `200`.
 4. Der Response-Body ist `{"status":"ok"}`.
-
-## Hinweis
 
 ## Szenario 2: Analyse eines Problemtexts via API v1
 
