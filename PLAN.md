@@ -170,7 +170,7 @@ Traceability: Jeder Meilenstein referenziert PRD-Elemente (FR/NFR/AC).
 
 * `cd backend && uv run pytest -q`
 * `cd frontend && npm run test -- --run && npm run build`
-* `docker compose up -d && docker compose ps`
+* `docker compose up --build -d && docker compose ps && docker compose down`
 * arc42 Kapitel 6/7/10/11 konsistent, ADRs aktuell
 
 ---

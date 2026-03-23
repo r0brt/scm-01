@@ -1,6 +1,6 @@
 # Social Cleanup Machine
 
-Dieses Repository enthält derzeit das Concept-/Conception-Pack des Projekts.
+Dieses Repository enthaelt den aktuellen MVP-Stand des Projekts inklusive Backend, Frontend, Persistenz, Docker-Compose-Betrieb und Projektdokumentation.
 
 ## Dokumentations-Navigation
 
@@ -111,7 +111,7 @@ Erreichbarkeit nach `up`:
 cd backend && uv run pytest -q
 cd frontend && npm run test -- --run
 cd frontend && npm run build
-docker compose up -d
+docker compose up --build -d
 docker compose ps
 docker compose down
 ```
