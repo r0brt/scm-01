@@ -6,6 +6,8 @@ Die Persistenz im Backend ist relational modelliert. Die API schreibt Analyse-Ru
 
 Die API bleibt der einzige Einstiegspunkt fuer Analysen, delegiert die eigentliche Analyseerzeugung aber an einen austauschbaren LLM-Adapter. Fuer lokale und Test-Nutzung kann ein Stub-Adapter ohne Netz aktiv bleiben; fuer reale Analysen steht eine OpenAI-basierte Implementierung zur Verfuegung.
 
+Die fachliche Quelle fuer die erzeugten Analyse-Payloads ist `docs/scm.md`. Deshalb muessen alle Laufzeitkomponenten im Compose-Betrieb denselben Vertrag fuer `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` verwenden; eine Rueckwaertskompatibilitaet zu frueheren Ebenennamen ist nicht vorgesehen.
+
 Mit M6 ist nun auch das Frontend als eigenstaendiger Baustein vorhanden. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermoeglicht den Export des aktuell gewaehlten Runs als JSON.
 
 Mit M8 ist der lokale Zielbetrieb ueber `docker compose` konkretisiert. Die Verteilung besteht aus drei Containern:

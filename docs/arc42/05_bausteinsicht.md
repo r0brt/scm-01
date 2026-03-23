@@ -13,3 +13,5 @@
 - API stellt Verträge, Orchestrierung, Fehlermapping und Persistenzzugriff bereit.
 - DB stellt dauerhafte, abfragbare Run-Historie sicher.
 - LLM-Provider liefert generierte Analyseinhalte unter strikten Contract-Checks.
+
+Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs muessen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rueckwaertskompatibel unterstuetzt.

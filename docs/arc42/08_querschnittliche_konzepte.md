@@ -2,7 +2,11 @@
 
 ## Analyse-Contract
 
-Die Analyseausgabe folgt einem strikten JSON-Contract. Die sechs Ebenen sind fest vorgegeben: `beobachtungen`, `erklaerungen`, `emotionen`, `zuschreibungen`, `schlussfolgerungen`, `massnahmen`. Zusätzliche Felder sind nicht erlaubt. Vertiefte semantische Prüfungen erfolgen erst in den späteren Validierungs- und Repair-Milestones.
+Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Quelle dafuer ist `docs/scm.md`. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusaetzliche Felder sind nicht erlaubt. Vertiefte semantische Pruefungen erfolgen erst in den spaeteren Validierungs- und Repair-Milestones.
+
+Jede Ebene folgt derselben Struktur mit `beschreibung` und `eintraege[].text`. Der Vertrag wird in Prompt, JSON Schema, Pydantic-Modellen, Persistenz-Payload und Frontend-Typen konsistent nachgezogen.
+
+Der Vertragswechsel ist bewusst nicht rueckwaertskompatibel. Bestehende alte Analyse-Payloads werden nicht implizit uebersetzt oder aliasiert.
 
 ## Validierung und Repair
 
@@ -34,7 +38,7 @@ Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sond
 
 Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt angefordertem JSON-Schema-Output. Offline-Tests injizieren weiterhin Fake- oder Stub-Adapter und fuehren keine Netzaufrufe aus.
 
-Prompts werden versioniert unter `prompts/v1/` abgelegt. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt.
+Prompts werden versioniert unter `prompts/v1/` abgelegt. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die in `docs/scm.md` definierten sechs Ebenen exakt anfordern.
 
 ## Betriebs- und Konfigurationskonzept
 
