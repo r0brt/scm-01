@@ -31,3 +31,38 @@ export type AnalysisRun = {
   error_reason: string | null;
   created_at: string;
 };
+
+export type PipelineStatus =
+  | "idle"
+  | "submitting"
+  | "result_received"
+  | "revealing"
+  | "completed"
+  | "failed";
+
+export type StageStatus = "idle" | "processing" | "completed";
+
+export type StageKey = keyof AnalysisJson;
+
+export type PipelineStageDefinition = {
+  key: StageKey;
+  title: string;
+  subtitle: string;
+  prompt: string;
+};
+
+export type PipelineStageViewModel = PipelineStageDefinition & {
+  status: StageStatus;
+  summary: string;
+  entries: AnalysisEntry[];
+};
+
+export type PipelineViewModel = {
+  headline: string;
+  status: PipelineStatus;
+  tone: "idle" | "processing" | "completed" | "failed";
+  description: string;
+  isTerminalError: boolean;
+  run: AnalysisRun | null;
+  stages: PipelineStageViewModel[];
+};

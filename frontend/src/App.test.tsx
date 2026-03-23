@@ -1,44 +1,47 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 
-function mockFetchSequence(runsOverride?: Array<Record<string, unknown>>) {
-  const runs = [
-    {
-      id: 1,
-      input_text: "Wohnungsnot",
-      analysis_json: {
-        symptome: { beschreibung: "A", eintraege: [{ text: "A" }] },
-        ursachen: { beschreibung: "B", eintraege: [{ text: "B" }] },
-        emotionen: { beschreibung: "C", eintraege: [{ text: "C" }] },
-        narrative: { beschreibung: "D", eintraege: [{ text: "D" }] },
-        mythen: { beschreibung: "E", eintraege: [{ text: "E" }] },
-        essenz: { beschreibung: "F", eintraege: [{ text: "F" }] },
-      },
-      validation_report: { checks: [{ stage: "schema", status: "passed" }] },
-      detected_language: "de",
-      language_confidence: 1,
-      model_id: "fake-api-model",
-      prompt_version: "v-fake",
-      run_status: "completed",
-      validation_status: "valid",
-      error_code: null,
-      error_reason: null,
-      created_at: "2026-03-22T10:00:00Z",
+function buildSuccessfulRun() {
+  return {
+    id: 1,
+    input_text: "Wohnungsnot",
+    analysis_json: {
+      symptome: { beschreibung: "Oberflaechliche Signale", eintraege: [{ text: "A" }] },
+      ursachen: { beschreibung: "Strukturelle Gruende", eintraege: [{ text: "B" }] },
+      emotionen: { beschreibung: "Affektive Ladung", eintraege: [{ text: "C" }] },
+      narrative: { beschreibung: "Storylines", eintraege: [{ text: "D" }] },
+      mythen: { beschreibung: "Fehlannahmen", eintraege: [{ text: "E" }] },
+      essenz: { beschreibung: "Kernaussage", eintraege: [{ text: "F" }] },
     },
-  ];
-  const selectedRuns = runsOverride ?? runs;
+    validation_report: { checks: [{ stage: "schema", status: "passed" }] },
+    detected_language: "de",
+    language_confidence: 1,
+    model_id: "fake-api-model",
+    prompt_version: "v-fake",
+    run_status: "completed",
+    validation_status: "valid",
+    error_code: null,
+    error_reason: null,
+    created_at: "2026-03-22T10:00:00Z",
+  };
+}
 
+function mockCreateFlow(run = buildSuccessfulRun()) {
   globalThis.fetch = vi
     .fn()
     .mockResolvedValueOnce(new Response(JSON.stringify([]), { status: 200 }))
-    .mockResolvedValueOnce(new Response(JSON.stringify(selectedRuns[0]), { status: 201 }))
-    .mockResolvedValueOnce(new Response(JSON.stringify(selectedRuns), { status: 200 }));
+    .mockResolvedValueOnce(new Response(JSON.stringify(run), { status: 201 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify([run]), { status: 200 }));
 }
 
-test("renders a filter machine with language metadata and six visible modules", async () => {
-  mockFetchSequence();
+function getStageCard(name: string) {
+  return screen.getByRole("article", { name: `Stage ${name}` });
+}
+
+test("reveals the six pipeline stages sequentially after a successful analysis", async () => {
+  mockCreateFlow();
   const user = userEvent.setup();
 
   render(<App />);
@@ -48,25 +51,26 @@ test("renders a filter machine with language metadata and six visible modules", 
   await user.type(screen.getByLabelText("Problemtext"), "Wohnungsnot");
   await user.click(screen.getByRole("button", { name: "Analyse starten" }));
 
+  expect(await screen.findByRole("heading", { name: "Analyse empfangen" })).toBeInTheDocument();
+
+  expect(within(getStageCard("Symptome")).getByText("Status: processing")).toBeInTheDocument();
+  expect(within(getStageCard("Ursachen")).getByText("Status: idle")).toBeInTheDocument();
+  expect(screen.getByText("Sprache · DE")).toBeInTheDocument();
+
   await waitFor(() => {
-    expect(screen.getByText("Wohnungsnot")).toBeInTheDocument();
+    expect(within(getStageCard("Symptome")).getByText("Status: completed")).toBeInTheDocument();
+    expect(within(getStageCard("Ursachen")).getByText("Status: processing")).toBeInTheDocument();
   });
 
-  expect(screen.getByRole("heading", { name: "Filtermaschine" })).toBeInTheDocument();
-  expect(screen.getByText("Sprache · DE")).toBeInTheDocument();
-  expect(screen.getByText("Sprachcheck")).toBeInTheDocument();
-  expect(screen.getByText("Analyse")).toBeInTheDocument();
-  expect(screen.getByText("Validierung")).toBeInTheDocument();
-  expect(screen.getByText("Symptome")).toBeInTheDocument();
-  expect(screen.getByText("Ursachen")).toBeInTheDocument();
-  expect(screen.getByText("Emotionen")).toBeInTheDocument();
-  expect(screen.getByText("Narrative")).toBeInTheDocument();
-  expect(screen.getByText("Mythen")).toBeInTheDocument();
-  expect(screen.getByText("Essenz")).toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.getByRole("heading", { name: "Pipeline abgeschlossen" })).toBeInTheDocument();
+  });
+
+  expect(within(getStageCard("Essenz")).getByText("Status: completed")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "JSON exportieren" })).toBeInTheDocument();
 });
 
-test("shows a visible machine stop when language detection fails", async () => {
+test("shows a global stop state and keeps all stages idle when the run failed", async () => {
   globalThis.fetch = vi.fn().mockResolvedValueOnce(
     new Response(
       JSON.stringify([
@@ -93,10 +97,11 @@ test("shows a visible machine stop when language detection fails", async () => {
   render(<App />);
 
   await waitFor(() => {
-    expect(screen.getByRole("heading", { name: "Sprachcheck blockiert" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Maschine blockiert" })).toBeInTheDocument();
   });
 
   expect(screen.getByText("LANGUAGE_CONFIDENCE_TOO_LOW")).toBeInTheDocument();
   expect(screen.getByText("Sprache · FR")).toBeInTheDocument();
-  expect(screen.getByText("Confidence · 0.41")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).getByText("Status: idle")).toBeInTheDocument();
+  expect(within(getStageCard("Essenz")).getByText("Status: idle")).toBeInTheDocument();
 });
