@@ -14,6 +14,7 @@ from app.services.validation import validate_analysis_payload
 
 DEFAULT_ANALYSIS_GENERATOR = StubAnalysisGenerator()
 DEFAULT_LANGUAGE_DETECTOR = LocalLanguageDetector()
+OUTPUT_LANGUAGE_MISMATCH = "OUTPUT_LANGUAGE_MISMATCH"
 
 
 def _normalize_generation_result(
@@ -83,15 +84,52 @@ def create_analysis_run(
             error_reason="Language detection failed",
         )
 
-    generation = _normalize_generation_result(adapter.generate_analysis(text))
+    generation = _normalize_generation_result(
+        adapter.generate_analysis(text, language=detection.language)
+    )
     validation = validate_analysis_payload(generation.payload)
     analysis_json = validation.analysis.model_dump() if validation.analysis is not None else None
+    validation_report = validation.report
+
+    if analysis_json is not None:
+        output_text = _flatten_analysis_text(analysis_json)
+        output_detection = _normalize_language_detection(language_detector.detect(output_text))
+        if output_detection.error_code is not None or output_detection.language != detection.language:
+            validation_report = {
+                "checks": [
+                    *validation.report["checks"],
+                    {
+                        "stage": "output_language",
+                        "status": "failed",
+                        "error_code": OUTPUT_LANGUAGE_MISMATCH,
+                        "details": {
+                            "expected_language": detection.language,
+                            "detected_language": output_detection.language,
+                            "language_confidence": output_detection.confidence,
+                        },
+                    },
+                ]
+            }
+            return create_run(
+                session,
+                input_text=text,
+                analysis_json=None,
+                validation_report=validation_report,
+                detected_language=detection.language,
+                language_confidence=detection.confidence,
+                model_id=generation.model_id,
+                prompt_version=generation.prompt_version,
+                run_status="failed",
+                validation_status="invalid",
+                error_code=OUTPUT_LANGUAGE_MISMATCH,
+                error_reason="Output language does not match detected input language",
+            )
 
     return create_run(
         session,
         input_text=text,
         analysis_json=analysis_json,
-        validation_report=validation.report,
+        validation_report=validation_report,
         detected_language=detection.language,
         language_confidence=detection.confidence,
         model_id=generation.model_id,
@@ -101,6 +139,21 @@ def create_analysis_run(
         error_code=validation.error_code,
         error_reason=None if validation.error_code is None else "Stub validation failed",
     )
+
+
+def _flatten_analysis_text(payload: dict) -> str:
+    parts: list[str] = []
+    for level in payload.values():
+        if not isinstance(level, dict):
+            continue
+        beschreibung = level.get("beschreibung")
+        if isinstance(beschreibung, str):
+            parts.append(beschreibung)
+        for entry in level.get("eintraege", []):
+            text = entry.get("text") if isinstance(entry, dict) else None
+            if isinstance(text, str):
+                parts.append(text)
+    return "\n".join(parts)
 
 
 def get_analysis_run_or_404(session: Session, run_id: int):

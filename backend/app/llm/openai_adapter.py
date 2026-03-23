@@ -10,8 +10,14 @@ except ImportError:  # pragma: no cover - exercised through runtime guard
     OpenAI = None
 
 ROOT = Path(__file__).resolve().parents[3]
-PROMPT_PATH = ROOT / "prompts" / "v1" / "analysis.md"
+PROMPT_PATH = ROOT / "prompts" / "v2" / "analysis.md"
 SCHEMA_PATH = ROOT / "schemas" / "analysis.schema.json"
+
+LANGUAGE_NAMES = {
+    "de": "German",
+    "fr": "French",
+    "en": "English",
+}
 
 
 class OpenAIAnalysisGenerator:
@@ -29,7 +35,9 @@ class OpenAIAnalysisGenerator:
         self.api_key_env = api_key_env
         self.client = client
 
-    def generate_analysis(self, text: str) -> AnalysisGenerationResult:
+    def generate_analysis(
+        self, text: str, *, language: str | None = None
+    ) -> AnalysisGenerationResult:
         """Call OpenAI with the versioned prompt and strict JSON schema output."""
         api_key = os.getenv(self.api_key_env)
         if not api_key:
@@ -42,10 +50,18 @@ class OpenAIAnalysisGenerator:
 
         prompt_template = PROMPT_PATH.read_text(encoding="utf-8")
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        language_key = language or "de"
+        language_name = LANGUAGE_NAMES.get(language_key, language_key)
+        prompt_input = (
+            f"Detected input language: {language_key}\n"
+            f"All beschreibung and text fields must be written in {language_name}.\n"
+            "Do not mix languages in the output.\n\n"
+            f"Problem text:\n{text}"
+        )
         response = self.client.responses.create(
             model=self.model_id,
             instructions=prompt_template,
-            input=text,
+            input=prompt_input,
             text={
                 "format": {
                     "type": "json_schema",
@@ -60,5 +76,5 @@ class OpenAIAnalysisGenerator:
         return AnalysisGenerationResult(
             payload=payload,
             model_id=self.model_id,
-            prompt_version="v1",
+            prompt_version="v2",
         )

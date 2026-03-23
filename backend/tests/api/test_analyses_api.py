@@ -19,7 +19,7 @@ class FakeLanguageDetector:
 
 
 class FakeAdapter:
-    def generate_analysis(self, text: str):
+    def generate_analysis(self, text: str, *, language: str | None = None):
         return {
             "payload": {
                 "symptome": {"beschreibung": text, "eintraege": [{"text": f"{text}-symptom"}]},
