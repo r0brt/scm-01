@@ -286,11 +286,11 @@ h3 {
   width: 0.38rem;
 }
 
-.level-card-beobachtungen::before {
+.level-card-symptome::before {
   background: linear-gradient(180deg, #8ad7ff, #37718f);
 }
 
-.level-card-erklaerungen::before {
+.level-card-ursachen::before {
   background: linear-gradient(180deg, #8ec5a4, #2f7a53);
 }
 
@@ -298,15 +298,15 @@ h3 {
   background: linear-gradient(180deg, #ff9c6e, #b7562d);
 }
 
-.level-card-zuschreibungen::before {
+.level-card-narrative::before {
   background: linear-gradient(180deg, #f0d06c, #9b7b21);
 }
 
-.level-card-schlussfolgerungen::before {
+.level-card-mythen::before {
   background: linear-gradient(180deg, #d8a2ff, #7b45a5);
 }
 
-.level-card-massnahmen::before {
+.level-card-essenz::before {
   background: linear-gradient(180deg, #ff8b95, #a93f4a);
 }
 

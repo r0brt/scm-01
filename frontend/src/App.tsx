@@ -5,12 +5,12 @@ import "./styles.css";
 import type { AnalysisRun } from "./types";
 
 const LEVELS = [
-  ["beobachtungen", "Beobachtungen", "Was liegt als Rohsignal sichtbar vor?"],
-  ["erklaerungen", "Erklaerungen", "Welche Deutungen verbinden die Signale?"],
+  ["symptome", "Symptome", "Welche beobachtbaren Phaenomene treten im Problemfeld hervor?"],
+  ["ursachen", "Ursachen", "Welche Erklaerungsansaetze werden fuer die Symptome genannt?"],
   ["emotionen", "Emotionen", "Welche Spannungen und Affekte werden aktiviert?"],
-  ["zuschreibungen", "Zuschreibungen", "Welche Rollen, Schuld oder Identitaeten werden verteilt?"],
-  ["schlussfolgerungen", "Schlussfolgerungen", "Welche Zuspitzung wird daraus abgeleitet?"],
-  ["massnahmen", "Massnahmen", "Welche Handlung wird als Konsequenz vorgeschlagen?"],
+  ["narrative", "Narrative", "Welche Erzaehlmuster oder Frames strukturieren den Diskurs?"],
+  ["mythen", "Mythen", "Welche Fehlannahmen oder vereinfachenden Zuschreibungen tauchen auf?"],
+  ["essenz", "Essenz", "Welche wertfreie Kernaussage bleibt nach der Filterstrecke uebrig?"],
 ] as const;
 
 const MACHINE_STAGES = [
@@ -219,7 +219,7 @@ export default function App() {
               <div className="pipeline-grid">
                 {LEVELS.map(([key, label, guidingQuestion]) => {
                   const level = selectedRun.analysis_json?.[key];
-                  const visiblePoints = (level?.punkte ?? []).slice(0, 3);
+                  const visibleEntries = (level?.eintraege ?? []).slice(0, 3);
                   return (
                     <article className={`level-card level-card-${key}`} key={key}>
                       <div className="level-head">
@@ -227,13 +227,13 @@ export default function App() {
                         <h3>{label}</h3>
                         <span>{guidingQuestion}</span>
                       </div>
-                      <p className="level-summary">{level?.zusammenfassung ?? "Keine Daten"}</p>
+                      <p className="level-summary">{level?.beschreibung ?? "Keine Daten"}</p>
                       <ul>
-                        {visiblePoints.map((point) => (
-                          <li key={point}>{point}</li>
+                        {visibleEntries.map((entry) => (
+                          <li key={entry.text}>{entry.text}</li>
                         ))}
                       </ul>
-                      {!visiblePoints.length ? <p className="level-empty">Modul ohne Ausgabe.</p> : null}
+                      {!visibleEntries.length ? <p className="level-empty">Modul ohne Ausgabe.</p> : null}
                     </article>
                   );
                 })}

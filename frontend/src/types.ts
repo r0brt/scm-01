@@ -1,15 +1,19 @@
+export type AnalysisEntry = {
+  text: string;
+};
+
 export type AnalysisLevel = {
-  zusammenfassung: string;
-  punkte: string[];
+  beschreibung: string;
+  eintraege: AnalysisEntry[];
 };
 
 export type AnalysisJson = {
-  beobachtungen: AnalysisLevel;
-  erklaerungen: AnalysisLevel;
+  symptome: AnalysisLevel;
+  ursachen: AnalysisLevel;
   emotionen: AnalysisLevel;
-  zuschreibungen: AnalysisLevel;
-  schlussfolgerungen: AnalysisLevel;
-  massnahmen: AnalysisLevel;
+  narrative: AnalysisLevel;
+  mythen: AnalysisLevel;
+  essenz: AnalysisLevel;
 };
 
 export type AnalysisRun = {
