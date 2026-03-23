@@ -17,12 +17,16 @@ services:
 
   api:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     depends_on:
       db:
         condition: service_healthy
     environment:
       SCM_DATABASE_URL: ${SCM_DATABASE_URL:-postgresql+psycopg://scm:scm@db:5432/scm}
+      SCM_ANALYSIS_PROVIDER: ${SCM_ANALYSIS_PROVIDER:-stub}
+      SCM_OPENAI_MODEL: ${SCM_OPENAI_MODEL:-gpt-5.2}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     ports:
       - "8000:8000"
 

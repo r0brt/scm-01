@@ -5,9 +5,11 @@ WORKDIR /app
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1
 
-COPY pyproject.toml uv.lock alembic.ini ./
-COPY alembic ./alembic
-COPY app ./app
+COPY backend/pyproject.toml backend/uv.lock backend/alembic.ini ./
+COPY backend/alembic ./alembic
+COPY backend/app ./app
+COPY prompts /prompts
+COPY schemas /schemas
 
 RUN uv sync --frozen --no-dev
 
