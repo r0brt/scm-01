@@ -13,7 +13,6 @@ function formatConfidence(confidence: number | null | undefined): string {
 
 type PipelineViewProps = {
   viewModel: PipelineViewModel;
-  onExport: () => void;
 };
 
 function getPreviewEntries(stage: PipelineStageViewModel) {
@@ -21,7 +20,7 @@ function getPreviewEntries(stage: PipelineStageViewModel) {
 }
 
 function getProcessingEntries(stage: PipelineStageViewModel) {
-  return stage.entries.slice(0, stage.key === "essenz" ? 3 : 2);
+  return stage.entries.slice(0, 2);
 }
 
 function getStageToggleHint(stage: PipelineStageViewModel, expanded: boolean) {
@@ -61,7 +60,7 @@ function getCompactSummary(stageKey: StageKey) {
   return compactSummaryByStage[stageKey];
 }
 
-export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
+export function PipelineView({ viewModel }: PipelineViewProps) {
   const run = viewModel.run;
   const lastStageKey = viewModel.stages[viewModel.stages.length - 1]?.key;
   const activeStage = viewModel.stages.find((stage) => stage.status === "processing") ?? null;
@@ -76,19 +75,15 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
   );
   const activeStageRef = useRef<HTMLElement | null>(null);
   const [expandedStageKeys, setExpandedStageKeys] = useState<StageKey[]>([]);
-  const completedStageKeys = viewModel.stages
-    .filter((stage) => stage.status === "completed")
-    .map((stage) => stage.key);
-  const areAllCompletedStagesExpanded =
-    viewModel.status === "completed" &&
-    completedStageKeys.length > 0 &&
-    completedStageKeys.every((key) => key === "essenz" || expandedStageKeys.includes(key));
   const timelineStyle = {
     "--active-stage-index": activeStageIndex,
   } as CSSProperties;
+  const processingHeadline = activeStage
+    ? `Analyse laeuft - ${activeStage.title} wird analysiert`
+    : "Analyse laeuft";
 
   useEffect(() => {
-    setExpandedStageKeys(viewModel.status === "completed" ? ["essenz"] : []);
+    setExpandedStageKeys([]);
   }, [run?.id, viewModel.status]);
 
   useEffect(() => {
@@ -104,9 +99,6 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
 
   function isStageExpanded(stage: PipelineStageViewModel) {
     if (stage.status === "processing") {
-      return true;
-    }
-    if (viewModel.status === "completed" && stage.key === "essenz") {
       return true;
     }
     return stage.status === "completed" && expandedStageKeys.includes(stage.key);
@@ -128,16 +120,6 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
     });
   }
 
-  function toggleAllCompletedStages() {
-    if (viewModel.status !== "completed") {
-      return;
-    }
-
-    setExpandedStageKeys(
-      areAllCompletedStagesExpanded ? ["essenz"] : completedStageKeys,
-    );
-  }
-
   function renderStageCard(
     stage: PipelineStageViewModel,
     options?: {
@@ -153,11 +135,14 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
     const processingEntries = getProcessingEntries(stage);
     const toggleHint = getStageToggleHint(stage, expanded);
     const shouldShowFullDetails = expanded && stage.status === "completed";
-    const shouldShowProcessingNote = stage.entries.length > processingEntries.length && stage.key === "essenz";
+    const shouldShowCompactSummary = compactProcessing && stage.status === "processing";
     const shouldRenderContent = stage.status !== "idle";
     const isTerminal = stage.key === lastStageKey;
     const compactSummary = getCompactSummary(stage.key);
     const fullSummary = stage.summary.trim() || compactSummary;
+    const reviewBulletLimit = stage.key === "essenz" ? 3 : 2;
+    const hasReviewDetails = reviewMode && stage.entries.length > reviewBulletLimit;
+    const reviewEntries = shouldShowFullDetails ? stage.entries : stage.entries.slice(0, reviewBulletLimit);
     function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -171,6 +156,7 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
         className={[
           "stage-card",
           reviewMode ? "stage-card-review" : "stage-card-flow",
+          reviewMode && stage.key === "essenz" ? "stage-card-review-essence" : "",
           compactProcessing ? "stage-card-flow-focus" : "",
           getStageFlowClass(stage),
           `stage-card-${stage.status}`,
@@ -191,20 +177,41 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
           <div>
             <h3>{stage.title}</h3>
           </div>
-          <span className={`stage-status stage-status-${stage.status}`}>Status: {stage.status}</span>
+          {!compactProcessing && !reviewMode ? (
+            <span className={`stage-status stage-status-${stage.status}`}>Status: {stage.status}</span>
+          ) : null}
         </div>
         {stage.status === "processing" ? <div className="stage-signal" aria-hidden="true" /> : null}
         {shouldRenderContent ? (
           <div className="stage-content">
             {stage.status === "processing" ? (
               <>
+                {shouldShowCompactSummary ? <p className="stage-summary">{compactSummary}</p> : null}
                 <ul className="stage-entries stage-entries-processing">
                   {processingEntries.map((entry) => (
                     <li key={entry.text}>{entry.text}</li>
                   ))}
                 </ul>
-                {shouldShowProcessingNote ? (
-                  <p className="stage-archive-note">Details folgen im Review</p>
+              </>
+            ) : reviewMode ? (
+              <>
+                <p className="stage-summary">{fullSummary}</p>
+                <ul className="stage-entries">
+                  {reviewEntries.map((entry) => (
+                    <li key={entry.text}>{entry.text}</li>
+                  ))}
+                </ul>
+                {hasReviewDetails ? (
+                  <button
+                    className="stage-details-toggle"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleStage(stage);
+                    }}
+                    type="button"
+                  >
+                    {shouldShowFullDetails ? "Details ausblenden" : "Details anzeigen"}
+                  </button>
                 ) : null}
               </>
             ) : shouldShowFullDetails ? (
@@ -228,12 +235,14 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
                 {toggleHint ? <p className="stage-archive-note">{toggleHint}</p> : null}
               </>
             )}
-            {!stage.entries.length ? <p className="stage-empty">Noch kein strukturierter Output.</p> : null}
+            {!stage.entries.length && !compactProcessing ? (
+              <p className="stage-empty">Noch kein strukturierter Output.</p>
+            ) : null}
           </div>
         ) : (
           <p className="stage-empty">{compactProcessing ? "Wartet" : "Bereit"}</p>
         )}
-        {isTerminal ? (
+        {isTerminal && !compactProcessing && !reviewMode ? (
           <p className="stage-terminal-label">
             {stage.status === "completed" ? "Finales Kondensat" : "Finaler Destillationspunkt"}
           </p>
@@ -246,26 +255,22 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
     <section className={`pipeline-panel pipeline-panel-${viewModel.status}`}>
       <div className="panel-header">
         <div>
-          <p className="panel-kicker">Filterstrecke</p>
+          {isProcessingMode ? (
+            <p className="panel-live-status">{processingHeadline}</p>
+          ) : (
+            <p className="panel-kicker">Filterstrecke</p>
+          )}
         </div>
-        {viewModel.status === "completed" ? (
-          <div className="panel-actions">
-            <button className="secondary-action" onClick={toggleAllCompletedStages} type="button">
-              {areAllCompletedStagesExpanded ? "Alle reduzieren" : "Alle oeffnen"}
-            </button>
-            <button className="secondary-action secondary-action-ghost" disabled={!run} onClick={onExport} type="button">
-              JSON exportieren
-            </button>
-          </div>
-        ) : null}
       </div>
 
-      <div className={`machine-status machine-status-${viewModel.tone} ${isReviewMode ? "machine-status-review" : "machine-status-flow"}`}>
-        <strong>{viewModel.headline}</strong>
-        {!isReviewMode ? <span>{viewModel.description}</span> : null}
-      </div>
+      {!isProcessingMode && !isReviewMode ? (
+        <div className={`machine-status machine-status-${viewModel.tone} ${isReviewMode ? "machine-status-review" : "machine-status-flow"}`}>
+          <strong>{viewModel.headline}</strong>
+          {!isReviewMode ? <span>{viewModel.description}</span> : null}
+        </div>
+      ) : null}
 
-      {run && (viewModel.status === "completed" || viewModel.status === "failed") ? (
+      {run && viewModel.status === "failed" ? (
         <div className="run-meta">
           <span>Sprache · {formatLanguage(run.detected_language)}</span>
           <span>Modell · {run.model_id}</span>
@@ -315,7 +320,7 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
           </div>
 
           <div className="pipeline-viewport pipeline-viewport-complete">
-            <div className="pipeline-timeline" aria-label="Analysepipeline">
+            <div className="pipeline-timeline pipeline-timeline-review" aria-label="Analysepipeline">
               {viewModel.stages.map((stage) => renderStageCard(stage, { reviewMode: true }))}
             </div>
           </div>
