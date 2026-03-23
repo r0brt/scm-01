@@ -1,5 +1,7 @@
 # Real LLM Filter Machine Design
 
+> Archivhinweis: Diese Spec beschreibt weiterhin die historische Filtermaschinen-Gestaltungsidee, verwendet aber teilweise alte Ebenenamen. Fuer den aktuellen fachlichen Vertrag auf `main` gelten `docs/scm.md`, `docs/prd.md` und `schemas/analysis.schema.json`.
+
 ## Ziel
 
 SCM soll vom technisch funktionierenden MVP-Geruest zu einer fachlich glaubwuerdigen, visuell markanten Filtermaschine ausgebaut werden. Dazu werden zwei Luecken geschlossen: echte LLM-Integration statt Stub und reale Sprachdetektion gemaess PRD. Parallel wird das bestehende Frontend nicht ersetzt, sondern in eine lineare, industrialisierte Filterstrecke weiterentwickelt.

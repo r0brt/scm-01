@@ -1,5 +1,7 @@
 # M1 Analysis Contract Design
 
+> Archivhinweis: Diese historische Spec dokumentiert einen frueheren Vertragsstand. Der aktuelle fachliche Vertrag liegt auf `main` in `docs/scm.md`, `docs/prd.md` und `schemas/analysis.schema.json` bei `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`.
+
 ## Ziel
 
 M1 definiert den ersten verbindlichen Analysevertrag fuer SCM. Der Deliverable umfasst ein versioniertes JSON Schema, passende Pydantic-Modelle im Backend, Contract-Tests sowie Fixtures fuer Eingabetexte und gueltige/ungueltige JSON-Beispiele.
