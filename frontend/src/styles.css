@@ -329,7 +329,7 @@ h3 {
 .pipeline-timeline {
   position: relative;
   display: grid;
-  gap: 1.25rem;
+  gap: 0.95rem;
   padding: 0.35rem 0 0.35rem 1.55rem;
 }
 
@@ -344,11 +344,27 @@ h3 {
     linear-gradient(180deg, rgba(90, 131, 255, 0.5), rgba(255, 255, 255, 0.08) 38%, rgba(242, 240, 236, 0.38));
 }
 
+.pipeline-timeline::after {
+  content: "";
+  position: absolute;
+  left: 0.26rem;
+  width: 0.44rem;
+  height: 3.1rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(90, 131, 255, 0.9), rgba(242, 240, 236, 0.26));
+  box-shadow: 0 0 1.2rem rgba(90, 131, 255, 0.35);
+  opacity: 0;
+  transform: translateY(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
 .stage-card {
   position: relative;
   display: grid;
-  gap: 0.78rem;
-  padding: 1.15rem 1.15rem 1.2rem 1.4rem;
+  gap: 0.58rem;
+  padding: 0.95rem 1rem 1rem 1.2rem;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%),
     rgba(18, 18, 19, 0.98);
@@ -357,12 +373,18 @@ h3 {
   box-shadow:
     0 14px 28px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease,
+    background 180ms ease;
 }
 
 .stage-card::before {
   content: "";
   position: absolute;
-  top: 1.4rem;
+  top: 1.15rem;
   left: -1.48rem;
   width: 0.85rem;
   height: 0.85rem;
@@ -379,16 +401,28 @@ h3 {
   background: var(--idle);
 }
 
+.stage-card-closed {
+  gap: 0.34rem;
+  padding-top: 0.82rem;
+  padding-bottom: 0.82rem;
+}
+
+.stage-card-closed .stage-prompt {
+  display: none;
+}
+
 .stage-card-processing {
   border-left-color: var(--processing);
   box-shadow:
     0 18px 34px rgba(0, 0, 0, 0.38),
     inset 0 0 0 1px rgba(77, 125, 255, 0.28);
+  transform: translateX(0.35rem);
 }
 
 .stage-card-processing::before {
   background: var(--processing);
   box-shadow: 0 0 0 0.38rem rgba(77, 125, 255, 0.18);
+  animation: stage-pulse 900ms ease-in-out infinite;
 }
 
 .stage-card-completed {
@@ -401,7 +435,7 @@ h3 {
 }
 
 .stage-card-terminal {
-  padding-bottom: 1.45rem;
+  padding-bottom: 1.2rem;
   background:
     linear-gradient(180deg, rgba(242, 240, 236, 0.06), rgba(255, 255, 255, 0.01) 42%),
     rgba(16, 16, 17, 0.99);
@@ -420,6 +454,12 @@ h3 {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.stage-content {
+  display: grid;
+  gap: 0.55rem;
+  animation: stage-reveal 220ms ease;
 }
 
 .stage-status {
@@ -453,21 +493,22 @@ h3 {
 
 .stage-prompt {
   color: rgba(255, 255, 255, 0.58);
-  font-size: 0.88rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .stage-summary {
-  font-size: 1.04rem;
-  line-height: 1.55;
+  font-size: 0.96rem;
+  line-height: 1.45;
 }
 
 .stage-entries {
   margin: 0;
   padding-left: 1rem;
   display: grid;
-  gap: 0.35rem;
+  gap: 0.24rem;
+  font-size: 0.92rem;
 }
 
 .stage-entries li::marker {
@@ -475,11 +516,27 @@ h3 {
 }
 
 .stage-terminal-label {
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;
   color: rgba(242, 240, 236, 0.72);
   font-size: 0.74rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.stage-card-processing.stage-card-terminal {
+  transform: translateX(0.35rem) scale(1.01);
+}
+
+.stage-card-processing + .stage-card::before {
+  box-shadow: 0 0 0 0.24rem rgba(90, 131, 255, 0.08);
+}
+
+.stage-card-processing ~ .stage-card {
+  opacity: 0.68;
+}
+
+.stage-card-processing ~ .stage-card .stage-empty {
+  color: rgba(246, 239, 229, 0.42);
 }
 
 .runs-panel {
@@ -530,6 +587,57 @@ h3 {
   color: var(--muted-text);
 }
 
+.pipeline-timeline:has(.stage-card-processing)::after {
+  opacity: 1;
+}
+
+.pipeline-timeline:has(.stage-card-processing:nth-of-type(1))::after {
+  transform: translateY(0.2rem);
+}
+
+.pipeline-timeline:has(.stage-card-processing:nth-of-type(2))::after {
+  transform: translateY(8rem);
+}
+
+.pipeline-timeline:has(.stage-card-processing:nth-of-type(3))::after {
+  transform: translateY(15.8rem);
+}
+
+.pipeline-timeline:has(.stage-card-processing:nth-of-type(4))::after {
+  transform: translateY(23.6rem);
+}
+
+.pipeline-timeline:has(.stage-card-processing:nth-of-type(5))::after {
+  transform: translateY(31.4rem);
+}
+
+.pipeline-timeline:has(.stage-card-processing:nth-of-type(6))::after {
+  transform: translateY(39.2rem);
+}
+
+@keyframes stage-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0.3rem rgba(77, 125, 255, 0.16);
+  }
+
+  50% {
+    box-shadow: 0 0 0 0.5rem rgba(77, 125, 255, 0.08);
+  }
+}
+
+@keyframes stage-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 900px) {
   .workspace-grid {
     grid-template-columns: 1fr;
@@ -557,5 +665,25 @@ h3 {
 
   .pipeline-caption {
     display: none;
+  }
+
+  .pipeline-timeline:has(.stage-card-processing:nth-of-type(2))::after {
+    transform: translateY(7rem);
+  }
+
+  .pipeline-timeline:has(.stage-card-processing:nth-of-type(3))::after {
+    transform: translateY(13.8rem);
+  }
+
+  .pipeline-timeline:has(.stage-card-processing:nth-of-type(4))::after {
+    transform: translateY(20.6rem);
+  }
+
+  .pipeline-timeline:has(.stage-card-processing:nth-of-type(5))::after {
+    transform: translateY(27.4rem);
+  }
+
+  .pipeline-timeline:has(.stage-card-processing:nth-of-type(6))::after {
+    transform: translateY(34.2rem);
   }
 }
