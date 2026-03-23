@@ -10,7 +10,7 @@ except ImportError:  # pragma: no cover - exercised through runtime guard
     OpenAI = None
 
 ROOT = Path(__file__).resolve().parents[3]
-PROMPT_PATH = ROOT / "prompts" / "v1" / "analysis.md"
+PROMPT_PATH = ROOT / "prompts" / "v2" / "analysis.md"
 SCHEMA_PATH = ROOT / "schemas" / "analysis.schema.json"
 
 LANGUAGE_NAMES = {
@@ -76,5 +76,5 @@ class OpenAIAnalysisGenerator:
         return AnalysisGenerationResult(
             payload=payload,
             model_id=self.model_id,
-            prompt_version="v1",
+            prompt_version="v2",
         )
