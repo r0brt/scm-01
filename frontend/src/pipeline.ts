@@ -9,7 +9,15 @@ import type {
   StageStatus,
 } from "./types";
 
-export const REVEAL_INTERVAL_MS = 120;
+function getRevealTimings() {
+  const globalScope = globalThis as typeof globalThis & { __SCM_TEST_MODE__?: boolean };
+  const isTestMode = globalScope.__SCM_TEST_MODE__ === true;
+
+  return {
+    startDelayMs: isTestMode ? 10 : 1400,
+    intervalMs: isTestMode ? 40 : 3400,
+  };
+}
 
 export const PIPELINE_STAGES: PipelineStageDefinition[] = [
   {
@@ -80,19 +88,31 @@ function buildStageStatuses(activeIndex: number | null, completedThrough: number
 
 function buildIdleViewModel(): PipelineViewModel {
   return {
-    headline: "Maschine bereit",
+    headline: "Bereit zur Analyse",
     status: "idle",
     tone: "idle",
-    description: "Rohtext einspeisen und die Analyse gezielt starten.",
+    description: "Problemtext eingeben und starten.",
     isTerminalError: false,
     run: null,
     stages: buildStages(null, buildStageStatuses(null, -1)),
   };
 }
 
+function buildSubmittingViewModel(run: AnalysisRun | null): PipelineViewModel {
+  return {
+    headline: "Analyse laeuft",
+    status: "submitting",
+    tone: "processing",
+    description: "Die erste Stufe wird in den Fokus gezogen.",
+    isTerminalError: false,
+    run,
+    stages: buildStages(run, buildStageStatuses(0, -1)),
+  };
+}
+
 function buildFailureViewModel(run: AnalysisRun): PipelineViewModel {
   return {
-    headline: "Maschine blockiert",
+    headline: "Analyse blockiert",
     status: "failed",
     tone: "failed",
     description: run.error_reason ?? "Der Analysefluss wurde vorzeitig gestoppt.",
@@ -104,10 +124,10 @@ function buildFailureViewModel(run: AnalysisRun): PipelineViewModel {
 
 function buildCompletedViewModel(run: AnalysisRun): PipelineViewModel {
   return {
-    headline: "Pipeline abgeschlossen",
+    headline: "Analyse abgeschlossen",
     status: "completed",
     tone: "completed",
-    description: "Alle sechs Ebenen wurden nachvollziehbar entfaltet.",
+    description: "Alle sechs Ebenen sind sichtbar.",
     isTerminalError: false,
     run,
     stages: buildStages(run, buildStageStatuses(null, PIPELINE_STAGES.length - 1)),
@@ -121,13 +141,13 @@ function buildRevealViewModel(
   completedThrough: number,
 ): PipelineViewModel {
   return {
-    headline: status === "result_received" ? "Analyse empfangen" : "Pipeline in Entfaltung",
+    headline: status === "result_received" ? "Analyse laeuft" : "Stufe wird entfaltet",
     status,
     tone: "processing",
     description:
       status === "result_received"
-        ? "Die Analyse liegt vor und wird jetzt Ebene fuer Ebene sichtbar gemacht."
-        : "Die sechs Ebenen werden in fester Reihenfolge aktiviert.",
+        ? "Die Filterstrecke oeffnet jetzt schrittweise ihre Ebenen."
+        : "Die naechste Stufe wird in den Fokus gezogen.",
     isTerminalError: false,
     run,
     stages: buildStages(run, buildStageStatuses(activeIndex, completedThrough)),
@@ -138,10 +158,17 @@ function isFailedRun(run: AnalysisRun | null): run is AnalysisRun {
   return Boolean(run && (run.run_status === "failed" || run.error_code || !run.analysis_json));
 }
 
-export function usePipelineViewModel(selectedRun: AnalysisRun | null, revealToken: number) {
+export function usePipelineViewModel(selectedRun: AnalysisRun | null, revealToken: number, loading: boolean) {
   const [viewModel, setViewModel] = useState<PipelineViewModel>(() => buildIdleViewModel());
 
   useEffect(() => {
+    const { startDelayMs, intervalMs } = getRevealTimings();
+
+    if (loading) {
+      setViewModel(buildSubmittingViewModel(selectedRun));
+      return;
+    }
+
     if (!selectedRun) {
       setViewModel(buildIdleViewModel());
       return;
@@ -160,22 +187,30 @@ export function usePipelineViewModel(selectedRun: AnalysisRun | null, revealToke
     setViewModel(buildRevealViewModel(selectedRun, "result_received", 0, -1));
 
     let currentIndex = 0;
-    const intervalId = window.setInterval(() => {
-      currentIndex += 1;
+    let intervalId: number | null = null;
+    const startTimeoutId = window.setTimeout(() => {
+      intervalId = window.setInterval(() => {
+        currentIndex += 1;
 
-      if (currentIndex >= PIPELINE_STAGES.length) {
-        window.clearInterval(intervalId);
-        setViewModel(buildCompletedViewModel(selectedRun));
-        return;
-      }
+        if (currentIndex >= PIPELINE_STAGES.length) {
+          if (intervalId !== null) {
+            window.clearInterval(intervalId);
+          }
+          setViewModel(buildCompletedViewModel(selectedRun));
+          return;
+        }
 
-      setViewModel(buildRevealViewModel(selectedRun, "revealing", currentIndex, currentIndex - 1));
-    }, REVEAL_INTERVAL_MS);
+        setViewModel(buildRevealViewModel(selectedRun, "revealing", currentIndex, currentIndex - 1));
+      }, intervalMs);
+    }, startDelayMs);
 
     return () => {
-      window.clearInterval(intervalId);
+      window.clearTimeout(startTimeoutId);
+      if (intervalId !== null) {
+        window.clearInterval(intervalId);
+      }
     };
-  }, [selectedRun, revealToken]);
+  }, [selectedRun, revealToken, loading]);
 
   return viewModel;
 }
