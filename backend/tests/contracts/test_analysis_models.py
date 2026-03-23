@@ -19,7 +19,7 @@ def test_analyse_model_accepts_valid_payload() -> None:
 
     analyse = Analyse.model_validate(payload)
 
-    assert analyse.massnahmen.punkte == ["Massnahme eins."]
+    assert analyse.essenz.eintraege[0].text == "Essenz eins."
 
 
 def test_analyse_model_rejects_invalid_payload() -> None:
@@ -29,9 +29,9 @@ def test_analyse_model_rejects_invalid_payload() -> None:
         Analyse.model_validate(payload)
 
 
-def test_analyse_model_rejects_empty_punkt_item() -> None:
+def test_analyse_model_rejects_empty_text_item() -> None:
     payload = load_json(FIXTURES / "valid" / "analysis_minimal.json")
-    payload["beobachtungen"]["punkte"] = [""]
+    payload["symptome"]["eintraege"] = [{"text": ""}]
 
     with pytest.raises(ValidationError):
         Analyse.model_validate(payload)

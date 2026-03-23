@@ -9,12 +9,12 @@ function mockFetchSequence(runsOverride?: Array<Record<string, unknown>>) {
       id: 1,
       input_text: "Wohnungsnot",
       analysis_json: {
-        beobachtungen: { zusammenfassung: "A", punkte: ["A"] },
-        erklaerungen: { zusammenfassung: "B", punkte: ["B"] },
-        emotionen: { zusammenfassung: "C", punkte: ["C"] },
-        zuschreibungen: { zusammenfassung: "D", punkte: ["D"] },
-        schlussfolgerungen: { zusammenfassung: "E", punkte: ["E"] },
-        massnahmen: { zusammenfassung: "F", punkte: ["F"] },
+        symptome: { beschreibung: "A", eintraege: [{ text: "A" }] },
+        ursachen: { beschreibung: "B", eintraege: [{ text: "B" }] },
+        emotionen: { beschreibung: "C", eintraege: [{ text: "C" }] },
+        narrative: { beschreibung: "D", eintraege: [{ text: "D" }] },
+        mythen: { beschreibung: "E", eintraege: [{ text: "E" }] },
+        essenz: { beschreibung: "F", eintraege: [{ text: "F" }] },
       },
       validation_report: { checks: [{ stage: "schema", status: "passed" }] },
       detected_language: "de",
@@ -57,12 +57,12 @@ test("renders a filter machine with language metadata and six visible modules", 
   expect(screen.getByText("Sprachcheck")).toBeInTheDocument();
   expect(screen.getByText("Analyse")).toBeInTheDocument();
   expect(screen.getByText("Validierung")).toBeInTheDocument();
-  expect(screen.getByText("Beobachtungen")).toBeInTheDocument();
-  expect(screen.getByText("Erklaerungen")).toBeInTheDocument();
+  expect(screen.getByText("Symptome")).toBeInTheDocument();
+  expect(screen.getByText("Ursachen")).toBeInTheDocument();
   expect(screen.getByText("Emotionen")).toBeInTheDocument();
-  expect(screen.getByText("Zuschreibungen")).toBeInTheDocument();
-  expect(screen.getByText("Schlussfolgerungen")).toBeInTheDocument();
-  expect(screen.getByText("Massnahmen")).toBeInTheDocument();
+  expect(screen.getByText("Narrative")).toBeInTheDocument();
+  expect(screen.getByText("Mythen")).toBeInTheDocument();
+  expect(screen.getByText("Essenz")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "JSON exportieren" })).toBeInTheDocument();
 });
 

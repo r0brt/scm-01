@@ -11,12 +11,12 @@ def test_create_app_uses_openai_adapter_when_configured(
         def generate_analysis(self, text: str):
             return {
                 "payload": {
-                    "beobachtungen": {"zusammenfassung": text, "punkte": ["A"]},
-                    "erklaerungen": {"zusammenfassung": text, "punkte": ["B"]},
-                    "emotionen": {"zusammenfassung": text, "punkte": ["C"]},
-                    "zuschreibungen": {"zusammenfassung": text, "punkte": ["D"]},
-                    "schlussfolgerungen": {"zusammenfassung": text, "punkte": ["E"]},
-                    "massnahmen": {"zusammenfassung": text, "punkte": ["F"]},
+                    "symptome": {"beschreibung": text, "eintraege": [{"text": "A"}]},
+                    "ursachen": {"beschreibung": text, "eintraege": [{"text": "B"}]},
+                    "emotionen": {"beschreibung": text, "eintraege": [{"text": "C"}]},
+                    "narrative": {"beschreibung": text, "eintraege": [{"text": "D"}]},
+                    "mythen": {"beschreibung": text, "eintraege": [{"text": "E"}]},
+                    "essenz": {"beschreibung": text, "eintraege": [{"text": "F"}]},
                 },
                 "model_id": "openai-test-model",
                 "prompt_version": "v1",
@@ -46,12 +46,12 @@ def test_create_app_prefers_explicit_adapter_over_env_provider(monkeypatch, tmp_
         def generate_analysis(self, text: str):
             return {
                 "payload": {
-                    "beobachtungen": {"zusammenfassung": text, "punkte": ["A"]},
-                    "erklaerungen": {"zusammenfassung": text, "punkte": ["B"]},
-                    "emotionen": {"zusammenfassung": text, "punkte": ["C"]},
-                    "zuschreibungen": {"zusammenfassung": text, "punkte": ["D"]},
-                    "schlussfolgerungen": {"zusammenfassung": text, "punkte": ["E"]},
-                    "massnahmen": {"zusammenfassung": text, "punkte": ["F"]},
+                    "symptome": {"beschreibung": text, "eintraege": [{"text": "A"}]},
+                    "ursachen": {"beschreibung": text, "eintraege": [{"text": "B"}]},
+                    "emotionen": {"beschreibung": text, "eintraege": [{"text": "C"}]},
+                    "narrative": {"beschreibung": text, "eintraege": [{"text": "D"}]},
+                    "mythen": {"beschreibung": text, "eintraege": [{"text": "E"}]},
+                    "essenz": {"beschreibung": text, "eintraege": [{"text": "F"}]},
                 },
                 "model_id": "explicit-model",
                 "prompt_version": "v-explicit",

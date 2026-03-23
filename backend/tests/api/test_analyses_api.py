@@ -22,15 +22,12 @@ class FakeAdapter:
     def generate_analysis(self, text: str):
         return {
             "payload": {
-                "beobachtungen": {"zusammenfassung": text, "punkte": [f"{text}-beobachtung"]},
-                "erklaerungen": {"zusammenfassung": text, "punkte": [f"{text}-erklaerung"]},
-                "emotionen": {"zusammenfassung": text, "punkte": [f"{text}-emotion"]},
-                "zuschreibungen": {"zusammenfassung": text, "punkte": [f"{text}-zuschreibung"]},
-                "schlussfolgerungen": {
-                    "zusammenfassung": text,
-                    "punkte": [f"{text}-schlussfolgerung"],
-                },
-                "massnahmen": {"zusammenfassung": text, "punkte": [f"{text}-massnahme"]},
+                "symptome": {"beschreibung": text, "eintraege": [{"text": f"{text}-symptom"}]},
+                "ursachen": {"beschreibung": text, "eintraege": [{"text": f"{text}-ursache"}]},
+                "emotionen": {"beschreibung": text, "eintraege": [{"text": f"{text}-emotion"}]},
+                "narrative": {"beschreibung": text, "eintraege": [{"text": f"{text}-narrativ"}]},
+                "mythen": {"beschreibung": text, "eintraege": [{"text": f"{text}-mythos"}]},
+                "essenz": {"beschreibung": text, "eintraege": [{"text": f"{text}-essenz"}]},
             },
             "model_id": "fake-api-model",
             "prompt_version": "v-fake",
@@ -67,7 +64,7 @@ def test_post_analyses_creates_and_persists_run(tmp_path: Path) -> None:
     assert payload["language_confidence"] == 0.95
     assert payload["prompt_version"] == "v-fake"
     assert payload["model_id"] == "fake-api-model"
-    assert payload["analysis_json"]["beobachtungen"]["punkte"]
+    assert payload["analysis_json"]["symptome"]["eintraege"]
     assert payload["validation_report"]["checks"][0]["stage"] == "schema"
 
 

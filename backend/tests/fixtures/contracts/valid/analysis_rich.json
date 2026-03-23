@@ -1,26 +1,26 @@
 {
-  "beobachtungen": {
-    "zusammenfassung": "Kurzbeschreibung der Beobachtungen.",
-    "punkte": ["Beobachtung eins.", "Beobachtung zwei."]
+  "symptome": {
+    "beschreibung": "Kurzbeschreibung der Symptome.",
+    "eintraege": [{"text": "Symptom eins."}, {"text": "Symptom zwei."}]
   },
-  "erklaerungen": {
-    "zusammenfassung": "Kurzbeschreibung der Erklaerungen.",
-    "punkte": ["Erklaerung eins.", "Erklaerung zwei."]
+  "ursachen": {
+    "beschreibung": "Kurzbeschreibung der Ursachen.",
+    "eintraege": [{"text": "Ursache eins."}, {"text": "Ursache zwei."}]
   },
   "emotionen": {
-    "zusammenfassung": "Kurzbeschreibung der Emotionen.",
-    "punkte": ["Emotion eins.", "Emotion zwei."]
+    "beschreibung": "Kurzbeschreibung der Emotionen.",
+    "eintraege": [{"text": "Emotion eins."}, {"text": "Emotion zwei."}]
   },
-  "zuschreibungen": {
-    "zusammenfassung": "Kurzbeschreibung der Zuschreibungen.",
-    "punkte": ["Zuschreibung eins.", "Zuschreibung zwei."]
+  "narrative": {
+    "beschreibung": "Kurzbeschreibung der Narrative.",
+    "eintraege": [{"text": "Narrativ eins."}, {"text": "Narrativ zwei."}]
   },
-  "schlussfolgerungen": {
-    "zusammenfassung": "Kurzbeschreibung der Schlussfolgerungen.",
-    "punkte": ["Schlussfolgerung eins.", "Schlussfolgerung zwei."]
+  "mythen": {
+    "beschreibung": "Kurzbeschreibung der Mythen.",
+    "eintraege": [{"text": "Mythos eins."}, {"text": "Mythos zwei."}]
   },
-  "massnahmen": {
-    "zusammenfassung": "Kurzbeschreibung der Massnahmen.",
-    "punkte": ["Massnahme eins.", "Massnahme zwei."]
+  "essenz": {
+    "beschreibung": "Kurzbeschreibung der Essenz.",
+    "eintraege": [{"text": "Essenz eins."}, {"text": "Essenz zwei."}]
   }
 }

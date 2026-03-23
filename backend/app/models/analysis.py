@@ -1,15 +1,21 @@
-from typing import Annotated
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class AnalyseEbene(BaseModel):
-    """Single analysis level with summary and supporting points."""
+class AnalyseEintrag(BaseModel):
+    """Single textual item inside one analysis level."""
 
     model_config = ConfigDict(extra="forbid")
 
-    zusammenfassung: str = Field(min_length=1)
-    punkte: list[Annotated[str, Field(min_length=1)]] = Field(min_length=1)
+    text: str = Field(min_length=1)
+
+
+class AnalyseEbene(BaseModel):
+    """Single analysis level with description and structured entries."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    beschreibung: str = Field(min_length=1)
+    eintraege: list[AnalyseEintrag] = Field(min_length=1)
 
 
 class Analyse(BaseModel):
@@ -17,9 +23,9 @@ class Analyse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    beobachtungen: AnalyseEbene
-    erklaerungen: AnalyseEbene
+    symptome: AnalyseEbene
+    ursachen: AnalyseEbene
     emotionen: AnalyseEbene
-    zuschreibungen: AnalyseEbene
-    schlussfolgerungen: AnalyseEbene
-    massnahmen: AnalyseEbene
+    narrative: AnalyseEbene
+    mythen: AnalyseEbene
+    essenz: AnalyseEbene

@@ -4,7 +4,7 @@
 
 - Szenario: Ein Nutzer startet eine Analyse ueber API oder UI.
 - Stimulus: Der Analyse-Workflow erzeugt ein JSON-Payload.
-- Erwartung: Das Payload ist schema-valide oder der Run wird explizit als `failed` mit `validation_report` und `error_code` persistiert.
+- Erwartung: Das Payload ist schema-valide im aktiven SCM-Vertrag mit `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz`, oder der Run wird explizit als `failed` mit `validation_report` und `error_code` persistiert.
 - Nachweis: Contract- und Validation-Tests im Backend sowie persistierte Run-Metadaten.
 
 ## QS2: Nachvollziehbarer Analyse-Run
@@ -25,7 +25,7 @@
 
 - Szenario: Ein Endnutzer gibt einen Problemtext ein und startet eine Analyse im Frontend.
 - Stimulus: Texteingabe und Klick auf `Analyse starten`.
-- Erwartung: Ein neuer Run wird erzeugt und die Pipeline mit den sechs Ebenen wird sichtbar.
+- Erwartung: Ein neuer Run wird erzeugt und die Pipeline mit den sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` wird sichtbar.
 - Nachweis: Playwright-E2E-Test fuer UJ1.
 
 ## QS5: Deterministische Sprachvorpruefung
@@ -39,5 +39,5 @@
 
 - Szenario: Die produktive Analyse soll OpenAI verwenden, waehrend Testlaeufe offline und reproduzierbar bleiben.
 - Stimulus: Konfiguration von `SCM_ANALYSIS_PROVIDER=openai` im Laufzeitsystem bzw. Fake-Adapter in Tests.
-- Erwartung: Der Produktionspfad verwendet den OpenAI-Adapter, Tests bleiben ohne externe Netzaufrufe stabil.
+- Erwartung: Der Produktionspfad verwendet den OpenAI-Adapter und fordert den aktiven SCM-Vertrag aus Prompt und Schema an; Tests bleiben ohne externe Netzaufrufe stabil.
 - Nachweis: Adapter- und App-Factory-Tests mit injizierten Fakes sowie dokumentierte Laufzeitkonfiguration.

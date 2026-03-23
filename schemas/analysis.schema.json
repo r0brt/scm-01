@@ -5,38 +5,48 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "beobachtungen",
-    "erklaerungen",
+    "symptome",
+    "ursachen",
     "emotionen",
-    "zuschreibungen",
-    "schlussfolgerungen",
-    "massnahmen"
+    "narrative",
+    "mythen",
+    "essenz"
   ],
   "properties": {
-    "beobachtungen": { "$ref": "#/$defs/ebene" },
-    "erklaerungen": { "$ref": "#/$defs/ebene" },
+    "symptome": { "$ref": "#/$defs/ebene" },
+    "ursachen": { "$ref": "#/$defs/ebene" },
     "emotionen": { "$ref": "#/$defs/ebene" },
-    "zuschreibungen": { "$ref": "#/$defs/ebene" },
-    "schlussfolgerungen": { "$ref": "#/$defs/ebene" },
-    "massnahmen": { "$ref": "#/$defs/ebene" }
+    "narrative": { "$ref": "#/$defs/ebene" },
+    "mythen": { "$ref": "#/$defs/ebene" },
+    "essenz": { "$ref": "#/$defs/ebene" }
   },
   "$defs": {
     "ebene": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["zusammenfassung", "punkte"],
+      "required": ["beschreibung", "eintraege"],
       "properties": {
-        "zusammenfassung": {
+        "beschreibung": {
           "type": "string",
           "minLength": 1
         },
-        "punkte": {
+        "eintraege": {
           "type": "array",
           "minItems": 1,
           "items": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/eintrag"
           }
+        }
+      }
+    },
+    "eintrag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }

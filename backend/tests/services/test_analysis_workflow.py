@@ -26,12 +26,12 @@ class FakeAdapter:
         self.calls.append(text)
         return {
             "payload": {
-                "beobachtungen": {"zusammenfassung": "A", "punkte": ["A"]},
-                "erklaerungen": {"zusammenfassung": "B", "punkte": ["B"]},
-                "emotionen": {"zusammenfassung": "C", "punkte": ["C"]},
-                "zuschreibungen": {"zusammenfassung": "D", "punkte": ["D"]},
-                "schlussfolgerungen": {"zusammenfassung": "E", "punkte": ["E"]},
-                "massnahmen": {"zusammenfassung": "F", "punkte": ["F"]},
+                "symptome": {"beschreibung": "A", "eintraege": [{"text": "A"}]},
+                "ursachen": {"beschreibung": "B", "eintraege": [{"text": "B"}]},
+                "emotionen": {"beschreibung": "C", "eintraege": [{"text": "C"}]},
+                "narrative": {"beschreibung": "D", "eintraege": [{"text": "D"}]},
+                "mythen": {"beschreibung": "E", "eintraege": [{"text": "E"}]},
+                "essenz": {"beschreibung": "F", "eintraege": [{"text": "F"}]},
             },
             "model_id": "fake-model",
             "prompt_version": "v-test",
@@ -64,7 +64,7 @@ def test_create_analysis_run_uses_injected_adapter_metadata() -> None:
     assert run.language_confidence == 0.95
     assert run.model_id == "fake-model"
     assert run.prompt_version == "v-test"
-    assert run.analysis_json["beobachtungen"]["punkte"] == ["A"]
+    assert run.analysis_json["symptome"]["eintraege"][0]["text"] == "A"
 
 
 def test_create_analysis_run_fails_for_low_language_confidence() -> None:
