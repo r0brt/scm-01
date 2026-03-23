@@ -17,8 +17,9 @@ export function RunHistoryPanel({
     <aside className="runs-panel">
       <div className="panel-header">
         <div>
-          <p className="panel-kicker">Historie</p>
+          <p className="panel-kicker">Archiv</p>
           <h2>Runs</h2>
+          <p className="runs-copy">Vorherige Laeufe bleiben abrufbar, treten aber bewusst hinter die aktive Filterstrecke zurueck.</p>
         </div>
         <button onClick={onRefresh} type="button">
           Aktualisieren

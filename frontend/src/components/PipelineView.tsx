@@ -15,6 +15,7 @@ type PipelineViewProps = {
 
 export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
   const run = viewModel.run;
+  const lastStageKey = viewModel.stages[viewModel.stages.length - 1]?.key;
 
   return (
     <section className="pipeline-panel">
@@ -22,6 +23,7 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
         <div>
           <p className="panel-kicker">SCM Core</p>
           <h2>{viewModel.headline}</h2>
+          <p className="panel-copy">Die Maschine entfaltet die Analyse als vertikale Sequenz von Symptom bis Essenz.</p>
         </div>
         <button disabled={!run} onClick={onExport} type="button">
           JSON exportieren
@@ -50,30 +52,45 @@ export function PipelineView({ viewModel, onExport }: PipelineViewProps) {
         </section>
       ) : null}
 
-      <div className="pipeline-timeline" aria-label="Analysepipeline">
-        {viewModel.stages.map((stage) => (
-          <article
-            aria-label={`Stage ${stage.title}`}
-            className={`stage-card stage-card-${stage.status}`}
-            key={stage.key}
-          >
-            <div className="stage-card-head">
-              <div>
-                <p className="stage-index">{stage.subtitle}</p>
-                <h3>{stage.title}</h3>
+      <div className="pipeline-frame">
+        <div className="pipeline-caption" aria-hidden="true">
+          <span>Einspeisung</span>
+          <span>Filterstrecke</span>
+          <span>Endzustand</span>
+        </div>
+
+        <div className="pipeline-timeline" aria-label="Analysepipeline">
+          {viewModel.stages.map((stage) => (
+            <article
+              aria-label={`Stage ${stage.title}`}
+              className={[
+                "stage-card",
+                `stage-card-${stage.status}`,
+                stage.key === lastStageKey ? "stage-card-terminal" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              key={stage.key}
+            >
+              <div className="stage-card-head">
+                <div>
+                  <p className="stage-index">{stage.subtitle}</p>
+                  <h3>{stage.title}</h3>
+                </div>
+                <span className={`stage-status stage-status-${stage.status}`}>Status: {stage.status}</span>
               </div>
-              <span className={`stage-status stage-status-${stage.status}`}>Status: {stage.status}</span>
-            </div>
-            <p className="stage-prompt">{stage.prompt}</p>
-            <p className="stage-summary">{stage.summary}</p>
-            <ul className="stage-entries">
-              {stage.entries.map((entry) => (
-                <li key={entry.text}>{entry.text}</li>
-              ))}
-            </ul>
-            {!stage.entries.length ? <p className="stage-empty">Noch kein strukturierter Output.</p> : null}
-          </article>
-        ))}
+              <p className="stage-prompt">{stage.prompt}</p>
+              <p className="stage-summary">{stage.summary}</p>
+              <ul className="stage-entries">
+                {stage.entries.map((entry) => (
+                  <li key={entry.text}>{entry.text}</li>
+                ))}
+              </ul>
+              {!stage.entries.length ? <p className="stage-empty">Noch kein strukturierter Output.</p> : null}
+              {stage.key === lastStageKey ? <p className="stage-terminal-label">Finaler Destillationspunkt</p> : null}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
