@@ -10,7 +10,7 @@ Accepted
 
 ## Entscheidung
 
-Providerzugriff wird hinter einem expliziten Adapter-Port gekapselt. Prompt-Dateien werden versioniert unter `prompts/v1/` abgelegt. Jeder Run persistiert `model_id` und `prompt_version`.
+Providerzugriff wird hinter einem expliziten Adapter-Port gekapselt. Prompt-Dateien werden versioniert unter `prompts/v*/` abgelegt; der aktuelle Produktivpfad verwendet `prompts/v2/analysis.md`. Jeder Run persistiert `model_id` und `prompt_version`.
 
 ## Kontext
 
