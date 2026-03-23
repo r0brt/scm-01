@@ -1,5 +1,7 @@
 # M1 Analysis Contract Implementation Plan
 
+> Archivhinweis: Dieser historische Plan basiert auf einem frueheren Vertragsstand. Der aktuelle fachliche Vertrag liegt auf `main` in `docs/scm.md`, `docs/prd.md` und `schemas/analysis.schema.json` bei `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the first SCM analysis contract with a strict JSON Schema, matching Pydantic models, contract tests, and fixture data for the six documented analysis levels.
