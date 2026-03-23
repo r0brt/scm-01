@@ -43,6 +43,8 @@ function getStageCard(name: string) {
 test("reveals the six pipeline stages sequentially after a successful analysis", async () => {
   mockCreateFlow();
   const user = userEvent.setup();
+  const scrollIntoViewMock = vi.fn();
+  Element.prototype.scrollIntoView = scrollIntoViewMock;
 
   render(<App />);
 
@@ -56,11 +58,20 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   expect(within(getStageCard("Symptome")).getByText("Status: processing")).toBeInTheDocument();
   expect(within(getStageCard("Ursachen")).getByText("Status: idle")).toBeInTheDocument();
   expect(screen.getByText("Sprache · DE")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).getByText("Oberflaechliche Signale")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).getByText("A")).toBeInTheDocument();
+  expect(within(getStageCard("Ursachen")).queryByText("Strukturelle Gruende")).not.toBeInTheDocument();
+  expect(within(getStageCard("Ursachen")).queryByText("B")).not.toBeInTheDocument();
+  expect(within(getStageCard("Ursachen")).getByText("Wartet auf Aktivierung")).toBeInTheDocument();
+  expect(scrollIntoViewMock).toHaveBeenCalled();
 
   await waitFor(() => {
     expect(within(getStageCard("Symptome")).getByText("Status: completed")).toBeInTheDocument();
     expect(within(getStageCard("Ursachen")).getByText("Status: processing")).toBeInTheDocument();
   });
+
+  expect(within(getStageCard("Ursachen")).getByText("Strukturelle Gruende")).toBeInTheDocument();
+  expect(within(getStageCard("Ursachen")).getByText("B")).toBeInTheDocument();
 
   await waitFor(() => {
     expect(screen.getByRole("heading", { name: "Pipeline abgeschlossen" })).toBeInTheDocument();
@@ -104,4 +115,5 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
   expect(screen.getByText("Sprache · FR")).toBeInTheDocument();
   expect(within(getStageCard("Symptome")).getByText("Status: idle")).toBeInTheDocument();
   expect(within(getStageCard("Essenz")).getByText("Status: idle")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).getByText("Wartet auf Aktivierung")).toBeInTheDocument();
 });
