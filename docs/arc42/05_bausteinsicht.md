@@ -15,3 +15,13 @@
 - LLM-Provider liefert generierte Analyseinhalte unter strikten Contract-Checks.
 
 Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs muessen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rueckwaertskompatibel unterstuetzt.
+
+## Frontend-Zerlegung (M6-Stand)
+
+- `App.tsx` orchestriert Texteingabe, API-Aufrufe, Run-Selektion, Export und den globalen Fehlerzustand.
+- `AnalysisComposer` kapselt die Eingabemaske fuer den Rohtext und den Start der Analyse.
+- `usePipelineViewModel` in `frontend/src/pipeline.ts` transformiert den gewaehlten Run in einen deterministischen UI-Zustand.
+- `PipelineView` rendert Maschinenstatus, Run-Metadaten und die sechs Stages des aktiven Analyse-Runs.
+- `RunHistoryPanel` entkoppelt die Auswahl bereits persistierter Runs von der Pipeline-Darstellung.
+
+Die Frontend-Logik trennt damit bewusst zwischen Datenbeschaffung (`App.tsx`), Zustandsableitung (`usePipelineViewModel`) und visueller Darstellung (`AnalysisComposer`, `PipelineView`, `RunHistoryPanel`). Die Pipeline-Stages sind zentral in `frontend/src/pipeline.ts` definiert, damit Reihenfolge, Titel und Prompt-Texte nicht ueber mehrere Komponenten verstreut gepflegt werden muessen.
