@@ -34,7 +34,8 @@
 2. `App.tsx` sendet den Text an `POST /api/v1/analyses` und setzt den UI-Zustand waehrenddessen auf `loading`.
 3. Nach erfolgreicher Antwort wird der neue Run als selektierter Run gesetzt und ein `revealToken` erhoeht.
 4. `usePipelineViewModel` erkennt den neuen Token und ueberfuehrt die Anzeige zuerst in den Zustand `result_received`.
-5. Danach aktiviert der Hook die sechs Stages `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` in fester Reihenfolge mit einem kurzen Zeitintervall.
-6. `PipelineView` rendert waehrend dieser Entfaltung pro Stage einen expliziten Status (`idle`, `processing`, `completed`) sowie Zusammenfassung und Eintraege aus dem Analysevertrag.
-7. Wird stattdessen ein historischer Run aus der Run-Historie geladen, zeigt das Frontend den gespeicherten Endzustand ohne erneute Entfaltungsanimation.
-8. Schlaegt die Analyse fehl oder liegt kein gueltiges `analysis_json` vor, wechselt die Ansicht in einen terminalen Fehlerzustand und zeigt Fehlercode sowie Fehlertext explizit an.
+5. Danach aktiviert der Hook die sechs Stages `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` in fester Reihenfolge mit einem Zeitintervall.
+6. `PipelineView` rendert waehrend dieser Entfaltung einen Flow-Modus mit Fortschrittsleiste und genau einer sichtbaren aktiven Stage; abgeschlossene und zukuenftige Stages erscheinen dort nur als reduzierte Timeline-Knoten.
+7. Nach Abschluss wechselt die UI in einen Review-Modus: alle sechs Stages werden gleichzeitig sichtbar, Details bleiben je Stage optional aufklappbar, und die `Essenz` bleibt standardmaessig geoeffnet.
+8. Wird stattdessen ein historischer Run aus dem Archiv-Tab geladen, zeigt das Frontend den gespeicherten Endzustand direkt im Review-Modus ohne erneute Entfaltungsanimation.
+9. Schlaegt die Analyse fehl oder liegt kein gueltiges `analysis_json` vor, wechselt die Ansicht in einen terminalen Fehlerzustand und zeigt Fehlercode sowie Fehlertext explizit an.
