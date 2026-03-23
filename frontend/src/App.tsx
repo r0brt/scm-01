@@ -79,8 +79,14 @@ export default function App() {
   return (
     <main className="page-shell">
       <header className="topbar">
-        <p>Social Clean-Up Machine</p>
-        <span>System Status · Ready / UX-State-Driven</span>
+        <div className="topbar-brand">
+          <p>Social Clean-Up Machine</p>
+          <span>SCM Interface / Deterministic Filter System</span>
+        </div>
+        <div className="topbar-state">
+          <span>System Status</span>
+          <strong>Ready / UX-State-Driven</strong>
+        </div>
       </header>
 
       <AnalysisComposer
@@ -93,13 +99,17 @@ export default function App() {
       {error ? <p className="error-banner">{error}</p> : null}
 
       <section className="workspace-grid">
-        <PipelineView onExport={handleExport} viewModel={pipelineViewModel} />
-        <RunHistoryPanel
-          onRefresh={() => void refreshRuns()}
-          onSelectRun={(runId) => void handleSelectRun(runId)}
-          runs={runs}
-          selectedRunId={selectedRun?.id ?? null}
-        />
+        <div className="workspace-main">
+          <PipelineView onExport={handleExport} viewModel={pipelineViewModel} />
+        </div>
+        <div className="workspace-side">
+          <RunHistoryPanel
+            onRefresh={() => void refreshRuns()}
+            onSelectRun={(runId) => void handleSelectRun(runId)}
+            runs={runs}
+            selectedRunId={selectedRun?.id ?? null}
+          />
+        </div>
       </section>
     </main>
   );
