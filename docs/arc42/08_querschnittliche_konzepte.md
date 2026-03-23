@@ -20,6 +20,10 @@ Vor jeder Analyse erkennt das Backend die dominante Sprache lokal. Aktuell werde
 
 Liegt die Sicherheit unter `0.80`, endet der Lauf explizit mit `LANGUAGE_CONFIDENCE_TOO_LOW`. Wird eine Sprache ausserhalb des unterstuetzten Korridors erkannt, endet der Lauf mit `UNSUPPORTED_LANGUAGE`. In beiden Faellen wird kein stiller Fallback auf den LLM-Pfad versucht.
 
+Nach erfolgreicher Eingabespracherkennung wird die erwartete Sprache explizit an den LLM-Adapter weitergegeben. Der Prompt verlangt, dass alle Felder `beschreibung` und `eintraege[].text` ausschliesslich in dieser Sprache formuliert werden und keine Sprachmischung enthalten.
+
+Nach der strukturellen Validierung prueft das Backend zusaetzlich die Sprache der gesamten Analyseausgabe. Weicht die dominierende Ausgabesprache von der zuvor erkannten Eingabesprache ab oder ist die Ausgabespracherkennung selbst zu unsicher, endet der Lauf explizit mit `OUTPUT_LANGUAGE_MISMATCH`. Dadurch wird die Produktanforderung abgesichert, dass Ausgabe- und Eingabesprache uebereinstimmen.
+
 ## Persistenz
 
 Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Persistiert werden Eingabetext, Analyse-JSON, Validierungsreport sowie die für Nachvollziehbarkeit relevanten Metadaten wie `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben.
@@ -39,6 +43,8 @@ Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sond
 Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt angefordertem JSON-Schema-Output. Offline-Tests injizieren weiterhin Fake- oder Stub-Adapter und fuehren keine Netzaufrufe aus.
 
 Prompts werden versioniert unter `prompts/v1/` abgelegt. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die in `docs/scm.md` definierten sechs Ebenen exakt anfordern.
+
+Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen fuer jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
 
 ## Betriebs- und Konfigurationskonzept
 

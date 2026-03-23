@@ -14,4 +14,6 @@ class AnalysisGenerationResult:
 class AnalysisGenerator(Protocol):
     """Protocol for provider-specific analysis generators."""
 
-    def generate_analysis(self, text: str) -> AnalysisGenerationResult: ...
+    def generate_analysis(
+        self, text: str, *, language: str | None = None
+    ) -> AnalysisGenerationResult: ...

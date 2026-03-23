@@ -8,7 +8,7 @@ def test_create_app_uses_openai_adapter_when_configured(
     tmp_path,
 ) -> None:
     class FakeOpenAIAnalysisGenerator:
-        def generate_analysis(self, text: str):
+        def generate_analysis(self, text: str, *, language: str | None = None):
             return {
                 "payload": {
                     "symptome": {"beschreibung": text, "eintraege": [{"text": "A"}]},
@@ -43,7 +43,7 @@ def test_create_app_uses_openai_adapter_when_configured(
 
 def test_create_app_prefers_explicit_adapter_over_env_provider(monkeypatch, tmp_path) -> None:
     class ExplicitAdapter:
-        def generate_analysis(self, text: str):
+        def generate_analysis(self, text: str, *, language: str | None = None):
             return {
                 "payload": {
                     "symptome": {"beschreibung": text, "eintraege": [{"text": "A"}]},

@@ -52,4 +52,6 @@ def test_openai_analysis_generator_calls_responses_api_with_json_schema(
     assert result.payload["symptome"]["beschreibung"] == "A"
     assert adapter.client.responses.calls[0]["text"]["format"]["type"] == "json_schema"
     assert adapter.client.responses.calls[0]["text"]["format"]["strict"] is True
-    assert adapter.client.responses.calls[0]["input"] == "Wohnungsnot in der Stadt"
+    assert "Detected input language: de" in adapter.client.responses.calls[0]["input"]
+    assert "All beschreibung and text fields must be written in German." in adapter.client.responses.calls[0]["input"]
+    assert "Wohnungsnot in der Stadt" in adapter.client.responses.calls[0]["input"]
