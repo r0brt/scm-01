@@ -874,17 +874,17 @@ h3 {
 }
 
 .stage-summary {
-  font-size: 0.82rem;
-  line-height: 1.34;
-  max-width: 40ch;
-  color: rgba(242, 246, 250, 0.95);
+  font-size: 0.72rem;
+  line-height: 1.42;
+  max-width: 58ch;
+  color: rgba(220, 229, 237, 0.72);
   display: block;
   overflow: visible;
   white-space: normal;
 }
 
 .stage-card-expanded .stage-summary {
-  font-size: 0.86rem;
+  font-size: 0.76rem;
 }
 
 .stage-card-review .stage-summary {
@@ -912,17 +912,18 @@ h3 {
 }
 
 .stage-card-processing .stage-summary {
-  font-size: 0.88rem;
-  line-height: 1.42;
-  color: rgba(240, 246, 252, 0.88);
+  font-size: 0.74rem;
+  line-height: 1.48;
+  color: rgba(228, 236, 244, 0.68);
 }
 
 .stage-card-flow .stage-entries {
-  gap: 0.08rem;
-  font-size: 0.92rem;
-  line-height: 1.38;
+  gap: 0.14rem;
+  font-size: 1rem;
+  line-height: 1.52;
   max-width: 100%;
   min-width: 0;
+  color: rgba(244, 248, 252, 0.98);
 }
 
 .stage-card-flow .stage-entries li:nth-child(n + 3) {
@@ -939,10 +940,10 @@ h3 {
 }
 
 .stage-card-processing .stage-entries {
-  margin-top: 0.08rem;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5;
+  margin-top: 0.12rem;
+  font-size: 1.06rem;
+  font-weight: 540;
+  line-height: 1.56;
   letter-spacing: 0.01em;
   color: rgba(244, 248, 252, 0.98);
 }
@@ -994,7 +995,15 @@ h3 {
 
 .stage-card-terminal .stage-summary {
   max-width: none;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: rgba(248, 238, 220, 0.92);
+}
+
+.stage-card-terminal .stage-entries {
+  font-size: 1.08rem;
+  line-height: 1.58;
+  gap: 0.2rem;
 }
 
 .stage-card-terminal .stage-terminal-label {
