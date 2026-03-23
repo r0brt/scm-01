@@ -12,12 +12,12 @@ class StubAnalysisGenerator:
         summary = f"Stub-Analyse fuer: {text}"
         point = f"Ableitung aus Input: {text}"
         payload = {
-            "beobachtungen": {"zusammenfassung": summary, "punkte": [point]},
-            "erklaerungen": {"zusammenfassung": summary, "punkte": [point]},
-            "emotionen": {"zusammenfassung": summary, "punkte": [point]},
-            "zuschreibungen": {"zusammenfassung": summary, "punkte": [point]},
-            "schlussfolgerungen": {"zusammenfassung": summary, "punkte": [point]},
-            "massnahmen": {"zusammenfassung": summary, "punkte": [point]},
+            "symptome": {"beschreibung": summary, "eintraege": [{"text": point}]},
+            "ursachen": {"beschreibung": summary, "eintraege": [{"text": point}]},
+            "emotionen": {"beschreibung": summary, "eintraege": [{"text": point}]},
+            "narrative": {"beschreibung": summary, "eintraege": [{"text": point}]},
+            "mythen": {"beschreibung": summary, "eintraege": [{"text": point}]},
+            "essenz": {"beschreibung": summary, "eintraege": [{"text": point}]},
         }
         return AnalysisGenerationResult(
             payload=payload,

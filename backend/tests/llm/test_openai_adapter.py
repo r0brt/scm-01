@@ -19,12 +19,12 @@ def test_openai_analysis_generator_calls_responses_api_with_json_schema(
     class FakeResponse:
         output_text = json.dumps(
             {
-                "beobachtungen": {"zusammenfassung": "A", "punkte": ["A1"]},
-                "erklaerungen": {"zusammenfassung": "B", "punkte": ["B1"]},
-                "emotionen": {"zusammenfassung": "C", "punkte": ["C1"]},
-                "zuschreibungen": {"zusammenfassung": "D", "punkte": ["D1"]},
-                "schlussfolgerungen": {"zusammenfassung": "E", "punkte": ["E1"]},
-                "massnahmen": {"zusammenfassung": "F", "punkte": ["F1"]},
+                "symptome": {"beschreibung": "A", "eintraege": [{"text": "A1"}]},
+                "ursachen": {"beschreibung": "B", "eintraege": [{"text": "B1"}]},
+                "emotionen": {"beschreibung": "C", "eintraege": [{"text": "C1"}]},
+                "narrative": {"beschreibung": "D", "eintraege": [{"text": "D1"}]},
+                "mythen": {"beschreibung": "E", "eintraege": [{"text": "E1"}]},
+                "essenz": {"beschreibung": "F", "eintraege": [{"text": "F1"}]},
             }
         )
 
@@ -49,7 +49,7 @@ def test_openai_analysis_generator_calls_responses_api_with_json_schema(
 
     assert result.model_id == "gpt-5.2"
     assert result.prompt_version == "v1"
-    assert result.payload["beobachtungen"]["zusammenfassung"] == "A"
+    assert result.payload["symptome"]["beschreibung"] == "A"
     assert adapter.client.responses.calls[0]["text"]["format"]["type"] == "json_schema"
     assert adapter.client.responses.calls[0]["text"]["format"]["strict"] is True
     assert adapter.client.responses.calls[0]["input"] == "Wohnungsnot in der Stadt"
