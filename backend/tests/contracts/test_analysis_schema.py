@@ -30,7 +30,7 @@ def test_analysis_schema_rejects_payload_with_missing_level() -> None:
     errors = list(validator.iter_errors(payload))
 
     assert any(
-        error.validator == "required" and "massnahmen" in error.message
+        error.validator == "required" and "essenz" in error.message
         for error in errors
     )
 
@@ -57,7 +57,7 @@ def test_analysis_schema_rejects_unknown_top_level_field() -> None:
     )
 
 
-def test_analysis_schema_rejects_empty_punkte() -> None:
+def test_analysis_schema_rejects_empty_eintraege() -> None:
     schema = load_json(SCHEMA_PATH)
     payload = load_json(FIXTURES / "invalid" / "empty_punkte.json")
 
@@ -66,12 +66,12 @@ def test_analysis_schema_rejects_empty_punkte() -> None:
 
     assert any(
         error.validator == "minItems"
-        and list(error.path) == ["beobachtungen", "punkte"]
+        and list(error.path) == ["symptome", "eintraege"]
         for error in errors
     )
 
 
-def test_analysis_schema_rejects_non_string_punkt() -> None:
+def test_analysis_schema_rejects_non_string_text() -> None:
     schema = load_json(SCHEMA_PATH)
     payload = load_json(FIXTURES / "invalid" / "non_string_punkt.json")
 
@@ -80,12 +80,12 @@ def test_analysis_schema_rejects_non_string_punkt() -> None:
 
     assert any(
         error.validator == "type"
-        and list(error.path) == ["beobachtungen", "punkte", 0]
+        and list(error.path) == ["symptome", "eintraege", 0, "text"]
         for error in errors
     )
 
 
-def test_analysis_schema_rejects_missing_zusammenfassung() -> None:
+def test_analysis_schema_rejects_missing_beschreibung() -> None:
     schema = load_json(SCHEMA_PATH)
     payload = load_json(FIXTURES / "invalid" / "missing_zusammenfassung.json")
 
@@ -93,7 +93,9 @@ def test_analysis_schema_rejects_missing_zusammenfassung() -> None:
     errors = list(validator.iter_errors(payload))
 
     assert any(
-        error.validator == "required" and list(error.path) == ["beobachtungen"]
+        error.validator == "required"
+        and list(error.path) == ["symptome"]
+        and "beschreibung" in error.message
         for error in errors
     )
 

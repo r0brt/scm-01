@@ -1,25 +1,25 @@
 {
-  "beobachtungen": {
-    "punkte": ["Beobachtung eins."]
+  "symptome": {
+    "eintraege": [{"text": "Symptom eins."}]
   },
-  "erklaerungen": {
-    "zusammenfassung": "Kurzbeschreibung der Erklaerungen.",
-    "punkte": ["Erklaerung eins."]
+  "ursachen": {
+    "beschreibung": "Kurzbeschreibung der Ursachen.",
+    "eintraege": [{"text": "Ursache eins."}]
   },
   "emotionen": {
-    "zusammenfassung": "Kurzbeschreibung der Emotionen.",
-    "punkte": ["Emotion eins."]
+    "beschreibung": "Kurzbeschreibung der Emotionen.",
+    "eintraege": [{"text": "Emotion eins."}]
   },
-  "zuschreibungen": {
-    "zusammenfassung": "Kurzbeschreibung der Zuschreibungen.",
-    "punkte": ["Zuschreibung eins."]
+  "narrative": {
+    "beschreibung": "Kurzbeschreibung der Narrative.",
+    "eintraege": [{"text": "Narrativ eins."}]
   },
-  "schlussfolgerungen": {
-    "zusammenfassung": "Kurzbeschreibung der Schlussfolgerungen.",
-    "punkte": ["Schlussfolgerung eins."]
+  "mythen": {
+    "beschreibung": "Kurzbeschreibung der Mythen.",
+    "eintraege": [{"text": "Mythos eins."}]
   },
-  "massnahmen": {
-    "zusammenfassung": "Kurzbeschreibung der Massnahmen.",
-    "punkte": ["Massnahme eins."]
+  "essenz": {
+    "beschreibung": "Kurzbeschreibung der Essenz.",
+    "eintraege": [{"text": "Essenz eins."}]
   }
 }
