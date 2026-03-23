@@ -76,17 +76,6 @@ export default function App() {
     }
   }
 
-  function handleExport() {
-    if (!selectedRun) return;
-    const blob = new Blob([JSON.stringify(selectedRun, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `scm-run-${selectedRun.id}.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-  }
-
   return (
     <main className="page-shell">
       <header className="topbar">
@@ -105,7 +94,7 @@ export default function App() {
 
       {error ? <p className="error-banner">{error}</p> : null}
 
-      {showArchive ? (
+      {showArchive && !isFlowMode ? (
         <nav className="workspace-tabs" aria-label="Arbeitsbereiche">
           <button
             className={workspaceTab === "pipeline" ? "workspace-tab workspace-tab-active" : "workspace-tab"}
@@ -126,7 +115,7 @@ export default function App() {
 
       <section className={`workspace-grid ${isReviewMode ? "workspace-grid-review" : "workspace-grid-flow"}`}>
         <div className={`workspace-main ${workspaceTab !== "pipeline" ? "workspace-main-hidden" : ""}`}>
-          <PipelineView onExport={handleExport} viewModel={pipelineViewModel} />
+          <PipelineView viewModel={pipelineViewModel} />
         </div>
         {showArchive && workspaceTab === "archive" ? (
           <section className={`workspace-secondary ${isReviewMode ? "workspace-secondary-review" : "workspace-secondary-flow"}`}>

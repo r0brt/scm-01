@@ -81,10 +81,10 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   await user.type(screen.getByLabelText("Problemtext"), "Wohnungsnot");
   await user.click(screen.getByRole("button", { name: "Analyse starten" }));
 
-  expect(await screen.findByText("Analyse laeuft")).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
+  expect(await screen.findByText(/^Analyse laeuft/)).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
 
-  expect(within(getStageCard("Symptome")).getByText("Status: processing")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).queryByText(/Status:/)).not.toBeInTheDocument();
   expect(
     within(getStageCard("Symptome")).getByText(
       "Sie hat staendig Angst vor der naechsten Mieterhoehung.",
@@ -93,36 +93,33 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   expect(within(getStageCard("Symptome")).queryByText("Oberflaechliche Signale")).not.toBeInTheDocument();
   expect(queryStageCard("Ursachen")).not.toBeInTheDocument();
   await waitFor(() => {
-    expect(screen.getByText("Analyse abgeschlossen")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
   }, { timeout: revealTimeout });
 
   expect(scrollIntoViewMock).toHaveBeenCalled();
-  expect(screen.getByText("Sprache · DE")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
-  expect(within(getStageCard("Essenz")).getByText("Status: completed")).toBeInTheDocument();
+  expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
   expect(
     within(getStageCard("Symptome")).getByText(
       "Sie hat staendig Angst vor der naechsten Mieterhoehung.",
     ),
   ).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("A2")).not.toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).getByText("A2")).toBeInTheDocument();
   expect(within(getStageCard("Symptome")).queryByText("A3")).not.toBeInTheDocument();
   expect(within(getStageCard("Symptome")).queryByText("A4")).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("Klick zeigt alle Eintraege")).toBeInTheDocument();
-  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "true");
+  expect(within(getStageCard("Symptome")).getByRole("button", { name: "Details anzeigen" })).toBeInTheDocument();
+  expect(within(getStageCard("Essenz")).queryByRole("button", { name: "Details anzeigen" })).not.toBeInTheDocument();
+  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "false");
   expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "false");
-  expect(within(getStageCard("Essenz")).getByText("Finales Kondensat")).toBeInTheDocument();
 
   await user.click(getStageCard("Symptome"));
   expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "true");
-  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "true");
+  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "false");
   expect(within(getStageCard("Symptome")).getByText("A4")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("Klick blendet Details wieder aus")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).getByRole("button", { name: "Details ausblenden" })).toBeInTheDocument();
   await user.click(getStageCard("Ursachen"));
   expect(getStageCard("Ursachen")).toHaveAttribute("aria-expanded", "true");
   expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "true");
-
-  expect(screen.getByRole("button", { name: "JSON exportieren" })).toBeInTheDocument();
 }, 10_000);
 
 test("shows a global stop state and keeps all stages idle when the run failed", async () => {
@@ -163,8 +160,8 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
 
   expect(screen.getByText("LANGUAGE_CONFIDENCE_TOO_LOW")).toBeInTheDocument();
   expect(screen.getByText("Sprache · FR")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("Status: idle")).toBeInTheDocument();
-  expect(within(getStageCard("Essenz")).getByText("Status: idle")).toBeInTheDocument();
+  expect(within(getStageCard("Symptome")).queryByText(/Status:/)).not.toBeInTheDocument();
+  expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
   expect(within(getStageCard("Symptome")).getByText("Bereit")).toBeInTheDocument();
 });
 
@@ -205,7 +202,7 @@ test("clears the previously selected run content while a new analysis starts", a
   await user.click(screen.getByRole("button", { name: "Pipeline" }));
 
   await waitFor(() => {
-    expect(screen.getByText("Analyse abgeschlossen")).toBeInTheDocument();
+    expect(getStageCard("Essenz")).toBeInTheDocument();
   });
 
   expect(screen.getByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).toBeInTheDocument();
@@ -214,7 +211,7 @@ test("clears the previously selected run content while a new analysis starts", a
   await user.click(screen.getByRole("button", { name: "Analyse starten" }));
 
   await waitFor(() => {
-    expect(screen.getByText("Analyse laeuft")).toBeInTheDocument();
+    expect(screen.getByText(/^Analyse laeuft/)).toBeInTheDocument();
   });
 
   expect(
