@@ -135,6 +135,44 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
 }, 10_000);
 
+test("renders completed runs as one compact full pipeline with a distinct essenz stage", async () => {
+  const completedRun = buildSuccessfulRun();
+  globalThis.fetch = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify([completedRun]), { status: 200 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify(completedRun), { status: 200 }));
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await waitFor(() => {
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
+  });
+
+  await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+
+  await waitFor(() => {
+    expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
+  });
+
+  const stageCards = screen.getAllByRole("article", { name: /Stage / });
+  expect(stageCards).toHaveLength(6);
+  expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+
+  const symptomeStage = getStageCard("Symptome");
+  expect(symptomeStage).toHaveAttribute("data-stage-density", "compact");
+  expect(within(symptomeStage).getByText("Oberflaechliche Signale")).toBeInTheDocument();
+  expect(within(symptomeStage).getAllByRole("listitem")).toHaveLength(2);
+  expect(within(symptomeStage).queryByText("A3")).not.toBeInTheDocument();
+  expect(within(symptomeStage).queryByText("A4")).not.toBeInTheDocument();
+
+  const essenzStage = getStageCard("Essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-emphasis", "essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-density", "compact");
+  expect(within(essenzStage).getAllByRole("listitem")).toHaveLength(2);
+});
+
 test("shows a global stop state and keeps all stages idle when the run failed", async () => {
   (globalThis as typeof globalThis & { __SCM_TEST_MODE__?: boolean }).__SCM_TEST_MODE__ = true;
   const failedRun = {
@@ -175,9 +213,20 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
 
   expect(screen.getByText("LANGUAGE_CONFIDENCE_TOO_LOW")).toBeInTheDocument();
   expect(screen.getByText("Sprache · FR")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("Bereit")).toBeInTheDocument();
+  expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
+  expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+
+  const symptomeStage = getStageCard("Symptome");
+  expect(symptomeStage).toHaveAttribute("data-stage-density", "failed");
+  expect(within(symptomeStage).queryByText(/Status:/)).not.toBeInTheDocument();
+  expect(within(symptomeStage).getByText("Keine validen Analyseinhalte vorhanden.")).toBeInTheDocument();
+  expect(within(symptomeStage).queryByRole("list")).not.toBeInTheDocument();
+
+  const essenzStage = getStageCard("Essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-emphasis", "essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-density", "failed");
+  expect(within(essenzStage).queryByRole("list")).not.toBeInTheDocument();
 });
 
 test("clears the previously selected run content while a new analysis starts", async () => {

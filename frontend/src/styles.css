@@ -1348,3 +1348,110 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+.pipeline-frame-result {
+  padding-bottom: 1rem;
+}
+
+.machine-status-result {
+  margin-top: 0.9rem;
+  margin-bottom: 0.85rem;
+}
+
+.pipeline-timeline-result {
+  gap: 0.52rem;
+  padding-top: 0.2rem;
+  --stage-step: 4.35rem;
+}
+
+.pipeline-timeline-result::after {
+  display: none;
+}
+
+.pipeline-timeline-result .stage-card {
+  min-height: 0;
+  padding: 0.68rem 0.82rem 0.72rem 0.88rem;
+}
+
+.pipeline-timeline-result .stage-card::before {
+  left: -1.34rem;
+}
+
+.stage-card-mode-completed,
+.stage-card-mode-failed {
+  cursor: default;
+}
+
+.stage-card-mode-completed .stage-card-head h3,
+.stage-card-mode-failed .stage-card-head h3 {
+  font-size: 0.94rem;
+}
+
+.stage-card-mode-completed .stage-summary,
+.stage-card-mode-failed .stage-summary {
+  font-size: 0.7rem;
+  line-height: 1.32;
+  max-width: none;
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stage-summary-compact,
+.stage-summary-failed {
+  color: rgba(226, 233, 239, 0.78);
+}
+
+.stage-card-mode-completed .stage-entries,
+.stage-card-mode-failed .stage-entries {
+  gap: 0.12rem;
+  font-size: 0.78rem;
+  line-height: 1.28;
+}
+
+.stage-entries-compact li:nth-child(n + 4) {
+  display: none;
+}
+
+.stage-card-mode-failed .stage-content {
+  gap: 0.14rem;
+}
+
+.stage-card-mode-failed .stage-summary-failed {
+  color: rgba(227, 231, 236, 0.62);
+}
+
+.stage-card-mode-failed .stage-entries {
+  display: none;
+}
+
+.stage-card-essenz.stage-card-mode-completed,
+.stage-card-essenz.stage-card-mode-failed {
+  border-left-color: rgba(239, 184, 94, 0.92);
+  background:
+    linear-gradient(90deg, rgba(239, 184, 94, 0.16), rgba(255, 255, 255, 0.02) 56%, transparent),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 42%),
+    rgba(63, 59, 48, 0.95);
+  box-shadow:
+    0 12px 22px rgba(26, 31, 36, 0.2),
+    inset 0 0 0 1px rgba(239, 184, 94, 0.16);
+}
+
+.stage-card-essenz.stage-card-mode-completed::before,
+.stage-card-essenz.stage-card-mode-failed::before {
+  background: rgba(239, 184, 94, 0.92);
+  box-shadow: 0 0 0 0.26rem rgba(239, 184, 94, 0.14);
+}
+
+.stage-card-essenz .stage-card-head h3 {
+  color: rgba(250, 241, 220, 0.98);
+}
+
+@media (max-width: 900px) {
+  .pipeline-timeline-result {
+    gap: 0.46rem;
+    --stage-step: 4rem;
+  }
+}
