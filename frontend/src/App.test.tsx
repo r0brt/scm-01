@@ -190,6 +190,10 @@ test("renders completed runs as one compact full pipeline with a distinct essenz
   expect(stageCards).toHaveLength(6);
   expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+  expect(screen.queryByText("0/5000")).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Runs$/i)).not.toBeInTheDocument();
 
   const symptomeStage = getStageCard("Symptome");
   expect(symptomeStage).toHaveAttribute("data-stage-density", "compact");
@@ -249,6 +253,10 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
   expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
   expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+  expect(screen.queryByText("0/5000")).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Runs$/i)).not.toBeInTheDocument();
 
   const symptomeStage = getStageCard("Symptome");
   expect(symptomeStage).toHaveAttribute("data-stage-density", "failed");
