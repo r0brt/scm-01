@@ -32,6 +32,13 @@ export const Stage = forwardRef<HTMLElement, StageProps>(function Stage({ mode, 
       : isReducedProcessingStage
         ? "reduced"
         : "active";
+  const tone = isFailedStage
+    ? "failed"
+    : isActiveProcessingStage
+      ? "active"
+      : isCompletedStage || stage.status === "completed"
+        ? "completed"
+        : "upcoming";
 
   return (
     <article
@@ -47,6 +54,7 @@ export const Stage = forwardRef<HTMLElement, StageProps>(function Stage({ mode, 
         .join(" ")}
       data-stage-density={density}
       data-stage-emphasis={stage.key === "essenz" ? "essenz" : "default"}
+      data-stage-tone={tone}
       ref={isActiveProcessingStage ? ref : null}
       role="article"
     >

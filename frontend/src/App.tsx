@@ -101,6 +101,13 @@ export default function App() {
 
       {activeTab === "analyse" ? (
         <section aria-labelledby="analyse-tab" className="analysis-layout" id="analyse-panel" role="tabpanel">
+          <header className="analysis-context">
+            <p className="analysis-context-title">Social Cleanup Machine</p>
+            <p className="analysis-context-copy">
+              Analysiert komplexe gesellschaftliche Themen in sechs Ebenen: Symptome,
+              Ursachen, Emotionen, Narrative, Mythen und Essenz.
+            </p>
+          </header>
           <AnalysisComposer
             loading={loading}
             onSubmit={handleSubmit}

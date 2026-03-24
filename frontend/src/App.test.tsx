@@ -60,8 +60,17 @@ test("renders two top-level tabs and keeps archive accessible without runs", asy
 
   expect(await screen.findByRole("tab", { name: "Analyse" })).toBeInTheDocument();
   expect(screen.getByRole("tab", { name: "Archiv" })).toBeInTheDocument();
-  expect(screen.getByRole("heading", { name: "Problem eingeben" })).toBeInTheDocument();
+  expect(screen.getByText("Social Cleanup Machine")).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      "Analysiert komplexe gesellschaftliche Themen in sechs Ebenen: Symptome, Ursachen, Emotionen, Narrative, Mythen und Essenz.",
+    ),
+  ).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "Problem" })).toBeInTheDocument();
   expect(screen.getByText("Noch keine Analyse gestartet")).toBeInTheDocument();
+  expect(screen.getByPlaceholderText("Beschreibe das Problem kurz...")).toBeInTheDocument();
+  expect(screen.queryByText("Problem eingeben")).not.toBeInTheDocument();
+  expect(screen.queryByPlaceholderText("Problemtext eingeben")).not.toBeInTheDocument();
   expect(screen.queryByText("Maschine einspeisen")).not.toBeInTheDocument();
   expect(screen.queryByRole("complementary", { name: "Run-Verlauf" })).not.toBeInTheDocument();
 
@@ -90,6 +99,7 @@ test("loads a selected archived run into Analyse and copies its problem text", a
     expect(screen.getByRole("tab", { name: "Analyse" })).toHaveAttribute("aria-selected", "true");
   });
 
+  expect(screen.getByText("Social Cleanup Machine")).toBeInTheDocument();
   expect(screen.getByLabelText("Problemtext")).toHaveValue("Wohnungsnot");
   expect(screen.getByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).toBeInTheDocument();
 });
@@ -169,13 +179,37 @@ test("renders completed runs as a compact pipeline and emphasizes Essenz", async
 
   const symptomeStage = getStageCard("Symptome");
   expect(symptomeStage).toHaveAttribute("data-stage-density", "compact");
+  expect(within(symptomeStage).getByText("Stage 01")).toHaveClass("stage-index");
   expect(within(symptomeStage).getAllByRole("listitem")).toHaveLength(2);
   expect(within(symptomeStage).queryByText("Wartelisten wachsen.")).not.toBeInTheDocument();
 
   const essenzStage = getStageCard("Essenz");
   expect(essenzStage).toHaveAttribute("data-stage-emphasis", "essenz");
+  expect(essenzStage).toHaveClass("stage-card-essenz");
   expect(within(essenzStage).getAllByRole("listitem")).toHaveLength(3);
   expect(screen.queryByText("Filterstrecke")).not.toBeInTheDocument();
+});
+
+test("compresses archive entries to id, one-line title, and subtle status", async () => {
+  const run = {
+    ...buildSuccessfulRun(),
+    id: 59,
+    input_text: "Ein sehr langer Archivtitel fuer eine Analyse, der visuell gekuerzt werden soll",
+  };
+  globalThis.fetch = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify([run]), { status: 200 }));
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await user.click(await screen.findByRole("tab", { name: "Archiv" }));
+
+  const entry = screen.getByRole("button", {
+    name: /Ein sehr langer Archivtitel fuer eine Analyse/i,
+  });
+
+  expect(within(entry).getByText("#59")).toHaveClass("run-item-id");
+  expect(within(entry).getByText(/Ein sehr langer Archivtitel/)).toHaveClass("run-item-title");
+  expect(within(entry).getByText("completed · valid")).toHaveClass("run-item-status");
 });
 
 test("defines the simplified stylesheet contract for tabs, archive, and analysis hierarchy", () => {
@@ -188,9 +222,13 @@ test("defines the simplified stylesheet contract for tabs, archive, and analysis
   expect(stylesheet).toContain(".tab-button");
   expect(stylesheet).toContain(".analysis-layout");
   expect(stylesheet).toContain(".archive-layout");
+  expect(stylesheet).toContain(".analysis-context");
   expect(stylesheet).toContain(".pipeline-empty-state");
   expect(stylesheet).toContain(".stage-card-essenz");
+  expect(stylesheet).toContain(".run-item-title");
+  expect(stylesheet).toContain("text-overflow: ellipsis;");
   expect(stylesheet).not.toContain(".history-access-trigger");
   expect(stylesheet).not.toContain(".machine-status");
   expect(stylesheet).not.toContain("Maschine einspeisen");
+  expect(stylesheet).not.toContain("Problemtext eingeben");
 });

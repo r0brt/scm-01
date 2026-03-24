@@ -75,6 +75,29 @@ p {
   gap: 1rem;
 }
 
+.analysis-layout {
+  gap: 0.85rem;
+}
+
+.analysis-context {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 42rem;
+}
+
+.analysis-context-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(31, 39, 49, 0.86);
+}
+
+.analysis-context-copy {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted-text);
+}
+
 .top-level-tabs {
   display: inline-flex;
   gap: 0.5rem;
@@ -122,25 +145,28 @@ p {
 
 .composer-panel {
   display: grid;
-  gap: 0.85rem;
-  padding: 1rem 1rem 1.1rem;
+  gap: 0.7rem;
+  padding: 0.75rem 0.8rem 0.8rem;
+  border-color: rgba(31, 39, 49, 0.08);
+  background: rgba(255, 252, 247, 0.76);
+  box-shadow: 0 12px 30px rgba(73, 66, 53, 0.04);
 }
 
 .composer-label {
   font-family: "Space Grotesk", "Avenir Next", sans-serif;
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
 
 .composer-panel textarea {
   width: 100%;
-  min-height: 6.5rem;
+  min-height: 5rem;
   resize: vertical;
-  padding: 0.85rem 0.95rem;
-  border: 1px solid rgba(31, 39, 49, 0.14);
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(31, 39, 49, 0.1);
   border-radius: 0.95rem;
-  background: rgba(255, 253, 249, 0.96);
+  background: rgba(255, 253, 249, 0.84);
   color: var(--text);
 }
 
@@ -157,9 +183,9 @@ p {
 
 .composer-panel button,
 .runs-panel button {
-  padding: 0.75rem 1rem;
+  padding: 0.68rem 0.9rem;
   border-radius: 999px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   transition:
     transform 160ms ease,
@@ -227,8 +253,8 @@ p {
 
 .runs-list {
   display: grid;
-  gap: 0.6rem;
-  margin: 1rem 0 0;
+  gap: 0.45rem;
+  margin: 0.85rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -236,10 +262,10 @@ p {
 .run-item {
   width: 100%;
   display: grid;
-  gap: 0.2rem;
-  padding: 0.9rem;
+  gap: 0.12rem;
+  padding: 0.7rem 0.8rem;
   border: 1px solid rgba(31, 39, 49, 0.1);
-  border-radius: 1rem;
+  border-radius: 0.9rem;
   background: rgba(255, 253, 249, 0.96);
   color: var(--text);
   text-align: left;
@@ -255,14 +281,30 @@ p {
 }
 
 .run-item-id,
-.run-item small {
+.run-item-status {
   color: var(--muted-text);
+}
+
+.run-item-id {
+  font-size: 0.7rem;
+}
+
+.run-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.run-item-status {
+  font-size: 0.7rem;
 }
 
 .pipeline-timeline {
   position: relative;
   display: grid;
-  gap: 0.8rem;
+  gap: 0.62rem;
   padding-left: 1.5rem;
 }
 
@@ -284,8 +326,8 @@ p {
 .stage-card {
   position: relative;
   display: grid;
-  gap: 0.7rem;
-  padding: 0.95rem 1rem;
+  gap: 0.52rem;
+  padding: 0.82rem 0.92rem;
   border: 1px solid rgba(31, 39, 49, 0.1);
   border-radius: 1rem;
   background: var(--surface-strong);
@@ -311,20 +353,22 @@ p {
 .stage-card-head,
 .stage-content {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .stage-index {
   color: var(--muted-text);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  opacity: 0.72;
 }
 
 .stage-card h3 {
   font-family: "Space Grotesk", "Avenir Next", sans-serif;
-  font-size: 0.98rem;
+  font-size: 1rem;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
@@ -341,11 +385,11 @@ p {
 
 .stage-entries {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.18rem;
   margin: 0;
   padding-left: 1rem;
-  font-size: 0.83rem;
-  line-height: 1.4;
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .stage-entries li::marker {
@@ -354,11 +398,12 @@ p {
 
 .stage-card-processing {
   transform: translateY(-1px);
-  border-color: rgba(39, 104, 199, 0.28);
+  padding: 0.95rem 1rem;
+  border-color: rgba(39, 104, 199, 0.34);
   background:
-    linear-gradient(180deg, rgba(39, 104, 199, 0.06), rgba(255, 253, 249, 0.98) 55%),
+    linear-gradient(180deg, rgba(39, 104, 199, 0.07), rgba(255, 253, 249, 0.99) 55%),
     var(--surface-strong);
-  box-shadow: 0 14px 28px rgba(39, 104, 199, 0.1);
+  box-shadow: 0 16px 30px rgba(39, 104, 199, 0.12);
 }
 
 .stage-card-processing::before,
@@ -368,8 +413,8 @@ p {
 }
 
 .pipeline-timeline-processing .stage-card-status-completed {
-  opacity: 0.7;
-  background: rgba(248, 250, 247, 0.92);
+  opacity: 0.82;
+  background: rgba(248, 250, 247, 0.9);
   box-shadow: none;
 }
 
@@ -379,9 +424,19 @@ p {
 }
 
 .pipeline-timeline-processing .stage-card-status-idle {
-  opacity: 0.52;
+  opacity: 0.4;
   border-style: dashed;
   box-shadow: none;
+}
+
+.stage-card[data-stage-tone="completed"] h3 {
+  color: rgba(31, 39, 49, 0.88);
+}
+
+.stage-card[data-stage-tone="upcoming"] h3,
+.stage-card[data-stage-tone="upcoming"] .stage-index,
+.stage-card[data-stage-tone="upcoming"] .stage-state-chip {
+  color: rgba(104, 113, 125, 0.82);
 }
 
 .stage-card-mode-completed::before {
@@ -396,10 +451,11 @@ p {
 
 .stage-card-essenz {
   border-color: rgba(214, 162, 67, 0.28);
+  padding: 1rem 1.05rem;
   background:
-    linear-gradient(180deg, rgba(214, 162, 67, 0.08), rgba(255, 253, 249, 0.96) 55%),
+    linear-gradient(180deg, rgba(214, 162, 67, 0.1), rgba(255, 250, 242, 0.98) 58%),
     var(--surface-strong);
-  box-shadow: 0 14px 30px rgba(214, 162, 67, 0.1);
+  box-shadow: 0 16px 34px rgba(214, 162, 67, 0.12);
 }
 
 .stage-card-essenz::before {
@@ -409,19 +465,6 @@ p {
 
 .stage-card-essenz h3 {
   color: #6f531f;
-}
-
-.stage-signal {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 0.18rem;
-  border-radius: 1rem 1rem 0 0;
-  background: linear-gradient(
-    90deg,
-    rgba(39, 104, 199, 0.18),
-    rgba(39, 104, 199, 0.7),
-    rgba(39, 104, 199, 0.18)
-  );
 }
 
 .pipeline-inline-error {
@@ -455,6 +498,10 @@ p {
   .pipeline-empty-state {
     padding: 0.9rem;
     border-radius: 1rem;
+  }
+
+  .analysis-context-copy {
+    font-size: 0.76rem;
   }
 
   .panel-header {
