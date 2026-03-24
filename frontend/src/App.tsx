@@ -14,6 +14,7 @@ export default function App() {
   const [selectedRun, setSelectedRun] = useState<AnalysisRun | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [revealToken, setRevealToken] = useState(0);
 
   const pipelineViewModel = usePipelineViewModel(selectedRun, revealToken, loading);
@@ -24,7 +25,7 @@ export default function App() {
   const isCompletedLike =
     pipelineViewModel.status === "completed" || pipelineViewModel.status === "failed";
   const isIdle = !isProcessing && !isCompletedLike;
-  const showArchive = runs.length > 0;
+  const hasHistory = runs.length > 0;
 
   useEffect(() => {
     void refreshRuns();
@@ -64,6 +65,7 @@ export default function App() {
     try {
       const run = await getAnalysis(runId);
       setSelectedRun(run);
+      setIsHistoryOpen(false);
       setRevealToken(0);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Run konnte nicht geladen werden.");
@@ -87,10 +89,22 @@ export default function App() {
             <PipelineView viewModel={pipelineViewModel} />
           </section>
         ) : null}
+      </div>
 
-        {showArchive && !isProcessing ? (
-          <section className={`app-secondary ${isCompletedLike ? "app-secondary-result" : ""}`}>
-            <div className="app-secondary-body">
+      {hasHistory && !isProcessing ? (
+        <section className="history-access">
+          <div className="history-access-bar">
+            <button
+              className="history-access-trigger"
+              onClick={() => setIsHistoryOpen((current) => !current)}
+              type="button"
+            >
+              {isHistoryOpen ? "Verlauf ausblenden" : "Verlauf anzeigen"}
+            </button>
+          </div>
+
+          {isHistoryOpen ? (
+            <div className="history-access-panel">
               <RunHistoryPanel
                 onRefresh={() => void refreshRuns()}
                 onSelectRun={(runId) => void handleSelectRun(runId)}
@@ -98,9 +112,9 @@ export default function App() {
                 selectedRunId={selectedRun?.id ?? null}
               />
             </div>
-          </section>
-        ) : null}
-      </div>
+          ) : null}
+        </section>
+      ) : null}
     </main>
   );
 }

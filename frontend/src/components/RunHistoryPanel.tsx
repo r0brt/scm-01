@@ -14,7 +14,7 @@ export function RunHistoryPanel({
   onSelectRun,
 }: RunHistoryPanelProps) {
   return (
-    <aside className="runs-panel">
+    <aside aria-label="Run-Verlauf" className="runs-panel">
       <div className="panel-header">
         <div>
           <p className="panel-kicker">Runs</p>

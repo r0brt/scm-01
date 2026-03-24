@@ -84,6 +84,7 @@ test("renders a focused idle input view before submission", async () => {
   expect(queryStageCard("Symptome")).not.toBeInTheDocument();
   expect(queryStageCard("Essenz")).not.toBeInTheDocument();
   expect(screen.queryByText(/^Analyse laeuft/)).not.toBeInTheDocument();
+  expect(screen.queryByRole("complementary", { name: "Run-Verlauf" })).not.toBeInTheDocument();
 });
 
 test("reveals the six pipeline stages sequentially after a successful analysis", async () => {
@@ -149,6 +150,11 @@ test("renders completed runs as one compact full pipeline with a distinct essenz
     expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
   });
 
+  expect(screen.queryByRole("button", { name: /Wohnungsnot/i })).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
+  expect(screen.getByRole("complementary", { name: "Run-Verlauf" })).toBeInTheDocument();
+
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
 
   await waitFor(() => {
@@ -204,7 +210,9 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
 
   expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /bonjour hello hallo/i })).not.toBeInTheDocument();
 
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
   await user.click(screen.getByRole("button", { name: /bonjour hello hallo/i }));
 
   await waitFor(() => {
@@ -261,6 +269,7 @@ test("clears the previously selected run content while a new analysis starts", a
     expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
   });
 
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
 
   await waitFor(() => {
@@ -286,4 +295,26 @@ test("clears the previously selected run content while a new analysis starts", a
   await waitFor(() => {
     expect(screen.getByText("Neuer Eintrag")).toBeInTheDocument();
   });
+});
+
+test("keeps run history outside the default flow until the secondary trigger is used", async () => {
+  const completedRun = buildSuccessfulRun();
+  globalThis.fetch = vi.fn().mockResolvedValueOnce(
+    new Response(JSON.stringify([completedRun]), { status: 200 }),
+  );
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await waitFor(() => {
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
+  });
+
+  expect(screen.queryByRole("complementary", { name: "Run-Verlauf" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /Wohnungsnot/i })).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
+
+  expect(screen.getByRole("complementary", { name: "Run-Verlauf" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /Wohnungsnot/i })).toBeInTheDocument();
 });
