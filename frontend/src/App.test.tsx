@@ -1,3 +1,7 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -52,6 +56,10 @@ function queryStageCard(name: string) {
   return screen.queryByRole("article", { name: `Stage ${name}` });
 }
 
+function getCurrentStageCard() {
+  return document.querySelector(".stage-card-processing") as HTMLElement | null;
+}
+
 function createDeferredResponse() {
   let resolveResponse: ((response: Response) => void) | null = null;
   const promise = new Promise<Response>((resolve) => {
@@ -65,6 +73,44 @@ function createDeferredResponse() {
     },
   };
 }
+
+test("renders a focused idle input view before submission", async () => {
+  globalThis.fetch = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify([]), { status: 200 }));
+
+  render(<App />);
+
+  const textarea = await screen.findByLabelText("Problemtext");
+  const composerForm = textarea.closest("form");
+
+  expect(composerForm).not.toBeNull();
+  expect(within(composerForm as HTMLFormElement).getAllByRole("button")).toHaveLength(1);
+  expect(screen.queryByText("0/5000")).not.toBeInTheDocument();
+  expect(queryStageCard("Symptome")).not.toBeInTheDocument();
+  expect(queryStageCard("Essenz")).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Analyse laeuft/)).not.toBeInTheDocument();
+  expect(screen.queryByRole("complementary", { name: "Run-Verlauf" })).not.toBeInTheDocument();
+});
+
+test("defines a light analytical stylesheet contract for the process-machine layout", () => {
+  const stylesheet = readFileSync(
+    resolve(dirname(fileURLToPath(import.meta.url)), "styles.css"),
+    "utf8",
+  );
+
+  expect(stylesheet).toContain("--background:");
+  expect(stylesheet).toContain("--text:");
+  expect(stylesheet).toContain("--muted-text:");
+  expect(stylesheet).toContain("--line-color:");
+  expect(stylesheet).toContain("--processing-accent:");
+  expect(stylesheet).toContain("--completed-accent:");
+  expect(stylesheet).toContain("--essence-highlight:");
+  expect(stylesheet).toContain("--error-color:");
+  expect(stylesheet).toContain("max-width: 960px;");
+  expect(stylesheet).toContain("margin: 0 auto;");
+  expect(stylesheet).toContain(".pipeline-timeline::before");
+  expect(stylesheet).toContain("@media (max-width: 720px)");
+  expect(stylesheet).not.toContain("color-scheme: dark;");
+});
 
 test("reveals the six pipeline stages sequentially after a successful analysis", async () => {
   (globalThis as typeof globalThis & { __SCM_TEST_MODE__?: boolean }).__SCM_TEST_MODE__ = true;
@@ -82,45 +128,85 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   await user.click(screen.getByRole("button", { name: "Analyse starten" }));
 
   expect(await screen.findByText(/^Analyse laeuft/)).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
 
-  expect(within(getStageCard("Symptome")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(
-    within(getStageCard("Symptome")).getByText(
-      "Sie hat staendig Angst vor der naechsten Mieterhoehung.",
-    ),
-  ).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("Oberflaechliche Signale")).not.toBeInTheDocument();
-  expect(queryStageCard("Ursachen")).not.toBeInTheDocument();
   await waitFor(() => {
-    expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
+    expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
+  });
+
+  const processingCards = screen.getAllByRole("article", { name: /Stage / });
+  const activeProcessingCards = document.querySelectorAll(".stage-card-processing");
+
+  expect(activeProcessingCards).toHaveLength(1);
+  expect(within(activeProcessingCards[0] as HTMLElement).queryByText(/Status:/)).not.toBeInTheDocument();
+  expect(within(activeProcessingCards[0] as HTMLElement).queryAllByRole("listitem").length).toBeLessThanOrEqual(2);
+  expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+
+  const inactiveCards = processingCards.filter((card) => !card.classList.contains("stage-card-processing"));
+  expect(inactiveCards).toHaveLength(5);
+  inactiveCards.forEach((card) => {
+    expect(card).toHaveAttribute("data-stage-density", "reduced");
+    expect(within(card).queryByRole("list")).not.toBeInTheDocument();
+  });
+
+  await waitFor(() => {
+    expect(getStageCard("Essenz")).toBeInTheDocument();
   }, { timeout: revealTimeout });
 
   expect(scrollIntoViewMock).toHaveBeenCalled();
-  expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
   expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(
-    within(getStageCard("Symptome")).getByText(
-      "Sie hat staendig Angst vor der naechsten Mieterhoehung.",
-    ),
-  ).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("A2")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("A3")).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("A4")).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByRole("button", { name: "Details anzeigen" })).toBeInTheDocument();
-  expect(within(getStageCard("Essenz")).queryByRole("button", { name: "Details anzeigen" })).not.toBeInTheDocument();
-  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "false");
-  expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "false");
-
-  await user.click(getStageCard("Symptome"));
-  expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "true");
-  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "false");
-  expect(within(getStageCard("Symptome")).getByText("A4")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByRole("button", { name: "Details ausblenden" })).toBeInTheDocument();
-  await user.click(getStageCard("Ursachen"));
-  expect(getStageCard("Ursachen")).toHaveAttribute("aria-expanded", "true");
-  expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "true");
 }, 10_000);
+
+test("renders completed runs as one compact full pipeline with a distinct essenz stage", async () => {
+  const completedRun = buildSuccessfulRun();
+  globalThis.fetch = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify([completedRun]), { status: 200 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify(completedRun), { status: 200 }));
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await waitFor(() => {
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
+  });
+
+  expect(screen.queryByRole("button", { name: /Wohnungsnot/i })).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
+  expect(screen.getByRole("complementary", { name: "Run-Verlauf" })).toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+
+  await waitFor(() => {
+    expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
+  });
+
+  const stageCards = screen.getAllByRole("article", { name: /Stage / });
+  expect(stageCards).toHaveLength(6);
+  expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+  expect(screen.queryByText("0/5000")).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Runs$/i)).not.toBeInTheDocument();
+
+  const symptomeStage = getStageCard("Symptome");
+  expect(symptomeStage).toHaveAttribute("data-stage-density", "compact");
+  expect(within(symptomeStage).getByText("Oberflaechliche Signale")).toBeInTheDocument();
+  expect(within(symptomeStage).getAllByRole("listitem")).toHaveLength(2);
+  expect(within(symptomeStage).queryByText("A3")).not.toBeInTheDocument();
+  expect(within(symptomeStage).queryByText("A4")).not.toBeInTheDocument();
+
+  const essenzStage = getStageCard("Essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-emphasis", "essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-density", "compact");
+  expect(within(essenzStage).getAllByRole("listitem")).toHaveLength(2);
+});
 
 test("shows a global stop state and keeps all stages idle when the run failed", async () => {
   (globalThis as typeof globalThis & { __SCM_TEST_MODE__?: boolean }).__SCM_TEST_MODE__ = true;
@@ -148,10 +234,14 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
   render(<App />);
 
   await waitFor(() => {
-    expect(screen.getByText("Bereit zur Analyse")).toBeInTheDocument();
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
   });
 
-  await user.click(screen.getByRole("button", { name: "Archiv" }));
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /bonjour hello hallo/i })).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
   await user.click(screen.getByRole("button", { name: /bonjour hello hallo/i }));
 
   await waitFor(() => {
@@ -160,9 +250,24 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
 
   expect(screen.getByText("LANGUAGE_CONFIDENCE_TOO_LOW")).toBeInTheDocument();
   expect(screen.getByText("Sprache · FR")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("Bereit")).toBeInTheDocument();
+  expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
+  expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+  expect(screen.queryByText("0/5000")).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Runs$/i)).not.toBeInTheDocument();
+
+  const symptomeStage = getStageCard("Symptome");
+  expect(symptomeStage).toHaveAttribute("data-stage-density", "failed");
+  expect(within(symptomeStage).queryByText(/Status:/)).not.toBeInTheDocument();
+  expect(within(symptomeStage).getByText("Keine validen Analyseinhalte vorhanden.")).toBeInTheDocument();
+  expect(within(symptomeStage).queryByRole("list")).not.toBeInTheDocument();
+
+  const essenzStage = getStageCard("Essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-emphasis", "essenz");
+  expect(essenzStage).toHaveAttribute("data-stage-density", "failed");
+  expect(within(essenzStage).queryByRole("list")).not.toBeInTheDocument();
 });
 
 test("clears the previously selected run content while a new analysis starts", async () => {
@@ -194,12 +299,11 @@ test("clears the previously selected run content while a new analysis starts", a
   render(<App />);
 
   await waitFor(() => {
-    expect(screen.getByText("Bereit zur Analyse")).toBeInTheDocument();
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
   });
 
-  await user.click(screen.getByRole("button", { name: "Archiv" }));
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
-  await user.click(screen.getByRole("button", { name: "Pipeline" }));
 
   await waitFor(() => {
     expect(getStageCard("Essenz")).toBeInTheDocument();
@@ -224,4 +328,26 @@ test("clears the previously selected run content while a new analysis starts", a
   await waitFor(() => {
     expect(screen.getByText("Neuer Eintrag")).toBeInTheDocument();
   });
+});
+
+test("keeps run history outside the default flow until the secondary trigger is used", async () => {
+  const completedRun = buildSuccessfulRun();
+  globalThis.fetch = vi.fn().mockResolvedValueOnce(
+    new Response(JSON.stringify([completedRun]), { status: 200 }),
+  );
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await waitFor(() => {
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
+  });
+
+  expect(screen.queryByRole("complementary", { name: "Run-Verlauf" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /Wohnungsnot/i })).not.toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "Verlauf anzeigen" }));
+
+  expect(screen.getByRole("complementary", { name: "Run-Verlauf" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /Wohnungsnot/i })).toBeInTheDocument();
 });

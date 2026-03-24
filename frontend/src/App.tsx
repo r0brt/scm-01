@@ -12,25 +12,20 @@ export default function App() {
   const [text, setText] = useState("");
   const [runs, setRuns] = useState<AnalysisRun[]>([]);
   const [selectedRun, setSelectedRun] = useState<AnalysisRun | null>(null);
-  const [workspaceTab, setWorkspaceTab] = useState<"pipeline" | "archive">("pipeline");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [revealToken, setRevealToken] = useState(0);
 
   const pipelineViewModel = usePipelineViewModel(selectedRun, revealToken, loading);
-  const isReviewMode =
-    pipelineViewModel.status === "completed" || pipelineViewModel.status === "failed";
-  const isFlowMode =
+  const isProcessing =
     pipelineViewModel.status === "submitting" ||
     pipelineViewModel.status === "result_received" ||
     pipelineViewModel.status === "revealing";
-  const showArchive = runs.length > 0;
-
-  useEffect(() => {
-    if (isFlowMode) {
-      setWorkspaceTab("pipeline");
-    }
-  }, [isFlowMode]);
+  const isCompletedLike =
+    pipelineViewModel.status === "completed" || pipelineViewModel.status === "failed";
+  const isIdle = !isProcessing && !isCompletedLike;
+  const hasHistory = runs.length > 0;
 
   useEffect(() => {
     void refreshRuns();
@@ -70,6 +65,7 @@ export default function App() {
     try {
       const run = await getAnalysis(runId);
       setSelectedRun(run);
+      setIsHistoryOpen(false);
       setRevealToken(0);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Run konnte nicht geladen werden.");
@@ -77,14 +73,7 @@ export default function App() {
   }
 
   return (
-    <main className="page-shell">
-      <header className="topbar">
-        <div className="topbar-brand">
-          <p>Social Clean-Up Machine</p>
-          <span>Sequentielle Analysepipeline</span>
-        </div>
-      </header>
-
+    <main className="page-shell app-shell">
       <AnalysisComposer
         loading={loading}
         onSubmit={handleSubmit}
@@ -94,32 +83,28 @@ export default function App() {
 
       {error ? <p className="error-banner">{error}</p> : null}
 
-      {showArchive && !isFlowMode ? (
-        <nav className="workspace-tabs" aria-label="Arbeitsbereiche">
-          <button
-            className={workspaceTab === "pipeline" ? "workspace-tab workspace-tab-active" : "workspace-tab"}
-            onClick={() => setWorkspaceTab("pipeline")}
-            type="button"
-          >
-            Pipeline
-          </button>
-          <button
-            className={workspaceTab === "archive" ? "workspace-tab workspace-tab-active" : "workspace-tab"}
-            onClick={() => setWorkspaceTab("archive")}
-            type="button"
-          >
-            Archiv
-          </button>
-        </nav>
-      ) : null}
+      <div className="app-frame">
+        {!isIdle ? (
+          <section className="app-main">
+            <PipelineView viewModel={pipelineViewModel} />
+          </section>
+        ) : null}
+      </div>
 
-      <section className={`workspace-grid ${isReviewMode ? "workspace-grid-review" : "workspace-grid-flow"}`}>
-        <div className={`workspace-main ${workspaceTab !== "pipeline" ? "workspace-main-hidden" : ""}`}>
-          <PipelineView viewModel={pipelineViewModel} />
-        </div>
-        {showArchive && workspaceTab === "archive" ? (
-          <section className={`workspace-secondary ${isReviewMode ? "workspace-secondary-review" : "workspace-secondary-flow"}`}>
-            <div className="workspace-secondary-body">
+      {hasHistory && !isProcessing ? (
+        <section className="history-access">
+          <div className="history-access-bar">
+            <button
+              className="history-access-trigger"
+              onClick={() => setIsHistoryOpen((current) => !current)}
+              type="button"
+            >
+              {isHistoryOpen ? "Verlauf ausblenden" : "Verlauf anzeigen"}
+            </button>
+          </div>
+
+          {isHistoryOpen ? (
+            <div className="history-access-panel">
               <RunHistoryPanel
                 onRefresh={() => void refreshRuns()}
                 onSelectRun={(runId) => void handleSelectRun(runId)}
@@ -127,9 +112,9 @@ export default function App() {
                 selectedRunId={selectedRun?.id ?? null}
               />
             </div>
-          </section>
-        ) : null}
-      </section>
+          ) : null}
+        </section>
+      ) : null}
     </main>
   );
 }
