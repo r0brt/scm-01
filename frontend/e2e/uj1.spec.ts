@@ -60,6 +60,9 @@ test("UJ1: create analysis and show pipeline", async ({ page }) => {
 
   await page.goto("/");
 
+  await expect(page.getByRole("tab", { name: "Analyse" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tab", { name: "Archiv" })).toBeVisible();
+  await expect(page.getByText("Noch keine Analyse gestartet")).toBeVisible();
   await expect(page.getByLabel("Problemtext")).toBeVisible();
   await expect(page.getByRole("button", { name: "Analyse starten" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Analyse starten" })).toBeDisabled();
@@ -68,17 +71,14 @@ test("UJ1: create analysis and show pipeline", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Analyse starten" })).toBeEnabled();
   await page.getByRole("button", { name: "Analyse starten" }).click();
 
-  await expect(page.getByText(/^Analyse laeuft/)).toBeVisible();
   await expect(page.getByRole("article", { name: "Stage Symptome" })).toBeVisible();
   await expect(page.getByRole("article", { name: "Stage Essenz" })).toBeVisible();
 
-  await expect(page.getByText("Analyse abgeschlossen")).toBeVisible();
   await expect(page.getByRole("article", { name: "Stage Symptome" })).toContainText(
-    "Wohnungsnot in der Stadt",
+    "Mieten steigen schneller als Einkommen.",
   );
-
-  await expect(page.getByRole("button", { name: "Pipeline" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Archiv" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Verlauf anzeigen" })).toBeVisible();
-  await expect(page.getByRole("complementary", { name: "Run-Verlauf" })).toHaveCount(0);
+  await expect(page.getByRole("article", { name: "Stage Essenz" })).toContainText(
+    "Die Knappheit trifft verletzliche Gruppen zuerst.",
+  );
+  await expect(page.getByRole("tab", { name: "Archiv" })).toBeVisible();
 });

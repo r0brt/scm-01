@@ -61,41 +61,51 @@ export const Stage = forwardRef<HTMLElement, StageProps>(function Stage({ mode, 
 
       <div className="stage-content">
         {isReducedProcessingStage ? (
-          <p className="stage-summary">{stage.status === "completed" ? "Extraktion gesichert" : "Wartet auf Aktivierung"}</p>
+          <span className="stage-state-chip">
+            {stage.status === "completed" ? "Gesichert" : "Wartet"}
+          </span>
         ) : null}
 
         {isActiveProcessingStage ? (
           <>
-            <p className="stage-summary">{getCompletedSummary(stage.summary)}</p>
             {processingEntries.length > 0 ? (
               <ul className="stage-entries stage-entries-processing">
                 {processingEntries.map((entry) => (
                   <li key={entry.text}>{entry.text}</li>
                 ))}
               </ul>
-            ) : null}
+            ) : (
+              <ul className="stage-entries stage-entries-processing">
+                <li>{getCompletedSummary(stage.summary)}</li>
+              </ul>
+            )}
           </>
         ) : null}
 
         {isCompletedStage ? (
           <>
-            <p className="stage-summary stage-summary-compact">{getCompletedSummary(stage.summary)}</p>
             {completedEntries.length > 0 ? (
               <ul className="stage-entries stage-entries-compact">
                 {completedEntries.map((entry) => (
                   <li key={entry.text}>{entry.text}</li>
                 ))}
               </ul>
-            ) : null}
+            ) : (
+              <ul className="stage-entries stage-entries-compact">
+                <li>{getCompletedSummary(stage.summary)}</li>
+              </ul>
+            )}
           </>
         ) : null}
 
         {isFailedStage ? (
-          <p className="stage-summary stage-summary-failed">Keine validen Analyseinhalte vorhanden.</p>
+          <ul className="stage-entries stage-entries-failed">
+            <li>Keine validen Analyseinhalte vorhanden.</li>
+          </ul>
         ) : null}
 
         {!isFailedStage && !isCompletedStage && !isProcessingStage ? (
-          <p className="stage-empty">Bereit</p>
+          <span className="stage-state-chip">Bereit</span>
         ) : null}
       </div>
     </article>
