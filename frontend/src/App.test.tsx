@@ -70,6 +70,22 @@ function createDeferredResponse() {
   };
 }
 
+test("renders a focused idle input view before submission", async () => {
+  globalThis.fetch = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify([]), { status: 200 }));
+
+  render(<App />);
+
+  const textarea = await screen.findByLabelText("Problemtext");
+  const composerForm = textarea.closest("form");
+
+  expect(composerForm).not.toBeNull();
+  expect(within(composerForm as HTMLFormElement).getAllByRole("button")).toHaveLength(1);
+  expect(screen.queryByText("0/5000")).not.toBeInTheDocument();
+  expect(queryStageCard("Symptome")).not.toBeInTheDocument();
+  expect(queryStageCard("Essenz")).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Analyse laeuft/)).not.toBeInTheDocument();
+});
+
 test("reveals the six pipeline stages sequentially after a successful analysis", async () => {
   (globalThis as typeof globalThis & { __SCM_TEST_MODE__?: boolean }).__SCM_TEST_MODE__ = true;
   mockCreateFlow();
@@ -128,7 +144,7 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
   render(<App />);
 
   await waitFor(() => {
-    expect(screen.getByText("Bereit zur Analyse")).toBeInTheDocument();
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
   });
 
   expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
@@ -176,7 +192,7 @@ test("clears the previously selected run content while a new analysis starts", a
   render(<App />);
 
   await waitFor(() => {
-    expect(screen.getByText("Bereit zur Analyse")).toBeInTheDocument();
+    expect(screen.getByLabelText("Problemtext")).toBeInTheDocument();
   });
 
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));

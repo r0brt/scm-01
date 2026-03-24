@@ -96,12 +96,13 @@ button {
 
 .composer-panel {
   position: relative;
-  padding: 0.8rem 0.95rem 0.92rem;
-  margin-bottom: 1rem;
+  max-width: 46rem;
+  margin: 0 auto 1rem;
+  padding: 1.4rem 1.4rem 1.2rem;
   overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01)),
-    rgba(41, 51, 61, 0.88);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+    rgba(41, 51, 61, 0.9);
 }
 
 .composer-panel::after {
@@ -120,6 +121,15 @@ button {
   gap: 1rem;
 }
 
+.composer-label {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  color: rgba(238, 242, 246, 0.92);
+  font-family: "Space Grotesk", "Avenir Next", sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
 .panel-actions {
   display: flex;
   gap: 0.3rem;
@@ -129,11 +139,6 @@ button {
 
 .composer-header h1 {
   font-size: 1.35rem;
-}
-
-.composer-title {
-  display: inline-block;
-  margin: 0;
 }
 
 .panel-header h2 {
@@ -158,13 +163,6 @@ h3 {
   letter-spacing: -0.03em;
 }
 
-.buffer-indicator {
-  color: rgba(228, 235, 242, 0.48);
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
 .composer-copy,
 .panel-copy,
 .runs-copy,
@@ -177,11 +175,10 @@ h3 {
 
 .composer-panel textarea {
   width: 100%;
-  min-height: 6.2rem;
-  padding: 0.78rem 0.82rem;
-  margin-top: 0.45rem;
+  min-height: 9.5rem;
+  padding: 1rem 1.05rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 0;
+  border-radius: 0.75rem;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
     rgba(23, 29, 36, 0.96);
@@ -200,10 +197,10 @@ h3 {
 
 .composer-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
   gap: 1rem;
-  margin-top: 0.6rem;
+  margin-top: 0.85rem;
 }
 
 .composer-panel button,
@@ -214,7 +211,7 @@ h3 {
 
 .composer-panel button,
 .runs-panel .panel-header button {
-  padding: 0.9rem 1.4rem;
+  padding: 0.9rem 1.5rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.78rem;

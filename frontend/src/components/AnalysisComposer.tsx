@@ -15,12 +15,9 @@ export function AnalysisComposer({
 }: AnalysisComposerProps) {
   return (
     <form className="composer-panel" onSubmit={onSubmit}>
-      <div className="composer-header">
-        <label className="eyebrow composer-title" htmlFor="problemtext">
-          Einspeisung
-        </label>
-        <span className="buffer-indicator">{text.length}/5000</span>
-      </div>
+      <label className="composer-label" htmlFor="problemtext">
+        Maschine einspeisen
+      </label>
       <textarea
         aria-label="Problemtext"
         id="problemtext"

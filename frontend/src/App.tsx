@@ -23,6 +23,7 @@ export default function App() {
     pipelineViewModel.status === "revealing";
   const isCompletedLike =
     pipelineViewModel.status === "completed" || pipelineViewModel.status === "failed";
+  const isIdle = !isProcessing && !isCompletedLike;
   const showArchive = runs.length > 0;
 
   useEffect(() => {
@@ -81,9 +82,11 @@ export default function App() {
       {error ? <p className="error-banner">{error}</p> : null}
 
       <div className="app-frame">
-        <section className="app-main">
-          <PipelineView viewModel={pipelineViewModel} />
-        </section>
+        {!isIdle ? (
+          <section className="app-main">
+            <PipelineView viewModel={pipelineViewModel} />
+          </section>
+        ) : null}
 
         {showArchive && !isProcessing ? (
           <section className={`app-secondary ${isCompletedLike ? "app-secondary-result" : ""}`}>
