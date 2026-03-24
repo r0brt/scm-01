@@ -426,9 +426,7 @@ h3 {
 }
 
 .pipeline-frame-flow {
-  display: grid;
-  gap: 0.56rem;
-  padding: 0.58rem;
+  padding: 0.72rem 0.82rem;
 }
 
 .pipeline-frame::before {
@@ -544,6 +542,11 @@ h3 {
 .pipeline-panel-result_received .pipeline-viewport,
 .pipeline-panel-revealing .pipeline-viewport {
   max-height: 19rem;
+}
+
+.pipeline-timeline-processing {
+  gap: 0.56rem;
+  padding: 0.2rem 0 0.2rem 1.8rem;
 }
 
 .pipeline-viewport-complete,
@@ -673,13 +676,19 @@ h3 {
 
 .stage-card-flow-focus {
   min-height: 6.8rem;
-  width: min(100%, 48rem);
-  max-width: 100%;
-  margin-inline: auto;
+}
+
+.stage-card-processing-track {
+  width: 100%;
 }
 
 .stage-card-completed {
   cursor: pointer;
+}
+
+.stage-card-processing-track.stage-card-completed,
+.stage-card-processing-track.stage-card-idle {
+  cursor: default;
 }
 
 .stage-card::before {
@@ -763,6 +772,64 @@ h3 {
 
 .stage-card-future {
   opacity: 0.14;
+}
+
+.pipeline-timeline-processing .stage-card {
+  min-height: 0;
+}
+
+.pipeline-timeline-processing .stage-card::before {
+  left: -1.34rem;
+}
+
+.pipeline-timeline-processing .stage-card .stage-index {
+  margin-bottom: 0.3rem;
+}
+
+.pipeline-timeline-processing .stage-card-completed,
+.pipeline-timeline-processing .stage-card-idle {
+  padding-top: 0.62rem;
+  padding-bottom: 0.64rem;
+}
+
+.pipeline-timeline-processing .stage-card-completed .stage-card-head h3,
+.pipeline-timeline-processing .stage-card-idle .stage-card-head h3 {
+  font-size: 0.92rem;
+}
+
+.pipeline-timeline-processing .stage-card-completed .stage-summary,
+.pipeline-timeline-processing .stage-card-idle .stage-summary {
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.pipeline-timeline-processing .stage-card-completed .stage-content,
+.pipeline-timeline-processing .stage-card-idle .stage-content {
+  gap: 0.16rem;
+}
+
+.pipeline-timeline-processing .stage-card-processing {
+  padding-top: 0.88rem;
+  padding-bottom: 0.92rem;
+  transform: translateX(0.18rem);
+}
+
+.pipeline-timeline-processing .stage-card-processing .stage-card-head h3 {
+  font-size: 1.12rem;
+}
+
+.pipeline-timeline-processing .stage-card-processing .stage-summary {
+  font-size: 0.78rem;
+  text-transform: none;
+}
+
+.pipeline-timeline-processing .stage-card-processing .stage-entries-processing {
+  margin-top: 0.08rem;
+}
+
+.pipeline-timeline-processing .stage-card-terminal {
+  margin-top: 0;
 }
 
 .pipeline-panel-idle .stage-card-future {

@@ -105,9 +105,26 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
 
-  const processingCard = getCurrentStageCard();
-  expect(processingCard).not.toBeNull();
-  expect(within(processingCard!).queryByText(/Status:/)).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
+  });
+
+  const processingCards = screen.getAllByRole("article", { name: /Stage / });
+  const activeProcessingCards = document.querySelectorAll(".stage-card-processing");
+
+  expect(activeProcessingCards).toHaveLength(1);
+  expect(within(activeProcessingCards[0] as HTMLElement).queryByText(/Status:/)).not.toBeInTheDocument();
+  expect(within(activeProcessingCards[0] as HTMLElement).queryAllByRole("listitem").length).toBeLessThanOrEqual(2);
+  expect(screen.queryByRole("button", { name: /details anzeigen/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /details ausblenden/i })).not.toBeInTheDocument();
+
+  const inactiveCards = processingCards.filter((card) => !card.classList.contains("stage-card-processing"));
+  expect(inactiveCards).toHaveLength(5);
+  inactiveCards.forEach((card) => {
+    expect(card).toHaveAttribute("data-stage-density", "reduced");
+    expect(within(card).queryByRole("list")).not.toBeInTheDocument();
+  });
+
   await waitFor(() => {
     expect(getStageCard("Essenz")).toBeInTheDocument();
   }, { timeout: revealTimeout });

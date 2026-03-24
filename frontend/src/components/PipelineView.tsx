@@ -1,4 +1,4 @@
-import type { CSSProperties, KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import type { PipelineStageViewModel, PipelineViewModel, StageKey } from "../types";
@@ -21,6 +21,14 @@ function getPreviewEntries(stage: PipelineStageViewModel) {
 
 function getProcessingEntries(stage: PipelineStageViewModel) {
   return stage.entries.slice(0, 2);
+}
+
+function getReducedStageCopy(stage: PipelineStageViewModel) {
+  if (stage.status === "completed") {
+    return "Extraktion gesichert";
+  }
+
+  return "Wartet auf Aktivierung";
 }
 
 function getStageToggleHint(stage: PipelineStageViewModel, expanded: boolean) {
@@ -75,9 +83,6 @@ export function PipelineView({ viewModel }: PipelineViewProps) {
   );
   const activeStageRef = useRef<HTMLElement | null>(null);
   const [expandedStageKeys, setExpandedStageKeys] = useState<StageKey[]>([]);
-  const timelineStyle = {
-    "--active-stage-index": activeStageIndex,
-  } as CSSProperties;
   const processingHeadline = activeStage
     ? `Analyse laeuft - ${activeStage.title} wird analysiert`
     : "Analyse laeuft";
@@ -136,13 +141,16 @@ export function PipelineView({ viewModel }: PipelineViewProps) {
     const toggleHint = getStageToggleHint(stage, expanded);
     const shouldShowFullDetails = expanded && stage.status === "completed";
     const shouldShowCompactSummary = compactProcessing && stage.status === "processing";
-    const shouldRenderContent = stage.status !== "idle";
+    const isProcessingTrack = compactProcessing;
+    const shouldRenderContent = isProcessingTrack ? true : stage.status !== "idle";
     const isTerminal = stage.key === lastStageKey;
     const compactSummary = getCompactSummary(stage.key);
     const fullSummary = stage.summary.trim() || compactSummary;
     const reviewBulletLimit = stage.key === "essenz" ? 3 : 2;
     const hasReviewDetails = reviewMode && stage.entries.length > reviewBulletLimit;
     const reviewEntries = shouldShowFullDetails ? stage.entries : stage.entries.slice(0, reviewBulletLimit);
+    const isReducedProcessingStage = isProcessingTrack && stage.status !== "processing";
+    const reducedStageCopy = getReducedStageCopy(stage);
     function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -157,7 +165,8 @@ export function PipelineView({ viewModel }: PipelineViewProps) {
           "stage-card",
           reviewMode ? "stage-card-review" : "stage-card-flow",
           reviewMode && stage.key === "essenz" ? "stage-card-review-essence" : "",
-          compactProcessing ? "stage-card-flow-focus" : "",
+          isProcessingTrack ? "stage-card-processing-track" : "",
+          compactProcessing && stage.status === "processing" ? "stage-card-flow-focus" : "",
           getStageFlowClass(stage),
           `stage-card-${stage.status}`,
           expanded ? "stage-card-expanded" : "stage-card-condensed",
@@ -170,11 +179,13 @@ export function PipelineView({ viewModel }: PipelineViewProps) {
         onKeyDown={handleKeyDown}
         ref={stage.status === "processing" ? activeStageRef : null}
         aria-expanded={expanded}
+        data-stage-density={isReducedProcessingStage ? "reduced" : "active"}
         role="article"
-        tabIndex={stage.status === "completed" && !activeStage ? 0 : -1}
+        tabIndex={reviewMode && stage.status === "completed" && !activeStage ? 0 : -1}
       >
         <div className="stage-card-head">
           <div>
+            {isProcessingTrack ? <p className="stage-index">{stage.subtitle}</p> : null}
             <h3>{stage.title}</h3>
           </div>
           {!compactProcessing && !reviewMode ? (
@@ -184,9 +195,11 @@ export function PipelineView({ viewModel }: PipelineViewProps) {
         {stage.status === "processing" ? <div className="stage-signal" aria-hidden="true" /> : null}
         {shouldRenderContent ? (
           <div className="stage-content">
-            {stage.status === "processing" ? (
+            {isReducedProcessingStage ? (
+              <p className="stage-summary">{reducedStageCopy}</p>
+            ) : stage.status === "processing" ? (
               <>
-                {shouldShowCompactSummary ? <p className="stage-summary">{compactSummary}</p> : null}
+                {shouldShowCompactSummary ? <p className="stage-summary">{fullSummary}</p> : null}
                 <ul className="stage-entries stage-entries-processing">
                   {processingEntries.map((entry) => (
                     <li key={entry.text}>{entry.text}</li>
@@ -287,28 +300,17 @@ export function PipelineView({ viewModel }: PipelineViewProps) {
 
       {isProcessingMode ? (
         <div className="pipeline-frame pipeline-frame-flow">
-          <div className="pipeline-flow-track" aria-label="Analysepipeline" style={timelineStyle}>
-            {viewModel.stages.map((stage, index) => (
-              <div
-                className={[
-                  "flow-node",
-                  stage.status === "processing" ? "flow-node-active" : "",
-                  stage.status === "completed" ? "flow-node-completed" : "",
-                  stage.status === "idle" ? "flow-node-future" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                key={stage.key}
-              >
-                <span className="flow-node-dot" aria-hidden="true" />
-                <span className="flow-node-label">
-                  {index + 1}. {stage.title}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="pipeline-focus-card">
-            {activeStage ? renderStageCard(activeStage, { forceExpanded: true, compactProcessing: true }) : null}
+          <div
+            className="pipeline-timeline pipeline-timeline-processing"
+            aria-label="Analysepipeline"
+            data-active-stage-index={activeStageIndex}
+          >
+            {viewModel.stages.map((stage) =>
+              renderStageCard(stage, {
+                forceExpanded: stage.status === "processing",
+                compactProcessing: true,
+              }),
+            )}
           </div>
         </div>
       ) : (
