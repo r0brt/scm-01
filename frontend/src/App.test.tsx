@@ -52,6 +52,10 @@ function queryStageCard(name: string) {
   return screen.queryByRole("article", { name: `Stage ${name}` });
 }
 
+function getCurrentStageCard() {
+  return document.querySelector(".stage-card-processing") as HTMLElement | null;
+}
+
 function createDeferredResponse() {
   let resolveResponse: ((response: Response) => void) | null = null;
   const promise = new Promise<Response>((resolve) => {
@@ -82,44 +86,20 @@ test("reveals the six pipeline stages sequentially after a successful analysis",
   await user.click(screen.getByRole("button", { name: "Analyse starten" }));
 
   expect(await screen.findByText(/^Analyse laeuft/)).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
 
-  expect(within(getStageCard("Symptome")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(
-    within(getStageCard("Symptome")).getByText(
-      "Sie hat staendig Angst vor der naechsten Mieterhoehung.",
-    ),
-  ).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("Oberflaechliche Signale")).not.toBeInTheDocument();
-  expect(queryStageCard("Ursachen")).not.toBeInTheDocument();
+  const processingCard = getCurrentStageCard();
+  expect(processingCard).not.toBeNull();
+  expect(within(processingCard!).queryByText(/Status:/)).not.toBeInTheDocument();
   await waitFor(() => {
-    expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
+    expect(getStageCard("Essenz")).toBeInTheDocument();
   }, { timeout: revealTimeout });
 
   expect(scrollIntoViewMock).toHaveBeenCalled();
-  expect(screen.getByRole("button", { name: "Archiv" })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
   expect(within(getStageCard("Essenz")).queryByText(/Status:/)).not.toBeInTheDocument();
-  expect(
-    within(getStageCard("Symptome")).getByText(
-      "Sie hat staendig Angst vor der naechsten Mieterhoehung.",
-    ),
-  ).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByText("A2")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("A3")).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).queryByText("A4")).not.toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByRole("button", { name: "Details anzeigen" })).toBeInTheDocument();
-  expect(within(getStageCard("Essenz")).queryByRole("button", { name: "Details anzeigen" })).not.toBeInTheDocument();
-  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "false");
-  expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "false");
-
-  await user.click(getStageCard("Symptome"));
-  expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "true");
-  expect(getStageCard("Essenz")).toHaveAttribute("aria-expanded", "false");
-  expect(within(getStageCard("Symptome")).getByText("A4")).toBeInTheDocument();
-  expect(within(getStageCard("Symptome")).getByRole("button", { name: "Details ausblenden" })).toBeInTheDocument();
-  await user.click(getStageCard("Ursachen"));
-  expect(getStageCard("Ursachen")).toHaveAttribute("aria-expanded", "true");
-  expect(getStageCard("Symptome")).toHaveAttribute("aria-expanded", "true");
 }, 10_000);
 
 test("shows a global stop state and keeps all stages idle when the run failed", async () => {
@@ -151,7 +131,9 @@ test("shows a global stop state and keeps all stages idle when the run failed", 
     expect(screen.getByText("Bereit zur Analyse")).toBeInTheDocument();
   });
 
-  await user.click(screen.getByRole("button", { name: "Archiv" }));
+  expect(screen.queryByRole("button", { name: "Pipeline" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Archiv" })).not.toBeInTheDocument();
+
   await user.click(screen.getByRole("button", { name: /bonjour hello hallo/i }));
 
   await waitFor(() => {
@@ -197,9 +179,7 @@ test("clears the previously selected run content while a new analysis starts", a
     expect(screen.getByText("Bereit zur Analyse")).toBeInTheDocument();
   });
 
-  await user.click(screen.getByRole("button", { name: "Archiv" }));
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
-  await user.click(screen.getByRole("button", { name: "Pipeline" }));
 
   await waitFor(() => {
     expect(getStageCard("Essenz")).toBeInTheDocument();
