@@ -31,8 +31,10 @@ export function RunHistoryPanel({
               type="button"
             >
               <span className="run-item-id">#{run.id}</span>
-              <strong>{run.input_text}</strong>
-              <small>
+              <strong className="run-item-title" title={run.input_text}>
+                {run.input_text}
+              </strong>
+              <small className="run-item-status">
                 {run.run_status} · {run.validation_status}
               </small>
             </button>
