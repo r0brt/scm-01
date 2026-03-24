@@ -1,3 +1,7 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -85,6 +89,27 @@ test("renders a focused idle input view before submission", async () => {
   expect(queryStageCard("Essenz")).not.toBeInTheDocument();
   expect(screen.queryByText(/^Analyse laeuft/)).not.toBeInTheDocument();
   expect(screen.queryByRole("complementary", { name: "Run-Verlauf" })).not.toBeInTheDocument();
+});
+
+test("defines a light analytical stylesheet contract for the process-machine layout", () => {
+  const stylesheet = readFileSync(
+    resolve(dirname(fileURLToPath(import.meta.url)), "styles.css"),
+    "utf8",
+  );
+
+  expect(stylesheet).toContain("--background:");
+  expect(stylesheet).toContain("--text:");
+  expect(stylesheet).toContain("--muted-text:");
+  expect(stylesheet).toContain("--line-color:");
+  expect(stylesheet).toContain("--processing-accent:");
+  expect(stylesheet).toContain("--completed-accent:");
+  expect(stylesheet).toContain("--essence-highlight:");
+  expect(stylesheet).toContain("--error-color:");
+  expect(stylesheet).toContain("max-width: 960px;");
+  expect(stylesheet).toContain("margin: 0 auto;");
+  expect(stylesheet).toContain(".pipeline-timeline::before");
+  expect(stylesheet).toContain("@media (max-width: 720px)");
+  expect(stylesheet).not.toContain("color-scheme: dark;");
 });
 
 test("reveals the six pipeline stages sequentially after a successful analysis", async () => {
