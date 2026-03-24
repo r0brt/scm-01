@@ -14,17 +14,14 @@ export function RunHistoryPanel({
   onSelectRun,
 }: RunHistoryPanelProps) {
   return (
-    <aside aria-label="Run-Verlauf" className="runs-panel">
+    <aside aria-label="Archiv" className="runs-panel">
       <div className="panel-header">
-        <div>
-          <p className="panel-kicker">Runs</p>
-          <h2>Verlauf</h2>
-        </div>
+        <h2>Archiv</h2>
         <button onClick={onRefresh} type="button">
           Aktualisieren
         </button>
       </div>
-      {runs.length === 0 ? <p>Keine Runs geladen.</p> : null}
+      {runs.length === 0 ? <p className="runs-empty-state">Noch keine Analysen gespeichert</p> : null}
       <ul className="runs-list">
         {runs.map((run) => (
           <li key={run.id}>

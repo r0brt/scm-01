@@ -15,16 +15,14 @@ export function AnalysisComposer({
 }: AnalysisComposerProps) {
   return (
     <form className="composer-panel" onSubmit={onSubmit}>
-      <label className="composer-label" htmlFor="problemtext">
-        Maschine einspeisen
-      </label>
+      <h1 className="composer-label">Problem eingeben</h1>
       <textarea
         aria-label="Problemtext"
         id="problemtext"
         value={text}
         onChange={(event) => onTextChange(event.target.value)}
         placeholder="Problemtext eingeben"
-        rows={6}
+        rows={4}
       />
       <div className="composer-actions">
         <button disabled={loading || !text.trim()} type="submit">

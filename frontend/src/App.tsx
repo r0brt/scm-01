@@ -8,24 +8,19 @@ import { usePipelineViewModel } from "./pipeline";
 import "./styles.css";
 import type { AnalysisRun } from "./types";
 
+type TopLevelTab = "analyse" | "archiv";
+
 export default function App() {
   const [text, setText] = useState("");
   const [runs, setRuns] = useState<AnalysisRun[]>([]);
   const [selectedRun, setSelectedRun] = useState<AnalysisRun | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TopLevelTab>("analyse");
   const [revealToken, setRevealToken] = useState(0);
 
   const pipelineViewModel = usePipelineViewModel(selectedRun, revealToken, loading);
-  const isProcessing =
-    pipelineViewModel.status === "submitting" ||
-    pipelineViewModel.status === "result_received" ||
-    pipelineViewModel.status === "revealing";
-  const isCompletedLike =
-    pipelineViewModel.status === "completed" || pipelineViewModel.status === "failed";
-  const isIdle = !isProcessing && !isCompletedLike;
-  const hasHistory = runs.length > 0;
+  const hasRun = loading || selectedRun !== null;
 
   useEffect(() => {
     void refreshRuns();
@@ -42,6 +37,7 @@ export default function App() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setActiveTab("analyse");
     setSelectedRun(null);
     setLoading(true);
     setError(null);
@@ -63,9 +59,11 @@ export default function App() {
 
   async function handleSelectRun(runId: number) {
     try {
+      setError(null);
       const run = await getAnalysis(runId);
       setSelectedRun(run);
-      setIsHistoryOpen(false);
+      setText(run.input_text);
+      setActiveTab("analyse");
       setRevealToken(0);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Run konnte nicht geladen werden.");
@@ -74,47 +72,63 @@ export default function App() {
 
   return (
     <main className="page-shell app-shell">
-      <AnalysisComposer
-        loading={loading}
-        onSubmit={handleSubmit}
-        onTextChange={setText}
-        text={text}
-      />
+      <div aria-label="Bereiche" className="top-level-tabs" role="tablist">
+        <button
+          aria-controls="analyse-panel"
+          aria-selected={activeTab === "analyse"}
+          className={`tab-button ${activeTab === "analyse" ? "tab-button-active" : ""}`}
+          id="analyse-tab"
+          onClick={() => setActiveTab("analyse")}
+          role="tab"
+          type="button"
+        >
+          Analyse
+        </button>
+        <button
+          aria-controls="archiv-panel"
+          aria-selected={activeTab === "archiv"}
+          className={`tab-button ${activeTab === "archiv" ? "tab-button-active" : ""}`}
+          id="archiv-tab"
+          onClick={() => setActiveTab("archiv")}
+          role="tab"
+          type="button"
+        >
+          Archiv
+        </button>
+      </div>
 
       {error ? <p className="error-banner">{error}</p> : null}
 
-      <div className="app-frame">
-        {!isIdle ? (
-          <section className="app-main">
-            <PipelineView viewModel={pipelineViewModel} />
-          </section>
-        ) : null}
-      </div>
-
-      {hasHistory && !isProcessing ? (
-        <section className="history-access">
-          <div className="history-access-bar">
-            <button
-              className="history-access-trigger"
-              onClick={() => setIsHistoryOpen((current) => !current)}
-              type="button"
-            >
-              {isHistoryOpen ? "Verlauf ausblenden" : "Verlauf anzeigen"}
-            </button>
+      {activeTab === "analyse" ? (
+        <section aria-labelledby="analyse-tab" className="analysis-layout" id="analyse-panel" role="tabpanel">
+          <AnalysisComposer
+            loading={loading}
+            onSubmit={handleSubmit}
+            onTextChange={setText}
+            text={text}
+          />
+          <div className="app-frame">
+            {hasRun ? (
+              <section className="app-main">
+                <PipelineView viewModel={pipelineViewModel} />
+              </section>
+            ) : (
+              <section className="pipeline-empty-state">
+                <p>Noch keine Analyse gestartet</p>
+              </section>
+            )}
           </div>
-
-          {isHistoryOpen ? (
-            <div className="history-access-panel">
-              <RunHistoryPanel
-                onRefresh={() => void refreshRuns()}
-                onSelectRun={(runId) => void handleSelectRun(runId)}
-                runs={runs}
-                selectedRunId={selectedRun?.id ?? null}
-              />
-            </div>
-          ) : null}
         </section>
-      ) : null}
+      ) : (
+        <section aria-labelledby="archiv-tab" className="archive-layout" id="archiv-panel" role="tabpanel">
+          <RunHistoryPanel
+            onRefresh={() => void refreshRuns()}
+            onSelectRun={(runId) => void handleSelectRun(runId)}
+            runs={runs}
+            selectedRunId={selectedRun?.id ?? null}
+          />
+        </section>
+      )}
     </main>
   );
 }
