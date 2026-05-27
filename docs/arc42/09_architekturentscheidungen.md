@@ -2,6 +2,8 @@
 
 Architekturentscheidungen werden als ADRs in [`docs/adr/`](../adr/) dokumentiert.
 
+Dieses Kapitel fasst die architektonisch wichtigsten Entscheidungen in kurzer Form zusammen. Die ausführliche Begründung, Alternativen und Konsequenzen bleiben in den jeweiligen ADRs dokumentiert.
+
 Aktuelle ADRs:
 
 - [ADR-0001: Architekturstil](../adr/0001-architecture-style.md)
@@ -10,5 +12,43 @@ Aktuelle ADRs:
 - [ADR-0004: LLM-Adapter und Prompt-Versionierung](../adr/0004-llm-adapter-and-prompt-versioning.md)
 - [ADR-0005: Containerisierter lokaler Zielbetrieb](../adr/0005-containerized-local-runtime.md)
 - [ADR-0006: Frontend als clientseitig gerenderte SPA](../adr/0006-frontend-spa-and-client-side-pipeline.md)
+
+## Relevante Kernentscheidungen
+
+### Modularer Monolith statt früher Microservices
+
+Die Gesamtarchitektur bleibt bewusst bei einem modularen Monolithen. Für den aktuellen Umfang bringt diese Entscheidung das beste Verhältnis aus Evolvierbarkeit, Testbarkeit und geringer Betriebs- beziehungsweise Integrationskomplexität.
+
+Siehe: [ADR-0001](../adr/0001-architecture-style.md)
+
+### Strikter Analysevertrag mit expliziter Validierung
+
+Die zentrale Produktfunktion wird nicht allein über Prompting abgesichert, sondern über einen formalen JSON-Vertrag mit strukturierter Validierung. Dadurch bleiben API, Persistenz und Frontend gegen Formatdrift geschützt, und Fehlschläge werden als fachlich sichtbare Zustände statt als stille Heuristik behandelt.
+
+Siehe: [ADR-0002](../adr/0002-analysis-contract-and-validation.md)
+
+### Relationale Persistenz mit versionierten Migrationen
+
+Analyse-Runs werden relational gespeichert und über Alembic-Migrationen versioniert. Das unterstützt die gewünschte Nachvollziehbarkeit, weil Datenmodell und Schemahistorie nicht implizit auseinanderlaufen.
+
+Siehe: [ADR-0003](../adr/0003-persistence-and-migrations.md)
+
+### Adapter-basierte LLM-Integration mit Prompt-Versionierung
+
+Die Analyseerzeugung ist architektonisch von API, Validierung und Persistenz entkoppelt. Gleichzeitig werden `model_id` und `prompt_version` pro Run persistiert, damit Analyseergebnisse nicht als modelllose Blackbox erscheinen.
+
+Siehe: [ADR-0004](../adr/0004-llm-adapter-and-prompt-versioning.md)
+
+### Containerisierter lokaler Zielbetrieb
+
+Die verteilte MVP-Laufzeit wird über `frontend`, `api` und `db` via Docker Compose sichtbar gemacht. Damit bleibt der Projektbetrieb lokal reproduzierbar, ohne bereits produktionsnahe Orchestrierung oder Service-Zersplitterung einzuführen.
+
+Siehe: [ADR-0005](../adr/0005-containerized-local-runtime.md)
+
+### Clientseitige SPA mit deterministischer Pipeline-Inszenierung
+
+Die Frontend-Entscheidung zugunsten einer clientseitig gerenderten SPA passt zum synchron gelieferten Analyse-Run und zur didaktischen Pipeline-Darstellung. Die Zustandsableitung bleibt im Browser und ist dadurch ohne zusätzliche Server-UI-Schicht testbar.
+
+Siehe: [ADR-0006](../adr/0006-frontend-spa-and-client-side-pipeline.md)
 
 Bewertung des aktuellen Repo-Stands: Fuer die juengsten Frontend-Anpassungen ist derzeit keine zusaetzliche ADR noetig. Der state-driven Flow-/Review-Modus, der Archiv-Tab und die reduzierte Export-/Metadateninszenierung sind Auspraegungen der bestehenden Frontend-Architektur und keine neue systemweite Struktur- oder Integrationsentscheidung. Dokumentationspflichtig war hier vor allem die Nachfuehrung von Baustein-, Laufzeit- und Querschnittssicht.
