@@ -1,10 +1,10 @@
-# Privacy and AI Governance
+# Datenschutz und KI-Governance
 
 ## Zweck und Einordnung
 
-Dieses Dokument ergänzt die arc42-Architekturdokumentation um eine kompakte, abgabeorientierte Sicht auf Datenschutz, Nachvollziehbarkeit und KI-Governance im aktuellen SCM-MVP. Es beschreibt den tatsächlich implementierten Stand des Repositories, die dabei verarbeiteten Daten, die relevanten externen Abhängigkeiten und die bewusst offengelegten Grenzen.
+Dieses Dokument ergänzt die arc42-Architekturdokumentation um eine kompakte Sicht auf Datenschutz, Nachvollziehbarkeit und KI-Governance im aktuellen SCM-MVP. Es beschreibt den tatsächlich implementierten Stand des Repositories, die dabei verarbeiteten Daten, die relevanten externen Abhängigkeiten und die bewusst offengelegten Grenzen.
 
-Es ersetzt keine formale Rechtsberatung, kein vollständiges Datenschutzkonzept für einen Produktivbetrieb und keine behördliche oder gerichtliche Einordnung. Massgeblich bleibt deshalb: arc42 ist das Primärdokument der Architektur, dieses Dokument dient als unterstützendes Governance-Artefakt für die Bewertung des MVP.
+Es ersetzt keine formale Rechtsberatung, kein vollständiges Datenschutzkonzept für einen Produktivbetrieb und keine behördliche oder gerichtliche Einordnung. Massgeblich bleibt deshalb: arc42 ist das Primärdokument der Architektur, dieses Dokument dient als unterstützendes Governance-Artefakt für die Einordnung des MVP.
 
 ## Verarbeitete Daten
 
@@ -62,7 +62,7 @@ Transparenz entsteht im MVP vor allem über die sichtbare Pipeline-Darstellung i
 
 Für das aktuelle SCM-MVP ist eine vorsichtige, architekturbezogene Einordnung sinnvoller als eine scheinbar definitive Rechtsqualifikation. Das System analysiert frei formulierte Texte mithilfe eines LLM-gestützten Verarbeitungspfads und stellt die Ergebnisse für menschliche Betrachtung transparent dar. Es trifft keine automatisierten Personenentscheide, bewertet keine Kreditwürdigkeit, steuert keine kritische Infrastruktur und beansprucht keine hoheitliche oder sicherheitskritische Sonderrolle.
 
-Plausibel ist deshalb eine Einordnung als KI-gestütztes Analyse- und Strukturierungswerkzeug mit erhöhtem Bedarf an Transparenz, Nachvollziehbarkeit und menschlicher Kontrolle, aber ohne belastbare Behauptung, dass damit bereits sämtliche regulatorischen Pflichten vollständig abgedeckt wären. Relevant für die Abgabe sind vor allem folgende Governance-Gedanken:
+Plausibel ist deshalb eine Einordnung als KI-gestütztes Analyse- und Strukturierungswerkzeug mit erhöhtem Bedarf an Transparenz, Nachvollziehbarkeit und menschlicher Kontrolle, aber ohne belastbare Behauptung, dass damit bereits sämtliche regulatorischen Pflichten vollständig abgedeckt wären. Im Vordergrund stehen dabei folgende Governance-Gedanken:
 
 - Eingaben können personenbezogene oder sensible Inhalte enthalten und dürfen deshalb nicht als rein harmlose Testdaten behandelt werden.
 - Der optionale OpenAI-Pfad ist als externer Verarbeitungs- und Abhängigkeitsfaktor offen zu benennen.
@@ -84,4 +84,4 @@ Weitere reale Grenzen des MVP sind:
 - keine Aussage darüber, dass eingegebene Inhalte für jeden realen Einsatzkontext datenschutzrechtlich zulässig wären
 - keine Garantie, dass ein LLM-generiertes Analyseergebnis inhaltlich richtig, ausgewogen oder risikofrei ist
 
-Für die Bewertung des Projekts ist deshalb entscheidend, dass das System seine Datenpfade und Governance-Grenzen offenlegt, statt eine Vollreife zu simulieren, die im aktuellen MVP nicht vorhanden ist.
+Entscheidend ist deshalb, dass das System seine Datenpfade und Governance-Grenzen offenlegt, statt eine Vollreife zu simulieren, die im aktuellen MVP nicht vorhanden ist.
