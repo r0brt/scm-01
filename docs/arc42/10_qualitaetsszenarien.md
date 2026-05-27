@@ -54,7 +54,7 @@
 - Szenario: Ein Nutzer, Maintainer oder Stakeholder betrachtet ein Analyseergebnis und leitet daraus weitere Diskussionen ab.
 - Stimulus: Ein gespeicherter Run wird in UI, API oder Dokumentation erklärt.
 - Erwartung: Das System bleibt als KI-gestützte Analysehilfe verständlich und wird nicht als Wahrheitsmaschine beschrieben; Unsicherheit, Modellbezug und die Nicht-Ziele der fachlichen Bewertung bleiben nachvollziehbar.
-- Nachweis: PRD-Nicht-Ziele, UI-/API-Beschriftungen, Metadatenanzeige und arc42-Kapitel zu Qualitätszielen und Risiken.
+- Nachweis: PRD-Nicht-Ziele, API-Vertrag, persistierte Run-Metadaten und arc42-Kapitel zu Qualitätszielen, Governance und Risiken.
 
 ## QS9: Erklärbarer Audit-Pfad pro gespeichertem Run
 
