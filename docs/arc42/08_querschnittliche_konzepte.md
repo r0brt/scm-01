@@ -32,15 +32,15 @@ Schemaaenderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern ueber 
 
 ## Datenschutz und KI-Governance
 
-Die Architektur behandelt Datenschutz und KI-Governance im MVP als querschnittliche Leitplanken, nicht als nachgelagerte Formalitaet. Fachlich relevante Datenkategorien sind vor allem `input_text`, `analysis_json`, `validation_report`, Sprachmetadaten und technische Traceability-Metadaten. Weil der freie Eingabetext personenbezogene, sensible oder situativ heikle Inhalte enthalten kann, wird er architektonisch nicht als harmlose Testnutzlast behandelt.
+Die Architektur behandelt Datenschutz und KI-Governance im MVP als querschnittliche Leitplanken, nicht als nachgelagerte Formalität. Fachlich relevante Datenkategorien sind vor allem `input_text`, `analysis_json`, `validation_report`, Sprachmetadaten und technische Traceability-Metadaten. Weil der freie Eingabetext personenbezogene, sensible oder situativ heikle Inhalte enthalten kann, wird er architektonisch nicht als harmlose Testnutzlast behandelt.
 
-Die Aufbewahrung ist im aktuellen Stand technisch nachvollziehbar, aber operativ nur begrenzt ausdefiniert. Runs bleiben lokal gespeichert, bis die zugrunde liegende Datenbank bewusst bereinigt wird. Es gibt derzeit keine fachliche Loeschfunktion, keine dokumentierten Aufbewahrungsfristen pro Datenkategorie und keine vollstaendig ausgearbeitete Privacy-Operations-Sicht fuer Auskunft, Berichtigung oder Loeschung.
+Die Aufbewahrung ist im aktuellen Stand technisch nachvollziehbar, aber operativ nur begrenzt ausdefiniert. Runs bleiben lokal gespeichert, bis die zugrunde liegende Datenbank bewusst bereinigt wird. Es gibt derzeit keine fachliche Löschfunktion, keine dokumentierten Aufbewahrungsfristen pro Datenkategorie und keine vollständig ausgearbeitete Privacy-Operations-Sicht für Auskunft, Berichtigung oder Löschung.
 
-Transparenz entsteht im MVP ueber offen dokumentierte Datenpfade, die sichtbare Pipeline im Frontend und die persistierten technischen Metadaten pro Run. Die Anwendung ist als unterstuetzendes Analysewerkzeug konzipiert; sie trifft keine autonomen Sachentscheide und ersetzt keine menschliche Beurteilung. Menschliche Aufsicht bleibt insbesondere bei der Auswahl des Eingangstexts, bei der Interpretation der Analyse und bei jeder Weiterverwendung der Resultate erforderlich.
+Transparenz entsteht im MVP über offen dokumentierte Datenpfade, die sichtbare Pipeline im Frontend und die persistierten technischen Metadaten pro Run. Die Anwendung ist als unterstützendes Analysewerkzeug konzipiert; sie trifft keine autonomen Sachentscheide und ersetzt keine menschliche Beurteilung. Menschliche Aufsicht bleibt insbesondere bei der Auswahl des Eingangstexts, bei der Interpretation der Analyse und bei jeder Weiterverwendung der Resultate erforderlich.
 
-Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollstaendigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance fuer alle moeglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollstaendigkeit zu behaupten.
+Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollständigkeit zu behaupten.
 
-Als ergaenzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1).
+Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1).
 
 ## API-Fehlervertrag
 
@@ -60,9 +60,9 @@ Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachli
 
 ## Traceability und Laufnachvollziehbarkeit
 
-Die Nachvollziehbarkeit eines Analyse-Runs stuetzt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` haelt den technischen Pruefpfad ueber Schema-, Modell- und gegebenenfalls Sprachpruefungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gueltig war. `created_at` ordnet den Run zeitlich ein.
+Die Nachvollziehbarkeit eines Analyse-Runs stützt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` hält den technischen Prüfpfad über Schema-, Modell- und gegebenenfalls Sprachprüfungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gültig war. `created_at` ordnet den Run zeitlich ein.
 
-Diese Felder reichen fuer die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgaengigen Audit-Kontext ueber alle Schichten. Insbesondere ist die in API-Fehlerantworten erzeugte `correlation_id` derzeit nur punktuell fuer Fehlerkommunikation nutzbar und noch kein durchgehend persistiertes Traceability-Feld eines Runs. Damit bleibt die Fehlerdiagnose fuer Einzelaufrufe unterstuetzt, waehrend eine vollstaendige Ende-zu-Ende-Korrelation zwischen Frontend, API, Persistenz und optionalem Provider-Pfad noch nicht ausgebaut ist.
+Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Insbesondere ist die in API-Fehlerantworten erzeugte `correlation_id` derzeit nur punktuell für Fehlerkommunikation nutzbar und noch kein durchgehend persistiertes Traceability-Feld eines Runs. Damit bleibt die Fehlerdiagnose für Einzelaufrufe unterstützt, während eine vollständige Ende-zu-Ende-Korrelation zwischen Frontend, API, Persistenz und optionalem Provider-Pfad noch nicht ausgebaut ist.
 
 ## Frontend-Praesentationskonzept
 
