@@ -97,6 +97,18 @@ Das Ziel `ca. 25-30 Seiten inkl. Reflexion` wird nicht durch Wiederholungen erre
 - `docs/arc42/README.md`
 - `docs/ki-reflexion.md`
 
+## Dokumentationsstil
+
+Die aus dieser Phase entstehenden Artefakte werden repo- und abgabeorientiert formuliert, nicht als Agenten- oder Workflow-Spur.
+
+Das bedeutet insbesondere:
+
+- keine Formulierungen wie `ergänzen`, `nachziehen`, `mit Codex erstellt`, `im Plan umsetzen` oder andere Meta-Hinweise auf den Entstehungsprozess
+- keine Aufgabenformulierung aus Sicht eines Assistenten, sondern beschreibende Deliverables aus Sicht des Projekts
+- arc42 sachlich, trocken und entscheidungsorientiert statt generisch oder werblich
+- Reflexion persoenlicher, konkreter und erkennbar aus Projektperspektive statt in glatter KI-Prosa
+- Unsicherheiten und Grenzen offen benennen, aber nicht in einer Weise, die nach KI-internem Arbeitsprotokoll klingt
+
 ## Inhaltliche Leitlinie pro Themenblock
 
 ### Datenschutz
@@ -132,7 +144,7 @@ Zu dokumentieren sind mindestens:
 
 ### Reflexion
 
-Die KI-Reflexion wird ueber den reinen Arbeitsprozess hinaus erweitert um:
+Die Reflexion wird ueber den reinen Arbeitsprozess hinaus vertieft um:
 
 - Grenzen von KI-generierten Ergebnissen
 - Rolle menschlicher Kontrolle
@@ -146,7 +158,7 @@ Diese Phase ist abgeschlossen, wenn:
 - die genannten arc42-Kapitel substanziell erweitert und wechselseitig konsistent sind
 - das neue Governance-Dokument existiert und aus arc42 referenziert wird
 - die neuen Diagrammquellen vorhanden und aus den passenden Kapiteln referenziert sind
-- die KI-Reflexion inhaltlich vertieft wurde
+- die Reflexion inhaltlich vertieft wurde
 - die Gesamtdokumentation fuer arc42 plus Reflexion plausibel auf den Zielumfang waechst
 
 Da diese Phase bewusst dokumentationslastig bleibt, stehen keine neuen Produkt- oder API-Tests im Mittelpunkt. Relevante Verifikation ist hier primaer Konsistenz, Nachvollziehbarkeit und Vollstaendigkeit der Dokumentation.
