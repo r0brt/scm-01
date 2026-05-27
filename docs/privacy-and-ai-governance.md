@@ -20,7 +20,7 @@ Während der Verarbeitung entstehen und verbleiben im System insbesondere folgen
 
 Diese Daten dienen im MVP nicht der Profilbildung über Personen, sondern der nachvollziehbaren Durchführung, Validierung, Anzeige und Wiederverwendung einzelner Analyse-Runs. Das System speichert keine Benutzerkonten und keine Mehrmandantenstruktur, aber der fachliche Inhalt eines Runs kann trotzdem Rückschlüsse auf Personen, Gruppen, Organisationen oder konkrete Situationen erlauben.
 
-## Datenfluesse und externe Empfaenger
+## Datenflüsse und externe Empfänger
 
 Der reale Datenpfad im SCM-MVP verläuft in klaren Stufen:
 
@@ -34,9 +34,9 @@ Der reale Datenpfad im SCM-MVP verläuft in klaren Stufen:
 
 Externer Empfänger im engeren Sinn ist nur der optional aktivierte OpenAI-Pfad. Ohne entsprechende Konfiguration bleibt der Stub-Adapter aktiv und es findet für die Analyseerzeugung kein externer Netzaufruf statt. Unabhängig davon bleibt die lokale Spracherkennung im Backend.
 
-Lokale Persistenz bedeutet im Zielbetrieb des MVP eine relationale Speicherung im eigenen Datenbankkontext des Projekts, typischerweise in PostgreSQL via Docker Compose. Für Entwicklungs- und Persistenztests wird zusätzlich SQLite verwendet. Das Repository beschreibt damit einen lokal kontrollierten Persistenzpfad, aber keine ausformulierte produktive Betriebsorganisation mit getrennten Aufbewahrungs-, Backup- oder Zugriffsdiensten.
+Lokale Persistenz bedeutet im aktuellen Implementationsstand eine relationale Speicherung im vom Backend konfigurierten Datenbankpfad. Ohne gesetzte Variable `SCM_DATABASE_URL` läuft der lokale Default auf SQLite; für den beabsichtigten Compose- und Deployment-Pfad ist PostgreSQL vorgesehen. Das Repository beschreibt damit eine lokal kontrollierte Persistenz mit klarer technischer Zielarchitektur, aber keine ausformulierte produktive Betriebsorganisation mit belastbaren Aussagen zu Backups, Aufbewahrungsprozessen oder rechtlicher Gesamtverantwortung.
 
-## Aufbewahrung und Loeschannahmen
+## Aufbewahrung und Löschannahmen
 
 Das System behandelt Analyse-Runs als nachvollziehbare Datensätze. Ein erfolgreicher oder fehlgeschlagener Lauf wird deshalb zusammen mit Prüf- und Traceability-Informationen gespeichert, damit Resultate, Fehlerbilder und Reruns später nachvollzogen werden können.
 
