@@ -1,0 +1,33 @@
+@startuml
+top to bottom direction
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+node "Lokaler Host" {
+  rectangle "Browser" as browser
+
+  frame "Docker Compose" {
+    node "frontend container\nNginx + React/Vite build\nhost port 4173 -> container 80" as frontend
+    node "api container\nFastAPI/Uvicorn\nhost port 8000 -> container 8000\nSCM_ANALYSIS_PROVIDER=stub|openai" as api
+    database "db container\nPostgreSQL 17\nhost port 5432 -> container 5432" as db
+  }
+
+  artifact "SQLite fallback\n./scm.db ausserhalb Compose" as sqlite
+}
+
+cloud "OpenAI Provider API\nexternal" as openai
+
+browser --> frontend : HTTP
+frontend --> api : /api Proxy im Compose-Netz
+api --> db : SQLAlchemy + Alembic,\nrelationale Runs
+api --> openai : HTTPS ueber OpenAI-Adapter\n(nur wenn Provider=openai)
+
+note right of sqlite
+Das Backend kann ausserhalb von Compose
+auf SQLite zurueckfallen, wenn keine
+SCM_DATABASE_URL gesetzt ist.
+Im Compose-Pfad bleibt PostgreSQL das Zielsystem.
+end note
+
+@enduml

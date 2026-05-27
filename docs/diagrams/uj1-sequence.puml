@@ -1,0 +1,46 @@
+@startuml
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+actor "User" as user
+participant "Browser / Frontend UI" as frontend
+participant "Backend API" as api
+participant "Local Language Detector" as detector
+participant "Analysis Adapter" as adapter
+participant "Stub Generator" as stub
+participant "OpenAI Provider API" as openai
+participant "Validation + Repair" as validation
+database "PostgreSQL" as db
+
+user -> frontend : Problemtext erfassen\nund Analyse starten
+frontend -> api : POST /api/v1/analyses { text }
+api -> detector : dominante Sprache lokal erkennen
+detector --> api : detected_language,\nlanguage_confidence
+
+alt Sprache zu unsicher oder nicht unterstuetzt
+  api -> db : failed Run mit Sprachmetadaten\nund Fehlercode persistieren
+  db --> api : gespeicherter Run
+  api --> frontend : 201 Created mit failed Run
+else Sprache gueltig
+  api -> adapter : Analyse fuer erkannte Sprache anfordern
+  alt Stub-Pfad / Offline-Test
+    adapter -> stub : generate(text, language)
+    stub --> adapter : Analyse-Payload + Metadaten
+  else OpenAI-Pfad
+    adapter -> openai : Responses-API Request\nmit Prompt + JSON-Schema
+    openai --> adapter : Analyse-Payload + Modellmetadaten
+  end
+  adapter --> api : Analyse-Payload + Traceability
+  api -> validation : Schema-, Pydantic-\nund Repair-Pruefung
+  validation --> api : validiertes Payload oder Fehlerstatus
+  api -> detector : Ausgabesprache lokal pruefen
+  detector --> api : Sprachresultat der Ausgabe
+  api -> db : Run mit Analyse oder Fehler,\nValidation-Report und Metadaten persistieren
+  db --> api : gespeicherter Run
+  api --> frontend : 201 Created mit gespeichertem Run
+end
+
+frontend --> user : Pipeline oder Fehlzustand anzeigen
+
+@enduml

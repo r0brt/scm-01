@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+actor "User" as user
+rectangle "Browser / Frontend UI" as frontend
+rectangle "Backend API" as api
+database "PostgreSQL" as db
+cloud "OpenAI Provider API\n(optional external dependency)" as openai
+
+user --> frontend : Problemtext eingeben,\nRuns ansehen
+frontend --> api : HTTP/JSON\nPOST/GET /api/v1/analyses
+api --> db : Runs, Metadaten,\nValidierungsreport persistieren/laden
+api --> openai : Analyseauftrag ueber Adapter\n(optional bei SCM_ANALYSIS_PROVIDER=openai)
+
+api --> frontend : Analyse-Run als JSON\noder Fehlervertrag
+frontend --> user : Pipeline, Status,\nRun-Historie
+
+note right of api
+Frontend und Backend bilden das SCM-System.
+OpenAI liegt ausserhalb der Systemgrenze
+und bleibt eine optionale externe Abhaengigkeit.
+end note
+
+@enduml
