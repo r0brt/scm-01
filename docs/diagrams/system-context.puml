@@ -5,23 +5,21 @@ skinparam packageStyle rectangle
 skinparam linetype ortho
 
 actor "User" as user
-rectangle "Browser / Frontend UI" as frontend
-rectangle "Backend API" as api
-database "PostgreSQL" as db
+rectangle "Webbrowser" as browser
+rectangle "SCM" as scm
 cloud "OpenAI Provider API\n(optional external dependency)" as openai
 
-user --> frontend : Problemtext eingeben,\nRuns ansehen
-frontend --> api : HTTP/JSON\nPOST/GET /api/v1/analyses
-api --> db : Runs, Metadaten,\nValidierungsreport persistieren/laden
-api --> openai : Analyseauftrag über Adapter\n(optional bei SCM_ANALYSIS_PROVIDER=openai)
+user --> browser : Problemtext eingeben,\nRuns ansehen
+browser --> scm : HTTP/JSON über die UI\nPOST/GET /api/v1/analyses
+scm --> openai : Analyseauftrag über Adapter\n(optional bei SCM_ANALYSIS_PROVIDER=openai)
 
-api --> frontend : Analyse-Run als JSON\noder Fehlervertrag
-frontend --> user : Pipeline, Status,\nRun-Historie
+scm --> browser : Analyse-Run als JSON\noder Fehlervertrag
+browser --> user : Pipeline, Status,\nRun-Historie
 
-note right of api
-Frontend und Backend bilden das SCM-System.
-OpenAI liegt ausserhalb der Systemgrenze
-und bleibt eine optionale externe Abhängigkeit.
+note bottom of scm
+Frontend, Backend und lokale Persistenz
+gehören innerhalb dieser Abstraktion
+zur SCM-Systemgrenze.
 end note
 
 @enduml

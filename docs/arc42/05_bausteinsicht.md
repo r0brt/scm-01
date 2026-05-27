@@ -2,19 +2,32 @@
 
 ## Level-1-Zerlegung
 
+Als visuelle Ergänzung der Level-1-Sicht dient [docs/diagrams/building-blocks-level1.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level1.puml:1).
+
 - `Frontend UI` (implementiert in M6): Texteingabe, Pipeline-Darstellung, Run-Historie und JSON-Export.
 - `Backend API` (implementiert bis M5): FastAPI-API fuer Analyse, Run-Liste, Detail und Rerun; Analyseerzeugung ueber Adapter-Schnittstelle.
-- `PostgreSQL` (Zielsystem): Speicherung von Analyse-Runs und Metadaten.
+- `Lokale Persistenz` (Compose-Zielbetrieb: PostgreSQL, ausserhalb davon optional SQLite): Speicherung von Analyse-Runs und Metadaten.
 - `LLM Provider` (extern): Erzeugung von Analyseinhalten über Adapter-Integration.
 
 ## Verantwortlichkeiten (Konzept)
 
 - UI übernimmt Präsentation und Nutzerinteraktion.
 - API stellt Verträge, Orchestrierung, Fehlermapping und Persistenzzugriff bereit.
-- DB stellt dauerhafte, abfragbare Run-Historie sicher.
+- Persistenz stellt dauerhafte, abfragbare Run-Historie sicher.
 - LLM-Provider liefert generierte Analyseinhalte unter strikten Contract-Checks.
 
 Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs muessen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rueckwaertskompatibel unterstuetzt.
+
+## Backend-Zerlegung (Level 2)
+
+Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-blocks-level2-backend.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level2-backend.puml:1).
+
+- `app/api`: FastAPI-Endpunkte, API-Schemas und zentrales Fehlermapping.
+- `app/services/analysis_workflow.py`: Orchestrierung von Spracherkennung, Analyseerzeugung, Validierung und Persistenz.
+- `app/language`: lokale Sprachdetektion für Eingabe- und Ausgabesprache.
+- `app/services/validation.py`: strukturelle Prüfung gegen JSON-Schema und Pydantic-Modelle.
+- `app/llm`: Stub- und OpenAI-Adapter hinter einer gemeinsamen Generator-Schnittstelle.
+- `app/repositories` und `app/db`: Persistenzzugriff, Datenmodell und Session-Verwaltung.
 
 ## Frontend-Zerlegung (aktueller Stand)
 

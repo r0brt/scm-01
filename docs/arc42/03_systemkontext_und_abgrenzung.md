@@ -10,12 +10,11 @@ SCM ist dabei ein Analyse- und Unterstützungswerkzeug. Das System strukturiert 
 
 Als visuelle Ergänzung dient [docs/diagrams/system-context.puml](/Users/robert/code/scm-01/docs/diagrams/system-context.puml:1).
 
-- Primärer Akteur ist der `User`. Er gibt den fachlichen Ausgangstext im `Frontend UI` ein, startet damit einen Analyse-Run und liest die erzeugten Resultate, Statusanzeigen und Fehlermeldungen wieder im UI.
-- Der zentrale Eintrittspunkt für fachliche Daten ist das `Frontend UI`. Dort gelangt potenziell datenschutzsensitiver Freitext in das System und wird anschliessend per HTTP/JSON an das `Backend API` übergeben.
-- Das `Backend API` bildet die innere Verarbeitungsgrenze des Systems. Es nimmt Eingaben entgegen, ergänzt technische Metadaten, orchestriert Validierung und Persistenz und steuert den optionalen Aufruf des externen KI-Pfads.
-- Die lokale Persistenz gehört zur kontrollierten Systemumgebung von SCM. Im Compose-Zielbetrieb ist dies `PostgreSQL`; ausserhalb davon kann der aktuelle Standardpfad auch lokal auf SQLite zeigen. In diese Persistenz fliessen Run-Daten, Analyseergebnisse, Validierungsinformationen und Traceability-Metadaten zur späteren Anzeige und Nachvollziehbarkeit zurück.
-- Daten verlassen die lokale Systemgrenze nur dort, wo das `Backend API` über den internen Adapter ein externes `LLM Provider API` anspricht. Dieser Schritt ist optional konfiguriert und macht den KI-Anbieter zu einer bewusst benannten externen Abhängigkeit.
-- Die vom System ausgegebenen Resultate fliessen aus dem `Backend API` zurück an das `Frontend UI` und von dort an den `User`. Damit bleibt der letzte Interpretations- und Entscheidungsschritt ausdrücklich beim Menschen und nicht beim System.
+- Primärer Akteur ist der `User`. Er gibt den fachlichen Ausgangstext über die SCM-Oberfläche ein, startet damit einen Analyse-Run und liest die erzeugten Resultate, Statusanzeigen und Fehlermeldungen wieder aus dem System.
+- Auf Ebene des Systemkontexts erscheint `SCM` bewusst als Blackbox. Frontend, Backend und lokale Persistenz gehören innerhalb dieser Abstraktion zur internen Systemgrenze und werden nicht als eigene Umsysteme modelliert.
+- Der zentrale Eintrittspunkt für fachliche Daten ist damit das Gesamtsystem `SCM`. Dort gelangt potenziell datenschutzsensitiver Freitext in die interne Verarbeitungskette aus UI, API, Validierung und Persistenz.
+- Daten verlassen die lokale Systemgrenze nur dort, wo `SCM` über den internen Adapter ein externes `LLM Provider API` anspricht. Dieser Schritt ist optional konfiguriert und macht den KI-Anbieter zu einer bewusst benannten externen Abhängigkeit.
+- Die vom System ausgegebenen Resultate fliessen aus `SCM` zurück an den `User`. Damit bleibt der letzte Interpretations- und Entscheidungsschritt ausdrücklich beim Menschen und nicht beim System.
 
 ## Kontext und Verantwortung
 

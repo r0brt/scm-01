@@ -10,8 +10,8 @@ participant "Local Language Detector" as detector
 participant "Analysis Adapter" as adapter
 participant "Stub Generator" as stub
 participant "OpenAI Provider API" as openai
-participant "Validation + Repair" as validation
-database "PostgreSQL" as db
+participant "Validation Service" as validation
+database "Run Repository / Persistence" as persistence
 
 user -> frontend : Problemtext erfassen\nund Analyse starten
 frontend -> api : POST /api/v1/analyses { text }
@@ -19,8 +19,8 @@ api -> detector : dominante Sprache lokal erkennen
 detector --> api : detected_language,\nlanguage_confidence
 
 alt Sprache zu unsicher oder nicht unterstützt
-  api -> db : failed Run mit Sprachmetadaten\nund Fehlercode persistieren
-  db --> api : gespeicherter Run
+  api -> persistence : failed Run mit Sprachmetadaten\nund Fehlercode persistieren
+  persistence --> api : gespeicherter Run
   api --> frontend : 201 Created mit failed Run
 else Sprache gültig
   api -> adapter : Analyse für erkannte Sprache anfordern
@@ -28,16 +28,16 @@ else Sprache gültig
     adapter -> stub : generate(text, language)
     stub --> adapter : Analyse-Payload + Metadaten
   else OpenAI-Pfad
-    adapter -> openai : Responses-API Request\nmit Prompt + JSON-Schema
+    adapter -> openai : Responses-API Request\nmit Prompt-Inhalt + JSON-Schema
     openai --> adapter : Analyse-Payload + Modellmetadaten
   end
   adapter --> api : Analyse-Payload + Traceability
-  api -> validation : Schema-, Pydantic-\nund Repair-Prüfung
+  api -> validation : Schema- und Pydantic-\nPrüfung
   validation --> api : validiertes Payload oder Fehlerstatus
   api -> detector : Ausgabesprache lokal prüfen
   detector --> api : Sprachresultat der Ausgabe
-  api -> db : Run mit Analyse oder Fehler,\nValidation-Report und Metadaten persistieren
-  db --> api : gespeicherter Run
+  api -> persistence : Run mit Analyse oder Fehler,\nValidation-Report und Metadaten persistieren
+  persistence --> api : gespeicherter Run
   api --> frontend : 201 Created mit gespeichertem Run
 end
 
