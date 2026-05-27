@@ -1,6 +1,7 @@
 # Test Report
 
-Stand: 2026-03-23
+Stand: 2026-05-27
+Baseline-Commit: `8186e05`
 
 ## Ausgefuehrte Commands
 
@@ -8,12 +9,16 @@ Stand: 2026-03-23
 
 ```bash
 cd backend
-uv run pytest -q
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run pytest -q
 ```
 
 Resultat:
 
-- `39 passed in 0.84s`
+- `45 passed in 1.52s`
+
+Hinweis:
+
+- der Lauf wurde ueber `uv` mit der projektbezogenen Python-3.13-Umgebung ausgefuehrt
 
 ### Frontend Unit/UI
 
@@ -25,12 +30,11 @@ npm run test -- --run
 Resultat:
 
 - `1 file passed`
-- `2 tests passed`
+- `7 tests passed`
 
 Hinweis:
 
-- fuer den finalen Lauf wurde `frontend/vite.config.ts` nachgezogen, damit Vitest keine Playwright-E2E-Dateien aus `frontend/e2e/` einsammelt
-- der aktuelle UI-Testlauf deckt den zustandsgetriebenen Pipeline-View-Model-Pfad des Frontends ab
+- der UI-Testlauf deckt zentrale Struktur- und Darstellungsinvarianten der Analyse-/Archiv-Ansicht ab
 
 ### Frontend Build
 
@@ -41,7 +45,7 @@ npm run build
 
 Resultat:
 
-- `built in 324ms`
+- `built in 460ms`
 
 ### Frontend E2E
 
@@ -52,39 +56,26 @@ npm run test:e2e
 
 Resultat:
 
-- `1 passed`
+- nicht erfolgreich abgeschlossen
 
-Hinweis:
+Beobachtung:
 
-- der kritische Journey-Test UJ1 prueft den neuen Frontend-Flow mit Texteingabe, Analyse-Start und sichtbarer Pipeline
-- der Locator fuer die Stage `Symptome` wurde nach dem Frontend-Refactor auf einen eindeutigen Heading-Locator praezisiert, damit der E2E-Nachweis im Strict-Mode stabil bleibt
-
-### Docker Compose
-
-```bash
-docker compose up --build -d
-docker compose ps
-docker compose down
-```
-
-Resultat:
-
-- `frontend`, `api`, `db` erfolgreich gestartet
-- `db` war `healthy`
-- Stack wurde sauber wieder beendet
+- nach dem Stoppen des lokalen Compose-Stacks starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
+- der Lauf scheiterte anschliessend an fehlenden lokal installierten Playwright-Browser-Binaries
+- empfohlener Folge-Command laut Playwright: `npx playwright install`
 
 ## Abgedeckte Nachweise
 
 - kompletter Backend-Testlauf fuer Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
-- Frontend-Unit-/UI-Testlauf, Produktions-Build und deterministischer Pipeline-UX-Flow
-- API-zu-Persistenz-Integrationsfluss fuer Analyse, Liste, Detail und Rerun
-- UJ1-End-to-End-Nachweis: Texteingabe im Frontend, Analyse ausloesen, Pipeline sichtbar
-- lokaler Compose-Betrieb mit `frontend`, `api` und `db`
-- lokale Sprachdetektion fuer `de`, `fr` und `en` inkl. Fehlerpfaden fuer zu geringe Confidence und nicht unterstuetzte Sprache
+- Frontend-Unit-/UI-Testlauf und Produktions-Build
+- projektbezogene Python-3.13-Ausfuehrung ueber `uv`
+- aktueller Re-Onboarding-Nachweis, dass `main` lokal sauber und mit `origin/main` ausgerichtet ist
+- E2E-Setup startet lokal korrekt bis zum Browser-Launch
 
 ## Bekannte Limitationen
 
-- E2E deckt bewusst nur einen kritischen Happy Path ab
+- E2E deckt weiterhin nur einen kritischen Happy Path fuer UJ1 ab
+- der aktuelle E2E-Lauf benoetigt lokal installierte Playwright-Browser-Binaries
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
-- LLM-Erzeugung laeuft weiterhin ueber Stub/Adapter ohne echten Provider-Call im Test
-- Compose ist als lokaler Zielbetrieb verifiziert; produktionsnahe Themen wie TLS, Secret-Management und Observability bleiben ausserhalb des MVP
+- LLM-Erzeugung laeuft in Tests weiterhin ueber Stub/Fake-Adapter ohne echten Provider-Call
+- Compose ist im aktuellen Freeze-Prep nicht erneut end-to-end verifiziert worden
