@@ -3,7 +3,7 @@
 Stand: 2026-05-27
 Baseline-Commit: `8186e05`
 
-## Ausgefuehrte Commands
+## Ausgeführte Commands
 
 ### Backend Gesamt-Testlauf
 
@@ -18,7 +18,7 @@ Resultat:
 
 Hinweis:
 
-- der Lauf wurde ueber `uv` mit der projektbezogenen Python-3.13-Umgebung ausgefuehrt
+- der Lauf wurde über `uv` mit der projektbezogenen Python-3.13-Umgebung ausgeführt
 
 ### Frontend Unit/UI
 
@@ -66,16 +66,16 @@ Beobachtung:
 
 ## Abgedeckte Nachweise
 
-- kompletter Backend-Testlauf fuer Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
+- kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
-- projektbezogene Python-3.13-Ausfuehrung ueber `uv`
+- projektbezogene Python-3.13-Ausführung über `uv`
 - aktueller Re-Onboarding-Nachweis, dass `main` lokal sauber und mit `origin/main` ausgerichtet ist
 - E2E-Setup startet lokal korrekt bis zum Browser-Launch
 
 ## Bekannte Limitationen
 
-- E2E deckt weiterhin nur einen kritischen Happy Path fuer UJ1 ab
-- der aktuelle E2E-Lauf benoetigt lokal installierte Playwright-Browser-Binaries
+- E2E deckt weiterhin nur einen kritischen Happy Path für UJ1 ab
+- der aktuelle E2E-Lauf benötigt lokal installierte Playwright-Browser-Binaries
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
-- LLM-Erzeugung laeuft in Tests weiterhin ueber Stub/Fake-Adapter ohne echten Provider-Call
+- LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
 - Compose ist im aktuellen Freeze-Prep nicht erneut end-to-end verifiziert worden

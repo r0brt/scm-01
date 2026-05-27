@@ -1,6 +1,6 @@
 # Social Cleanup Machine
 
-Dieses Repository enthaelt den aktuellen MVP-Stand des Projekts inklusive Backend, Frontend, Persistenz, Docker-Compose-Betrieb und Projektdokumentation.
+Dieses Repository enthält den aktuellen MVP-Stand des Projekts inklusive Backend, Frontend, Persistenz, Docker-Compose-Betrieb und Projektdokumentation.
 
 ## Dokumentations-Navigation
 
@@ -42,7 +42,7 @@ export OPENAI_API_KEY=...
 uv run --python 3.13 uvicorn app.main:app --reload
 ```
 
-Ohne diese Konfiguration bleibt der Stub-Adapter der Default. Die lokale Sprachdetektion laeuft in beiden Faellen vor jeder Analyse und akzeptiert aktuell `de`, `fr` und `en`.
+Ohne diese Konfiguration bleibt der Stub-Adapter der Default. Die lokale Sprachdetektion läuft in beiden Fällen vor jeder Analyse und akzeptiert aktuell `de`, `fr` und `en`.
 
 ## Environment Baseline (M0)
 
@@ -91,7 +91,7 @@ npm run build
 ## Docker Compose (M8)
 
 Der lokale Zielbetrieb besteht aus drei Containern: `frontend`, `api` und `db`.
-Das Frontend wird statisch via Nginx ausgeliefert und leitet `/api` an das Backend weiter. Die API fuehrt beim Start automatisch `alembic upgrade head` gegen PostgreSQL aus.
+Das Frontend wird statisch via Nginx ausgeliefert und leitet `/api` an das Backend weiter. Die API führt beim Start automatisch `alembic upgrade head` gegen PostgreSQL aus.
 
 ```bash
 cp .env.example .env
