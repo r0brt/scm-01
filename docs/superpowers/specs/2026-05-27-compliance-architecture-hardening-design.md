@@ -2,7 +2,7 @@
 
 ## Ziel
 
-Diese Phase macht SCM dokumentations- und architekturseitig abgabereifer, ohne das Produktverhalten zu erweitern. Der Schwerpunkt liegt auf Datenschutz, EU-AI-Act-Einordnung, belastbarer Nachvollziehbarkeit und einem substanziellen Ausbau der arc42-Dokumentation inklusive Reflexion.
+Diese Phase macht SCM dokumentations- und architekturseitig abgabereifer, ohne das Produktverhalten zu erweitern. Der Schwerpunkt liegt auf Datenschutz, EU-AI-Act-Einordnung, belastbarer Nachvollziehbarkeit und einem substanziellen Ausbau der arc42-Dokumentation. Die Reflexion bleibt inhaltlich beim Projektverantwortlichen und wird durch diese Phase nur strukturell vorbereitet.
 
 ## Kontext
 
@@ -29,7 +29,7 @@ Enthalten:
 - Ausbau der bestehenden arc42-Kapitel zu Datenschutz, Governance, Nachvollziehbarkeit, Risiken und Qualitaetsszenarien
 - ein zentrales Zusatzdokument fuer Datenschutz- und KI-Governance
 - zusaetzliche textbasierte Diagrammquellen zur Systemkontext-, Laufzeit- und Container-Sicht
-- Ausbau der KI-Reflexion im Lichte von Datenschutz, Governance und menschlicher Verantwortung
+- Vorbereitung einer belastbaren Struktur fuer die Reflexion im Lichte von Datenschutz, Governance und menschlicher Verantwortung
 - klare Referenzen zwischen arc42 und Zusatzartefakten
 
 Nicht enthalten:
@@ -38,6 +38,7 @@ Nicht enthalten:
 - neue API-Endpunkte oder Datenbankfelder
 - juristische Vollbewertung im Sinn externer Rechtsberatung
 - produktionsreife organisatorische oder vertragliche Controls ausserhalb des Repos
+- ghostwriting-artige Ausformulierung einer persoenlichen Reflexion ohne inhaltlichen Input des Projektverantwortlichen
 
 ## Designentscheidungen
 
@@ -108,6 +109,7 @@ Das bedeutet insbesondere:
 - arc42 sachlich, trocken und entscheidungsorientiert statt generisch oder werblich
 - Reflexion persoenlicher, konkreter und erkennbar aus Projektperspektive statt in glatter KI-Prosa
 - Unsicherheiten und Grenzen offen benennen, aber nicht in einer Weise, die nach KI-internem Arbeitsprotokoll klingt
+- die Reflexion selbst wird nicht inhaltlich stellvertretend geschrieben; zulaessig sind nur Strukturvorschlag, Leitfragen, Verdichtung und sprachliche Ueberarbeitung auf Basis echter Projektpunkte
 
 ## Inhaltliche Leitlinie pro Themenblock
 
@@ -144,7 +146,9 @@ Zu dokumentieren sind mindestens:
 
 ### Reflexion
 
-Die Reflexion wird ueber den reinen Arbeitsprozess hinaus vertieft um:
+Diese Phase definiert fuer die Reflexion nur den thematischen Rahmen und die notwendige Tiefenschaerfe. Der eigentliche inhaltliche Kern stammt vom Projektverantwortlichen.
+
+Der Reflexionsrahmen soll mindestens abdecken:
 
 - Grenzen von KI-generierten Ergebnissen
 - Rolle menschlicher Kontrolle
@@ -158,7 +162,7 @@ Diese Phase ist abgeschlossen, wenn:
 - die genannten arc42-Kapitel substanziell erweitert und wechselseitig konsistent sind
 - das neue Governance-Dokument existiert und aus arc42 referenziert wird
 - die neuen Diagrammquellen vorhanden und aus den passenden Kapiteln referenziert sind
-- die Reflexion inhaltlich vertieft wurde
+- fuer die Reflexion ein belastbarer inhaltlicher Rahmen vorliegt, ohne den persoenlichen Kern vorwegzunehmen
 - die Gesamtdokumentation fuer arc42 plus Reflexion plausibel auf den Zielumfang waechst
 
 Da diese Phase bewusst dokumentationslastig bleibt, stehen keine neuen Produkt- oder API-Tests im Mittelpunkt. Relevante Verifikation ist hier primaer Konsistenz, Nachvollziehbarkeit und Vollstaendigkeit der Dokumentation.
