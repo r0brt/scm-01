@@ -30,6 +30,18 @@ Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Pe
 
 Schemaaenderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern ueber Alembic-Migrationen versioniert. Dadurch bleiben Datenbankstruktur und Anwendungsmodell reproduzierbar und auditiert.
 
+## Datenschutz und KI-Governance
+
+Die Architektur behandelt Datenschutz und KI-Governance im MVP als querschnittliche Leitplanken, nicht als nachgelagerte Formalitaet. Fachlich relevante Datenkategorien sind vor allem `input_text`, `analysis_json`, `validation_report`, Sprachmetadaten und technische Traceability-Metadaten. Weil der freie Eingabetext personenbezogene, sensible oder situativ heikle Inhalte enthalten kann, wird er architektonisch nicht als harmlose Testnutzlast behandelt.
+
+Die Aufbewahrung ist im aktuellen Stand technisch nachvollziehbar, aber operativ nur begrenzt ausdefiniert. Runs bleiben lokal gespeichert, bis die zugrunde liegende Datenbank bewusst bereinigt wird. Es gibt derzeit keine fachliche Loeschfunktion, keine dokumentierten Aufbewahrungsfristen pro Datenkategorie und keine vollstaendig ausgearbeitete Privacy-Operations-Sicht fuer Auskunft, Berichtigung oder Loeschung.
+
+Transparenz entsteht im MVP ueber offen dokumentierte Datenpfade, die sichtbare Pipeline im Frontend und die persistierten technischen Metadaten pro Run. Die Anwendung ist als unterstuetzendes Analysewerkzeug konzipiert; sie trifft keine autonomen Sachentscheide und ersetzt keine menschliche Beurteilung. Menschliche Aufsicht bleibt insbesondere bei der Auswahl des Eingangstexts, bei der Interpretation der Analyse und bei jeder Weiterverwendung der Resultate erforderlich.
+
+Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollstaendigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance fuer alle moeglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollstaendigkeit zu behaupten.
+
+Als ergaenzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1).
+
 ## API-Fehlervertrag
 
 Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine generierte `correlation_id`.
@@ -45,6 +57,12 @@ Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt
 Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivpfad verwendet `prompts/v2/analysis.md`. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die in `docs/scm.md` definierten sechs Ebenen exakt anfordern.
 
 Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen fuer jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
+
+## Traceability und Laufnachvollziehbarkeit
+
+Die Nachvollziehbarkeit eines Analyse-Runs stuetzt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` haelt den technischen Pruefpfad ueber Schema-, Modell- und gegebenenfalls Sprachpruefungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gueltig war. `created_at` ordnet den Run zeitlich ein.
+
+Diese Felder reichen fuer die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgaengigen Audit-Kontext ueber alle Schichten. Insbesondere ist die in API-Fehlerantworten erzeugte `correlation_id` derzeit nur punktuell fuer Fehlerkommunikation nutzbar und noch kein durchgehend persistiertes Traceability-Feld eines Runs. Damit bleibt die Fehlerdiagnose fuer Einzelaufrufe unterstuetzt, waehrend eine vollstaendige Ende-zu-Ende-Korrelation zwischen Frontend, API, Persistenz und optionalem Provider-Pfad noch nicht ausgebaut ist.
 
 ## Frontend-Praesentationskonzept
 
