@@ -6,7 +6,7 @@
 
 ## 1. Kontext & Problem
 
-Oeffentliche und organisatorische Diskussionen vermischen oft Symptome, Ursachenannahmen, Emotionen, Narrative und vereinfachende Zuschreibungen. Dadurch entstehen Missverstaendnisse, verkuerzte Schlussfolgerungen und Massnahmen, die nicht am Kern eines Problems ansetzen.
+Öffentliche und organisatorische Diskussionen vermischen oft Symptome, Ursachenannahmen, Emotionen, Narrative und vereinfachende Zuschreibungen. Dadurch entstehen Missverständnisse, verkürzte Schlussfolgerungen und Massnahmen, die nicht am Kern eines Problems ansetzen.
 
 SCM adressiert das Bedürfnis, frei formulierte Problemtexte systematisch zu entflechten und argumentative Ebenen transparent zu trennen.
 

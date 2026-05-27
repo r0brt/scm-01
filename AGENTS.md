@@ -121,6 +121,7 @@ Arc42 update triggers (minimum):
 Arc42 language rule:
 
 * arc42 documentation under `docs/arc42/` must be written in German.
+* German prose in repository documentation should use standard Swiss orthography: use `ä`, `ö`, `ü` where appropriate, keep `ss` instead of `ß`, and do not transliterate normal prose as `ae/oe/ue` unless a technical identifier, file path, code literal, or external interface requires it.
 
 ## 8. Contracts & Versioning (critical)
 
