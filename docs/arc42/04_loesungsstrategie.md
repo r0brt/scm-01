@@ -5,7 +5,7 @@
 1. Zuerst ein modularer Monolith für schnelle, konsistente und betrieblich einfache Umsetzung.
 2. Contract-First-JSON-Schema für Analyseausgaben.
 3. Schema-Validierung strikt vor Persistenz.
-4. Begrenzter Repair-Loop bei ungültigen Modellausgaben (max. 2 Retries).
+4. Begrenzte Repair-Logik fuer ungueltige Modellausgaben ist als Guardrail vorbereitet (max. 2 Retries), im aktuellen Standardpfad aber noch nicht aktiv verdrahtet.
 5. Unveränderliche Run-Datensätze mit vollständiger Traceability persistieren.
 
 Diese Kernstrategie verfolgt einen bewusst pragmatischen Mittelweg: Das System soll technisch robust genug sein, um Verträge, Persistenz und Provider-Grenzen nachvollziehbar abzubilden, gleichzeitig aber klein genug bleiben, damit Implementierung, Testen und Dokumentation in einem Solo-Projekt beherrschbar bleiben.

@@ -18,15 +18,15 @@
 
 - Szenario: Das System soll auf einer frischen lokalen Umgebung erneut gestartet und getestet werden.
 - Stimulus: Ein Maintainer fuehrt die dokumentierten `uv`, `npm` und `docker compose` Commands aus.
-- Erwartung: Backend-Tests, Frontend-Build und Compose-Start laufen ohne manuelle Sonderpfade reproduzierbar.
-- Nachweis: README-Kommandos, `docs/test-report.md` und M8/M9-Verifikationslaeufe.
+- Erwartung: Backend-Tests und Frontend-Build laufen reproduzierbar; fuer Compose- und E2E-Nachweise sind die jeweils dokumentierten lokalen Voraussetzungen und Grenzen sichtbar.
+- Nachweis: README-Kommandos, `docs/test-report.md`, dokumentierte Freeze-/Re-Onboarding-Nachweise sowie die beschriebenen lokalen Voraussetzungen fuer Compose und Playwright.
 
 ## QS4: Kritische Nutzerreise UJ1
 
 - Szenario: Ein Endnutzer gibt einen Problemtext ein und startet eine Analyse im Frontend.
 - Stimulus: Texteingabe und Klick auf `Analyse starten`.
 - Erwartung: Ein neuer Run wird erzeugt und die Pipeline mit den sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` wird sichtbar.
-- Nachweis: Playwright-E2E-Test für UJ1.
+- Nachweis: Playwright-Journey-Test fuer UJ1 mit gemockter API sowie ergaenzende Backend-, API- und Persistenztests fuer den darunterliegenden Laufzeitpfad.
 
 ## QS5: Deterministische Sprachvorpruefung
 

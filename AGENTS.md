@@ -135,8 +135,8 @@ Arc42 language rule:
 
 ### 8.2 Prompt versioning
 
-* Prompts live in `prompts/v1/...`
-* `prompt_version` is the folder name (e.g. `v1`), optionally plus git short SHA in metadata.
+* Prompts live in versioned folders under `prompts/v*/...` (e.g. `prompts/v2/...`).
+* `prompt_version` is the folder name (e.g. `v2`), optionally plus git short SHA in metadata.
 * Prompt changes must be committed and must update `prompt_version` only when intentionally bumping.
 
 ### 8.3 API contract

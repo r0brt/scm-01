@@ -16,7 +16,7 @@ Die folgende textuelle Abfolge wird zusätzlich durch [docs/diagrams/uj1-sequenc
 3. Bei zu geringer Sicherheit oder nicht unterstuetzter Sprache endet der Lauf sofort als `failed`; ein Run mit Fehlercode und Sprachmetadaten wird trotzdem persistiert.
 4. Bei erfolgreicher Spracherkennung übergibt das Backend die erkannte Sprache explizit an den konfigurierten Analyse-Adapter. Im Produktivpfad ist dies der OpenAI-Adapter, alternativ bleibt ein Stub-Pfad für Offline-Tests verfügbar.
 5. Der Adapter fordert die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` im versionierten SCM-Vertrag aus `docs/scm.md`, `prompts/v2/analysis.md` und `schemas/analysis.schema.json` an und erzwingt dabei dieselbe Sprache wie im Eingabetext.
-6. Das Backend validiert die Analyse gegen Schema und Pydantic-Modelle und fuehrt bei Bedarf einen begrenzten Repair-Loop aus.
+6. Das Backend validiert die Analyse gegen Schema und Pydantic-Modelle. Schlaegt diese Pruefung fehl, endet der aktuelle Standardpfad explizit als Fehlerlauf; eine separate bounded Repair-Logik ist im Repository vorbereitet, aber derzeit nicht in diesen Laufzeitpfad eingebunden.
 7. Anschliessend prüft das Backend die dominante Sprache der gesamten Analyseausgabe. Bei Abweichung oder zu geringer Sicherheit endet der Lauf mit `OUTPUT_LANGUAGE_MISMATCH`.
 8. Der Run wird mit Analyse-JSON oder Fehlerzustand, Validation-Report, Sprachmetadaten und Traceability-Feldern persistiert.
 9. Die API antwortet synchron mit dem gespeicherten Run.
@@ -26,7 +26,7 @@ Die folgende textuelle Abfolge wird zusätzlich durch [docs/diagrams/uj1-sequenc
 1. Ein Client ruft `GET /api/v1/analyses` oder `GET /api/v1/analyses/{id}` auf.
 2. Das Backend liest die gespeicherten Runs aus der Persistenz und liefert sie als API-Responses aus.
 3. Bei `POST /api/v1/analyses/{id}/rerun` wird der urspruengliche `input_text` erneut verarbeitet.
-4. Auch beim Rerun werden Spracherkennung, Analyse, Validierung und möglicher Repair erneut durchlaufen.
+4. Auch beim Rerun werden Spracherkennung, Analyse und Validierung erneut durchlaufen; der aktuelle Standardpfad enthaelt dabei keinen aktiv verdrahteten Repair-Schritt.
 5. Das System persistiert dafuer einen neuen Run; der alte Run bleibt unveraendert.
 6. Eine Übersetzung alter Analyse-Payloads in den neuen Vertrag findet nicht statt; der aktuelle Laufzeitpfad erwartet ausschliesslich das aktive SCM-Format.
 

@@ -12,7 +12,7 @@ Der Vertragswechsel ist bewusst nicht rückwärtskompatibel. Bestehende alte Ana
 
 Die Backend-Validierung prüft Analyse-Payloads in zwei Stufen: zuerst gegen das JSON Schema, danach gegen die Pydantic-Modelle. Das Ergebnis ist ein strukturierter Validierungsreport mit Status, Fehlercode und Prüfschritten.
 
-Bei ungültigen Payloads ist der Repair-Loop strikt begrenzt. Nach der initialen Prüfung sind höchstens zwei Reparaturversuche erlaubt. Schlägt auch der letzte Versuch fehl, endet der Lauf explizit mit `REPAIR_LIMIT_EXCEEDED`; es gibt keine stillen Fallbacks.
+Im aktuellen Standardpfad endet ein Lauf nach einer strukturell ungueltigen Payload explizit als Fehlerfall; es gibt keine stillen Fallbacks. Zusaetzlich existiert im Repository eine separate bounded Repair-Logik als vorbereitete Guardrail. Diese ist auf hoechstens zwei Reparaturversuche begrenzt und wuerde bei weiterem Scheitern explizit mit `REPAIR_LIMIT_EXCEEDED` enden, ist derzeit aber nicht im aktiven Standardpfad verdrahtet.
 
 ## Sprachdetektion
 
