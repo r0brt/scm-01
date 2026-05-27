@@ -16,7 +16,7 @@
 ## Organisatorische Randbedingungen
 
 - Solo-Projekt-Workflow mit kurzlebigen Branches.
-- Kleine, klar abgegrenzte Changes statt großer Pakete.
+- Kleine, klar abgegrenzte Changes statt grosser Pakete.
 - arc42 bleibt das Primärdokument der Architektur; ergänzende Governance-Dokumente präzisieren Annahmen, ersetzen aber keine Architekturbegründung.
 - Der aktuelle Stand ist ein bewusster MVP für Abgabe und Bewertung, nicht ein ausformuliertes Betriebsmodell für produktiven Dauereinsatz.
 
