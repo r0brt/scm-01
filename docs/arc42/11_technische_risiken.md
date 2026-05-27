@@ -22,7 +22,7 @@
 
 - Risiko: Compose verifiziert den lokalen Zielbetrieb, aber nicht produktionsnahe Themen wie TLS, Secret-Management, Observability oder externe Reverse-Proxies.
 - Auswirkung: Ein spaeterer Deployment-Schritt kann weitere Infrastrukturarbeit erfordern.
-- Gegenmassnahme: Konfiguration bereits ueber Umgebungsvariablen, klare Container-Schnitte (`frontend`, `api`, `db`) und dokumentierte Betriebsbefehle.
+- Gegenmassnahme: Konfiguration bereits über Umgebungsvariablen, klare Container-Schnitte (`frontend`, `api`, `db`) und dokumentierte Betriebsbefehle.
 
 ## R5: Sprach- und Analysequalitaet bleibt modellabhaengig
 
@@ -34,7 +34,7 @@
 
 - Risiko: Frontend-Unit- und E2E-Tests verwenden unterschiedliche Runner; ohne saubere Abgrenzung koennen sich Testdateien gegenseitig stoeren.
 - Auswirkung: Finale Verifikation oder CI-Laeufe koennen an Tooling-Konflikten scheitern.
-- Gegenmassnahme: Vitest schliesst `frontend/e2e/` explizit aus, Playwright bleibt ueber `npm run test:e2e` getrennt.
+- Gegenmassnahme: Vitest schliesst `frontend/e2e/` explizit aus, Playwright bleibt über `npm run test:e2e` getrennt.
 
 ## R7: Personenbezogene Daten in Freitexten
 

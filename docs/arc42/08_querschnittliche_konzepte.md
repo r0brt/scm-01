@@ -2,11 +2,11 @@
 
 ## Analyse-Contract
 
-Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Quelle dafuer ist `docs/scm.md`. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusaetzliche Felder sind nicht erlaubt. Vertiefte semantische Pruefungen erfolgen erst in den spaeteren Validierungs- und Repair-Milestones.
+Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Quelle dafür ist `docs/scm.md`. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusätzliche Felder sind nicht erlaubt. Vertiefte semantische Prüfungen erfolgen erst in den späteren Validierungs- und Repair-Milestones.
 
 Jede Ebene folgt derselben Struktur mit `beschreibung` und `eintraege[].text`. Der Vertrag wird in Prompt, JSON Schema, Pydantic-Modellen, Persistenz-Payload und Frontend-Typen konsistent nachgezogen.
 
-Der Vertragswechsel ist bewusst nicht rueckwaertskompatibel. Bestehende alte Analyse-Payloads werden nicht implizit uebersetzt oder aliasiert.
+Der Vertragswechsel ist bewusst nicht rückwärtskompatibel. Bestehende alte Analyse-Payloads werden nicht implizit übersetzt oder aliasiert.
 
 ## Validierung und Repair
 
@@ -18,17 +18,17 @@ Bei ungültigen Payloads ist der Repair-Loop strikt begrenzt. Nach der initialen
 
 Vor jeder Analyse erkennt das Backend die dominante Sprache lokal. Aktuell werden `de`, `fr` und `en` unterstuetzt. Die Spracherkennung liefert immer `detected_language`, `language_confidence` und optional einen Fehlercode.
 
-Liegt die Sicherheit unter `0.80`, endet der Lauf explizit mit `LANGUAGE_CONFIDENCE_TOO_LOW`. Wird eine Sprache ausserhalb des unterstuetzten Korridors erkannt, endet der Lauf mit `UNSUPPORTED_LANGUAGE`. In beiden Faellen wird kein stiller Fallback auf den LLM-Pfad versucht.
+Liegt die Sicherheit unter `0.80`, endet der Lauf explizit mit `LANGUAGE_CONFIDENCE_TOO_LOW`. Wird eine Sprache ausserhalb des unterstützten Korridors erkannt, endet der Lauf mit `UNSUPPORTED_LANGUAGE`. In beiden Fällen wird kein stiller Fallback auf den LLM-Pfad versucht.
 
 Nach erfolgreicher Eingabespracherkennung wird die erwartete Sprache explizit an den LLM-Adapter weitergegeben. Der Prompt verlangt, dass alle Felder `beschreibung` und `eintraege[].text` ausschliesslich in dieser Sprache formuliert werden und keine Sprachmischung enthalten.
 
-Nach der strukturellen Validierung prueft das Backend zusaetzlich die Sprache der gesamten Analyseausgabe. Weicht die dominierende Ausgabesprache von der zuvor erkannten Eingabesprache ab oder ist die Ausgabespracherkennung selbst zu unsicher, endet der Lauf explizit mit `OUTPUT_LANGUAGE_MISMATCH`. Dadurch wird die Produktanforderung abgesichert, dass Ausgabe- und Eingabesprache uebereinstimmen.
+Nach der strukturellen Validierung prüft das Backend zusätzlich die Sprache der gesamten Analyseausgabe. Weicht die dominierende Ausgabesprache von der zuvor erkannten Eingabesprache ab oder ist die Ausgabespracherkennung selbst zu unsicher, endet der Lauf explizit mit `OUTPUT_LANGUAGE_MISMATCH`. Dadurch wird die Produktanforderung abgesichert, dass Ausgabe- und Eingabesprache übereinstimmen.
 
 ## Persistenz
 
 Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Persistiert werden Eingabetext, Analyse-JSON, Validierungsreport sowie die für Nachvollziehbarkeit relevanten Metadaten wie `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben.
 
-Schemaaenderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern ueber Alembic-Migrationen versioniert. Dadurch bleiben Datenbankstruktur und Anwendungsmodell reproduzierbar und auditiert.
+Schemaänderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern über Alembic-Migrationen versioniert. Dadurch bleiben Datenbankstruktur und Anwendungsmodell reproduzierbar und auditiert.
 
 ## Datenschutz und KI-Governance
 
@@ -46,17 +46,17 @@ Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/User
 
 Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine generierte `correlation_id`.
 
-In M4 werden mindestens ungueltige Requests und unbekannte Analyse-IDs explizit ueber diesen Vertrag beantwortet. Dadurch bleibt das Verhalten fuer Frontend und spaetere Integrationen stabil, auch wenn sich interne Implementierungen aendern.
+In M4 werden mindestens ungültige Requests und unbekannte Analyse-IDs explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
 
 ## LLM-Adapter und Prompt-Versionierung
 
-Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sondern ueber einen expliziten Adapter-Port. Dadurch bleiben Stub-, Test- und Provider-Implementierungen austauschbar.
+Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sondern über einen expliziten Adapter-Port. Dadurch bleiben Stub-, Test- und Provider-Implementierungen austauschbar.
 
 Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt angefordertem JSON-Schema-Output. Offline-Tests injizieren weiterhin Fake- oder Stub-Adapter und fuehren keine Netzaufrufe aus.
 
 Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivpfad verwendet `prompts/v2/analysis.md`. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die in `docs/scm.md` definierten sechs Ebenen exakt anfordern.
 
-Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen fuer jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
+Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen für jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
 
 ## Traceability und Laufnachvollziehbarkeit
 
@@ -72,6 +72,6 @@ Nach Abschluss wechselt dieselbe Analyse in einen Review-Modus. Dort werden alle
 
 ## Betriebs- und Konfigurationskonzept
 
-Der lokale Standardbetrieb erfolgt ab M8 ueber Docker Compose. Konfiguration wird dabei ausschliesslich ueber Umgebungsvariablen injiziert; fuer den MVP sind insbesondere `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `SCM_DATABASE_URL`, `SCM_ANALYSIS_PROVIDER`, `SCM_OPENAI_MODEL` und `OPENAI_API_KEY` relevant.
+Der lokale Standardbetrieb erfolgt ab M8 über Docker Compose. Konfiguration wird dabei ausschliesslich über Umgebungsvariablen injiziert; für den MVP sind insbesondere `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `SCM_DATABASE_URL`, `SCM_ANALYSIS_PROVIDER`, `SCM_OPENAI_MODEL` und `OPENAI_API_KEY` relevant.
 
-Die API verwendet PostgreSQL im Compose-Betrieb als einziges Zielsystem und fuehrt Datenbankschema-Aenderungen nicht implizit ueber ORM-Erzeugung aus, sondern explizit ueber `alembic upgrade head` beim Containerstart. Dadurch bleibt der Container-Start reproduzierbar und das Schema im laufenden System entspricht der versionierten Migration-Historie.
+Die API verwendet PostgreSQL im Compose-Betrieb als einziges Zielsystem und führt Datenbankschema-Änderungen nicht implizit über ORM-Erzeugung aus, sondern explizit über `alembic upgrade head` beim Containerstart. Dadurch bleibt der Container-Start reproduzierbar und das Schema im laufenden System entspricht der versionierten Migration-Historie.
