@@ -22,6 +22,7 @@ Dieser Ordner enthält die Architekturdokumentation im arc42-Format.
 - Kapitel prägnant halten und nur betroffene Kapitel aktualisieren.
 - Entscheidungen als ADRs in `docs/adr/` referenzieren.
 - Konsistenz mit `docs/prd.md`, `PLAN.md` und Implementierung sicherstellen.
+- Datenschutz-, Nachvollziehbarkeits- und AI-Governance-Details bei Bedarf mit `docs/privacy-and-ai-governance.md` abgleichen; arc42 bleibt dabei das Primärdokument, das Zusatzdokument ist ein unterstützendes Artefakt.
 
 ## arc42 Update Trigger
 

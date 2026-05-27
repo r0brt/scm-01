@@ -1,0 +1,87 @@
+# Privacy and AI Governance
+
+## Zweck und Einordnung
+
+Dieses Dokument ergänzt die arc42-Architekturdokumentation um eine kompakte, abgabeorientierte Sicht auf Datenschutz, Nachvollziehbarkeit und KI-Governance im aktuellen SCM-MVP. Es beschreibt den tatsächlich implementierten Stand des Repositories, die dabei verarbeiteten Daten, die relevanten externen Abhängigkeiten und die bewusst offengelegten Grenzen.
+
+Es ersetzt keine formale Rechtsberatung, kein vollständiges Datenschutzkonzept für einen Produktivbetrieb und keine behördliche oder gerichtliche Einordnung. Massgeblich bleibt deshalb: arc42 ist das Primärdokument der Architektur, dieses Dokument dient als unterstützendes Governance-Artefakt für die Bewertung des MVP.
+
+## Verarbeitete Daten
+
+Der fachliche Kern des Systems ist die Verarbeitung eines frei eingegebenen Problemtexts. Dieser Rohtext wird als `input_text` unverändert übernommen und kann personenbezogene, sensible oder kontextuell heikle Informationen enthalten, wenn eine nutzende Person solche Inhalte eingibt.
+
+Während der Verarbeitung entstehen und verbleiben im System insbesondere folgende Datenarten:
+
+- `input_text` als unveränderter Eingabetext
+- `analysis_json` als strukturierter Analyse-Payload mit den sechs SCM-Ebenen
+- `validation_report` als technischer Prüfpfad über Schema-, Modell- und gegebenenfalls Sprachprüfungen
+- Sprachmetadaten wie `detected_language` und `language_confidence`
+- Traceability-Metadaten wie `prompt_version`, `model_id`, `run_status`, `validation_status`, `error_code`, `error_reason` und `created_at`
+
+Diese Daten dienen im MVP nicht der Profilbildung über Personen, sondern der nachvollziehbaren Durchführung, Validierung, Anzeige und Wiederverwendung einzelner Analyse-Runs. Das System speichert keine Benutzerkonten und keine Mehrmandantenstruktur, aber der fachliche Inhalt eines Runs kann trotzdem Rückschlüsse auf Personen, Gruppen, Organisationen oder konkrete Situationen erlauben.
+
+## Datenfluesse und externe Empfaenger
+
+Der reale Datenpfad im SCM-MVP verläuft in klaren Stufen:
+
+1. Eine nutzende Person erfasst im Browser über das Frontend einen Problemtext.
+2. Das Frontend übermittelt den Text per HTTP/JSON an die Backend-API.
+3. Das Backend führt die Spracherkennung lokal aus und erzeugt daraus Sprachmetadaten.
+4. Danach geht der Text entweder in einen rein lokalen Stub-Pfad oder, bei aktivierter Produktivkonfiguration, an den OpenAI-Adapter.
+5. Im OpenAI-Pfad werden der Problemtext, die erkannte Sprache, der versionierte Prompt und das angeforderte JSON-Schema an die externe OpenAI Responses API übergeben, um daraus den Analyse-Payload zu erzeugen.
+6. Das Backend validiert den erhaltenen Payload, ergänzt den `validation_report` und prüft bei erfolgreicher Struktur zusätzlich die dominante Sprache der Analyseausgabe.
+7. Abschliessend persistiert das Backend den Run lokal mit `input_text`, `analysis_json` oder Fehlerzustand, `validation_report` und den Traceability-Metadaten.
+
+Externer Empfänger im engeren Sinn ist nur der optional aktivierte OpenAI-Pfad. Ohne entsprechende Konfiguration bleibt der Stub-Adapter aktiv und es findet für die Analyseerzeugung kein externer Netzaufruf statt. Unabhängig davon bleibt die lokale Spracherkennung im Backend.
+
+Lokale Persistenz bedeutet im Zielbetrieb des MVP eine relationale Speicherung im eigenen Datenbankkontext des Projekts, typischerweise in PostgreSQL via Docker Compose. Für Entwicklungs- und Persistenztests wird zusätzlich SQLite verwendet. Das Repository beschreibt damit einen lokal kontrollierten Persistenzpfad, aber keine ausformulierte produktive Betriebsorganisation mit getrennten Aufbewahrungs-, Backup- oder Zugriffsdiensten.
+
+## Aufbewahrung und Loeschannahmen
+
+Das System behandelt Analyse-Runs als nachvollziehbare Datensätze. Ein erfolgreicher oder fehlgeschlagener Lauf wird deshalb zusammen mit Prüf- und Traceability-Informationen gespeichert, damit Resultate, Fehlerbilder und Reruns später nachvollzogen werden können.
+
+Für den MVP bestehen nur begrenzte Aufbewahrungs- und Löschannahmen:
+
+- Runs bleiben in der lokalen Persistenz erhalten, bis die zugrunde liegende Datenbank oder Entwicklungsumgebung bewusst bereinigt wird.
+- Es gibt im aktuellen Stand keine fachliche Löschfunktion, keine Aufbewahrungsfristen pro Datenkategorie und keinen dokumentierten operativen Prozess für Auskunft, Berichtigung oder Löschung.
+- Für den optionalen OpenAI-Pfad werden im Repository selbst keine zusätzlichen Speicherzusagen gegenüber dem externen Anbieter gemacht; dafür wären die jeweils gültigen Anbieterbedingungen und ein separates Betriebssetup massgeblich.
+
+Die Doku beschreibt damit den Ist-Zustand ehrlich: nachvollziehbare Speicherung ist technisch vorhanden, ausgereifte Privacy Operations für einen Produktivbetrieb jedoch nicht.
+
+## Transparenz und menschliche Verantwortung
+
+SCM ist als unterstützendes Analysewerkzeug konzipiert, nicht als autonom entscheidendes System. Die Anwendung zerlegt eingegebene Problemtexte in sechs Ebenen, bewertet deren Inhalt aber nicht als wahr, falsch oder rechtlich verbindlich. Menschliche Verantwortung bleibt insbesondere an drei Stellen zentral:
+
+- bei der Auswahl und Eingabe des Ausgangstexts
+- bei der Interpretation der erzeugten Analyse
+- bei jeder Weiterverwendung der Resultate in Diskussion, Lehre oder Entscheidungsprozessen
+
+Transparenz entsteht im MVP vor allem über die sichtbare Pipeline-Darstellung im Frontend sowie über die gespeicherten technischen Metadaten eines Runs. Nachvollziehbar sind heute insbesondere `prompt_version`, `model_id`, `validation_report`, `run_status`, `validation_status`, `error_code` und `created_at`. Nicht durchgängig gelöst ist dagegen ein Ende-zu-Ende-Auditkontext über alle Schichten hinweg; insbesondere wird die API-`correlation_id` aus Fehlerantworten derzeit nicht als persistiertes Traceability-Feld eines Runs weitergeführt.
+
+## AI-Act-Einordnung
+
+Für das aktuelle SCM-MVP ist eine vorsichtige, architekturbezogene Einordnung sinnvoller als eine scheinbar definitive Rechtsqualifikation. Das System analysiert frei formulierte Texte mithilfe eines LLM-gestützten Verarbeitungspfads und stellt die Ergebnisse für menschliche Betrachtung transparent dar. Es trifft keine automatisierten Personenentscheide, bewertet keine Kreditwürdigkeit, steuert keine kritische Infrastruktur und beansprucht keine hoheitliche oder sicherheitskritische Sonderrolle.
+
+Plausibel ist deshalb eine Einordnung als KI-gestütztes Analyse- und Strukturierungswerkzeug mit erhöhtem Bedarf an Transparenz, Nachvollziehbarkeit und menschlicher Kontrolle, aber ohne belastbare Behauptung, dass damit bereits sämtliche regulatorischen Pflichten vollständig abgedeckt wären. Relevant für die Abgabe sind vor allem folgende Governance-Gedanken:
+
+- Eingaben können personenbezogene oder sensible Inhalte enthalten und dürfen deshalb nicht als rein harmlose Testdaten behandelt werden.
+- Der optionale OpenAI-Pfad ist als externer Verarbeitungs- und Abhängigkeitsfaktor offen zu benennen.
+- Resultate benötigen menschliche Prüfung und dürfen nicht als selbstgenügende Tatsachenfeststellung gelesen werden.
+- Traceability und klare Grenzen sind Teil der Systemverantwortung, auch wenn das MVP noch kein vollständiges Compliance-Betriebsmodell besitzt.
+
+## Grenzen des MVP
+
+Dieses Repository macht bewusst keine der folgenden Behauptungen:
+
+- keine formale juristische Stellungnahme oder belastbare Rechtsmeinung zu Datenschutz-, Vertrags- oder AI-Act-Fragen
+- keine produktionsreife Privacy- oder Governance-Organisation mit vollständigen Prozessen für Löschung, Incident Handling, Auskunft oder Anbietersteuerung
+- kein Anspruch auf Vollständigkeit einer Compliance-Prüfung oder auf bereits abschliessend nachgewiesene Konformität
+
+Weitere reale Grenzen des MVP sind:
+
+- kein Benutzer- und Rollenmodell für feingranulare Zugriffssteuerung
+- kein durchgehender Audit- oder Logging-Kontext über Frontend, API, Persistenz und externe Anbieter
+- keine Aussage darüber, dass eingegebene Inhalte für jeden realen Einsatzkontext datenschutzrechtlich zulässig wären
+- keine Garantie, dass ein LLM-generiertes Analyseergebnis inhaltlich richtig, ausgewogen oder risikofrei ist
+
+Für die Bewertung des Projekts ist deshalb entscheidend, dass das System seine Datenpfade und Governance-Grenzen offenlegt, statt eine Vollreife zu simulieren, die im aktuellen MVP nicht vorhanden ist.
