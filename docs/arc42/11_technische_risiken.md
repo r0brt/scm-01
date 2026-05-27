@@ -35,3 +35,33 @@
 - Risiko: Frontend-Unit- und E2E-Tests verwenden unterschiedliche Runner; ohne saubere Abgrenzung koennen sich Testdateien gegenseitig stoeren.
 - Auswirkung: Finale Verifikation oder CI-Laeufe koennen an Tooling-Konflikten scheitern.
 - Gegenmassnahme: Vitest schliesst `frontend/e2e/` explizit aus, Playwright bleibt ueber `npm run test:e2e` getrennt.
+
+## R7: Personenbezogene Daten in Freitexten
+
+- Risiko: Freiformulierte Problemtexte können Namen, Gesundheitsbezüge, Vorwürfe oder andere personenbezogene Angaben enthalten, obwohl das MVP keine ausgereifte Datenschutz- oder Klassifikationsschicht besitzt.
+- Auswirkung: Sensible Inhalte können im Input, in Analyseartefakten oder bei externer Provider-Verarbeitung in einem grösseren Umfang erscheinen als fachlich nötig.
+- Gegenmassnahme: Die Architektur behandelt `input_text` grundsätzlich als potenziell sensibel, dokumentiert die Weitergabe an externe Provider explizit und vermeidet zusätzliche stille Anreicherung oder Sekundärnutzung. Das ist eine Begrenzung und keine vollständige Compliance-Zusage.
+
+## R8: Abhängigkeit von externen KI-Providern
+
+- Risiko: Die fachliche Kernfunktion hängt im produktiven Pfad von einem externen KI-Provider mit eigener Verfügbarkeit, Modellpolitik und Datenverarbeitung ab.
+- Auswirkung: Änderungen bei Erreichbarkeit, Preis, Vertragsbedingungen oder Modellverhalten können das System technisch und organisatorisch beeinflussen.
+- Gegenmassnahme: Provider-Zugriffe bleiben hinter einem Adapter-Port gekapselt, Konfiguration und Traceability-Felder werden persistiert, und der MVP macht diese Abhängigkeit architektonisch sichtbar statt sie zu kaschieren.
+
+## R9: Falsche Wahrnehmung von Objektivität
+
+- Risiko: Nutzer oder Stakeholder könnten die strukturierte Ausgabe fälschlich als objektive Wahrheit, neutrale Bewertung oder belastbare Faktengrundlage interpretieren.
+- Auswirkung: Analyseergebnisse werden über ihren didaktischen und unterstützenden Zweck hinaus verwendet, was Fehlentscheide oder unangemessene Autoritätszuschreibungen begünstigen kann.
+- Gegenmassnahme: PRD-Nicht-Ziele, Metadaten, UI-/API-Sprache und arc42 betonen, dass SCM eine KI-gestützte Analysehilfe und keine Wahrheitsmaschine ist.
+
+## R10: Unvollständige Audit-Trails
+
+- Risiko: Ein gespeicherter Run kann zwar Input, Output und zentrale Metadaten enthalten, aber nicht automatisch jeden externen Kontext, jede Modellinterna oder jede organisatorische Entscheidung vollständig belegen.
+- Auswirkung: Nachträgliche Erklärbarkeit bleibt begrenzt, insbesondere wenn Interpretationen oder Betriebsannahmen ausserhalb des gespeicherten Runs entstanden sind.
+- Gegenmassnahme: Die Architektur fordert einen starken Mindest-Audit-Pfad über Payload, Validierungsreport und Metadaten und dokumentiert bekannte Audit-Lücken ausdrücklich, statt Vollständigkeit zu behaupten.
+
+## R11: MVP-Grenze gegenüber Produktionsansprüchen
+
+- Risiko: Architekturentscheidungen des MVP könnten irrtümlich als produktionsreife Datenschutz-, Governance- oder Compliance-Lösung verstanden werden.
+- Auswirkung: Spätere Betriebsentscheide würden auf zu schwachen organisatorischen und technischen Annahmen aufbauen.
+- Gegenmassnahme: arc42 trennt bewusst zwischen MVP-Nachweis und weitergehenden Produktionsanforderungen wie Löschkonzepten, Zugriffskontrolle, Auftragsdatenbearbeitung, Monitoring und formeller Governance.

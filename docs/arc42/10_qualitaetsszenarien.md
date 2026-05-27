@@ -41,3 +41,24 @@
 - Stimulus: Konfiguration von `SCM_ANALYSIS_PROVIDER=openai` im Laufzeitsystem bzw. Fake-Adapter in Tests.
 - Erwartung: Der Produktionspfad verwendet den OpenAI-Adapter und fordert den aktiven SCM-Vertrag aus Prompt und Schema an; Tests bleiben ohne externe Netzaufrufe stabil.
 - Nachweis: Adapter- und App-Factory-Tests mit injizierten Fakes sowie dokumentierte Laufzeitkonfiguration.
+
+## QS7: Begrenzte Weitergabe sensibler Freitexte
+
+- Szenario: Ein Nutzer erfasst einen problemnahen Freitext, der personenbezogene oder anderweitig sensible Angaben enthalten kann.
+- Stimulus: Der Analyse-Run wird über API oder UI gestartet.
+- Erwartung: Das System behandelt `input_text` als potenziell sensibel, dokumentiert die externe Provider-Weitergabe als bewusste Betriebsannahme und beschränkt die gespeicherten Nachweise auf Input, Analyse, Metadaten und Validierungsreport ohne zusätzliche stille Anreicherung.
+- Nachweis: Datenmodell `runs`, API-Detailabruf, Betriebsdokumentation und Architekturkapitel zu Laufzeit- und Datenschutzannahmen.
+
+## QS8: Verständlichkeit als KI-gestützte Analysehilfe
+
+- Szenario: Ein Nutzer, Maintainer oder Stakeholder betrachtet ein Analyseergebnis und leitet daraus weitere Diskussionen ab.
+- Stimulus: Ein gespeicherter Run wird in UI, API oder Dokumentation erklärt.
+- Erwartung: Das System bleibt als KI-gestützte Analysehilfe verständlich und wird nicht als Wahrheitsmaschine beschrieben; Unsicherheit, Modellbezug und die Nicht-Ziele der fachlichen Bewertung bleiben nachvollziehbar.
+- Nachweis: PRD-Nicht-Ziele, UI-/API-Beschriftungen, Metadatenanzeige und arc42-Kapitel zu Qualitätszielen und Risiken.
+
+## QS9: Erklärbarer Audit-Pfad pro gespeichertem Run
+
+- Szenario: Ein Maintainer untersucht nachträglich, weshalb ein bestimmter Run zustande kam oder weshalb er fehlgeschlagen ist.
+- Stimulus: Ein gespeicherter Run wird über API oder Datenbank mit seinem Detailkontext geöffnet.
+- Erwartung: Der Run lässt sich mindestens über `input_text`, `analysis_json`, `validation_report`, `model_id`, `prompt_version`, `run_status`, `validation_status` und bekannte Audit-Lücken erklären, sodass der Interpretationsrahmen sichtbar bleibt.
+- Nachweis: Persistenzmodell `runs`, Detailansicht der Analyse-Runs, Dokumentation zu Audit-Grenzen und gezielte Persistenztests.
