@@ -9,6 +9,8 @@
 
 ## Szenario 2: Analyse eines Problemtexts via API v1
 
+Die folgende textuelle Abfolge wird zusätzlich durch [docs/diagrams/uj1-sequence.puml](/Users/robert/code/scm-01/docs/diagrams/uj1-sequence.puml:1) visualisiert.
+
 1. Ein Client sendet `POST /api/v1/analyses` mit einem Problemtext.
 2. Das Backend erkennt zuerst lokal die dominante Sprache und bewertet die Sicherheit der Erkennung.
 3. Bei zu geringer Sicherheit oder nicht unterstuetzter Sprache endet der Lauf sofort als `failed`; ein Run mit Fehlercode und Sprachmetadaten wird trotzdem persistiert.

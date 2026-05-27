@@ -13,7 +13,7 @@ node "Lokaler Host" {
     database "db container\nPostgreSQL 17\nhost port 5432 -> container 5432" as db
   }
 
-  artifact "SQLite fallback\n./scm.db ausserhalb Compose" as sqlite
+  artifact "Lokaler SQLite-Fallback\nausserhalb Compose" as sqlite
 }
 
 cloud "OpenAI Provider API\nexternal" as openai
@@ -21,11 +21,11 @@ cloud "OpenAI Provider API\nexternal" as openai
 browser --> frontend : HTTP
 frontend --> api : /api Proxy im Compose-Netz
 api --> db : SQLAlchemy + Alembic,\nrelationale Runs
-api --> openai : HTTPS ueber OpenAI-Adapter\n(nur wenn Provider=openai)
+api --> openai : HTTPS über OpenAI-Adapter\n(nur wenn Provider=openai)
 
 note right of sqlite
 Das Backend kann ausserhalb von Compose
-auf SQLite zurueckfallen, wenn keine
+auf SQLite zurückfallen, wenn keine
 SCM_DATABASE_URL gesetzt ist.
 Im Compose-Pfad bleibt PostgreSQL das Zielsystem.
 end note

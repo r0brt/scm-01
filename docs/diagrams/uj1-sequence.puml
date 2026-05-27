@@ -18,12 +18,12 @@ frontend -> api : POST /api/v1/analyses { text }
 api -> detector : dominante Sprache lokal erkennen
 detector --> api : detected_language,\nlanguage_confidence
 
-alt Sprache zu unsicher oder nicht unterstuetzt
+alt Sprache zu unsicher oder nicht unterstützt
   api -> db : failed Run mit Sprachmetadaten\nund Fehlercode persistieren
   db --> api : gespeicherter Run
   api --> frontend : 201 Created mit failed Run
-else Sprache gueltig
-  api -> adapter : Analyse fuer erkannte Sprache anfordern
+else Sprache gültig
+  api -> adapter : Analyse für erkannte Sprache anfordern
   alt Stub-Pfad / Offline-Test
     adapter -> stub : generate(text, language)
     stub --> adapter : Analyse-Payload + Metadaten
@@ -32,9 +32,9 @@ else Sprache gueltig
     openai --> adapter : Analyse-Payload + Modellmetadaten
   end
   adapter --> api : Analyse-Payload + Traceability
-  api -> validation : Schema-, Pydantic-\nund Repair-Pruefung
+  api -> validation : Schema-, Pydantic-\nund Repair-Prüfung
   validation --> api : validiertes Payload oder Fehlerstatus
-  api -> detector : Ausgabesprache lokal pruefen
+  api -> detector : Ausgabesprache lokal prüfen
   detector --> api : Sprachresultat der Ausgabe
   api -> db : Run mit Analyse oder Fehler,\nValidation-Report und Metadaten persistieren
   db --> api : gespeicherter Run

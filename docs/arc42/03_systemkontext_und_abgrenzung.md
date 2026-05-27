@@ -6,6 +6,8 @@ Das System nimmt vom Nutzer bereitgestellten Social-Media-Text entgegen, führt 
 
 ## Kontextdiagramm (textuell)
 
+Als visuelle Ergänzung dient [docs/diagrams/system-context.puml](/Users/robert/code/scm-01/docs/diagrams/system-context.puml:1).
+
 - Akteur `User` interagiert mit dem `Frontend UI`, um Text einzureichen und Runs einzusehen.
 - `Frontend UI` ruft das `Backend API` via HTTP/JSON auf.
 - `Backend API` persistiert Run-Daten und Metadaten in `PostgreSQL`.

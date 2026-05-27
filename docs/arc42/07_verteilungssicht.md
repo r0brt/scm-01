@@ -2,6 +2,8 @@
 
 Die initiale Deployment-Sicht bleibt bei einem containerisierten Setup aus UI, API und PostgreSQL via Docker Compose.
 
+Als visuelle Ergänzung dieser Verteilungssicht dient [docs/diagrams/container-view.puml](/Users/robert/code/scm-01/docs/diagrams/container-view.puml:1).
+
 Die Persistenz im Backend ist relational modelliert. Die API schreibt Analyse-Runs in eine `runs`-Tabelle; fuer den lokalen Zielbetrieb und fuer Compose wird PostgreSQL verwendet. Die lokalen Persistenztests laufen weiterhin mit SQLite, um den Entwicklungs- und Testloop ohne externe Datenbank schnell zu halten.
 
 Die API bleibt der einzige Einstiegspunkt fuer Analysen, delegiert die eigentliche Analyseerzeugung aber an einen austauschbaren LLM-Adapter. Fuer lokale und Test-Nutzung kann ein Stub-Adapter ohne Netz aktiv bleiben; fuer reale Analysen steht eine OpenAI-basierte Implementierung zur Verfuegung.
