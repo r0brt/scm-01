@@ -1,15 +1,15 @@
 @startuml
 left to right direction
 skinparam shadowing false
-skinparam packageStyle rectangle
+skinparam componentStyle rectangle
 skinparam linetype ortho
 
 actor "User" as user
 cloud "OpenAI Provider API\n(optional external dependency)" as openai
 
-rectangle "SCM" {
-  rectangle "Frontend UI" as frontend
-  rectangle "Backend API" as api
+package "SCM" {
+  component "Frontend UI" as frontend
+  component "Backend API" as api
   database "Lokale Persistenz" as persistence
 }
 

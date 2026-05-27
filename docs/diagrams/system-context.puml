@@ -1,12 +1,12 @@
 @startuml
 left to right direction
 skinparam shadowing false
-skinparam packageStyle rectangle
+skinparam componentStyle rectangle
 skinparam linetype ortho
 
 actor "User" as user
-rectangle "Webbrowser" as browser
-rectangle "SCM" as scm
+component "Webbrowser" as browser
+component "SCM" as scm
 cloud "OpenAI Provider API\n(optional external dependency)" as openai
 
 user --> browser : Problemtext eingeben,\nRuns ansehen

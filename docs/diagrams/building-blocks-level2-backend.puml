@@ -1,20 +1,20 @@
 @startuml
 top to bottom direction
 skinparam shadowing false
-skinparam packageStyle rectangle
+skinparam componentStyle rectangle
 skinparam linetype ortho
 
 cloud "OpenAI Provider API\n(optional external dependency)" as openai
 database "Lokale Persistenz" as persistence
 
-rectangle "Backend API" {
-  rectangle "API Layer\n(app/api)" as api_layer
-  rectangle "Analysis Workflow\n(app/services/analysis_workflow.py)" as workflow
-  rectangle "Language Detection\n(app/language)" as language
-  rectangle "Validation Service\n(app/services/validation.py)" as validation
-  rectangle "LLM Adapter\n(app/llm)" as llm
-  rectangle "Run Repository\n(app/repositories)" as repo
-  rectangle "DB Model + Session\n(app/db)" as db
+package "Backend API" {
+  component "API Layer\n(app/api)" as api_layer
+  component "Analysis Workflow\n(app/services/analysis_workflow.py)" as workflow
+  component "Language Detection\n(app/language)" as language
+  component "Validation Service\n(app/services/validation.py)" as validation
+  component "LLM Adapter\n(app/llm)" as llm
+  component "Run Repository\n(app/repositories)" as repo
+  component "DB Model + Session\n(app/db)" as db
 }
 
 api_layer --> workflow : Analyse starten,\nRun laden, Rerun
