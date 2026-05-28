@@ -65,7 +65,7 @@ Beobachtung:
   - Backend E2E: `18000`
 - dadurch sind Konflikte mit den Standardports `4173` und `8000` deutlich weniger wahrscheinlich
 - benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bleiben weiterhin möglich
-- nach dem Stoppen des lokalen Compose-Stacks starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
+- im beobachteten Verifikationslauf starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt; ein gestoppter Compose-Stack ist dabei nur relevant, falls benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bestehen
 - der Lauf scheiterte anschliessend an fehlenden lokal installierten Playwright-Browser-Binaries
 - empfohlener Folge-Command laut Playwright: `npx playwright install`
 

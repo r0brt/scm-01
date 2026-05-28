@@ -25,7 +25,7 @@ Stand: 2026-05-28
 - [x] AC2: schema-valide Ausgabe oder expliziter `failed`-Zustand mit Report
 - [x] AC3: UI zeigt Pipeline oder klaren Fehlerzustand
 - [x] AC4: Analysen sind persistiert und abrufbar
-- [x] AC5: Unit-/Integrations-Tests reproduzierbar; ein E2E-Test fuer UJ1 vorhanden
+- [x] AC5: Unit-/Integrations-Tests reproduzierbar; ein UJ1-E2E-Testpfad ist vorhanden und dokumentiert
 - [x] AC6: lokale Sprachdetektion fuer `de`, `fr` und `en` ist umgesetzt
 - [x] AC7: API-v1-Endpunkte sind implementiert und dokumentiert
 - [x] AC8: Sprachdetektionsfehler fuer geringe Confidence und nicht unterstuetzte Sprache sind separat implementiert

@@ -84,7 +84,6 @@ Für M0 auf Node `22 LTS` wechseln (gemäss `.nvmrc`), bevor Frontend-Scaffoldin
 cd frontend
 npm install
 npm run test -- --run
-npm run test:e2e
 npm run build
 ```
 
@@ -98,6 +97,13 @@ Für den lokalen Playwright-Journey-Test gilt:
   - Frontend E2E: `14173` statt `4173`
   - Backend E2E: `18000` statt `8000`
 - die E2E-Ports lassen sich bei Bedarf überschreiben mit `SCM_E2E_FRONTEND_PORT` und `SCM_E2E_BACKEND_PORT`
+
+Erst nach dieser Voraussetzung den E2E-Lauf starten:
+
+```bash
+cd frontend
+npm run test:e2e
+```
 
 Beispiel mit expliziten Overrides:
 
