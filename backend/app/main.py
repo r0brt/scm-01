@@ -80,12 +80,15 @@ def create_app(
         status_code=status.HTTP_201_CREATED,
     )
     def create_analysis(
-        request: AnalysisCreateRequest, session: Session = Depends(get_db)
+        request: AnalysisCreateRequest,
+        http_request: Request,
+        session: Session = Depends(get_db),
     ) -> AnalysisRunResponse:
         return AnalysisRunResponse.model_validate(
             create_analysis_run(
                 session,
                 request.text,
+                correlation_id=ensure_request_correlation_id(http_request),
                 adapter=adapter,
                 language_detector=detector,
             )
@@ -107,12 +110,15 @@ def create_app(
         status_code=status.HTTP_201_CREATED,
     )
     def rerun_existing_analysis(
-        analysis_id: int, session: Session = Depends(get_db)
+        analysis_id: int,
+        http_request: Request,
+        session: Session = Depends(get_db),
     ) -> AnalysisRunResponse:
         return AnalysisRunResponse.model_validate(
             rerun_analysis(
                 session,
                 analysis_id,
+                correlation_id=ensure_request_correlation_id(http_request),
                 adapter=adapter,
                 language_detector=detector,
             )

@@ -1,3 +1,4 @@
+import sqlite3
 from pathlib import Path
 
 from fastapi import Request
@@ -68,6 +69,30 @@ def test_post_analyses_creates_and_persists_run(tmp_path: Path) -> None:
     assert payload["model_id"] == "fake-api-model"
     assert payload["analysis_json"]["symptome"]["eintraege"]
     assert payload["validation_report"]["checks"][0]["stage"] == "schema"
+
+
+def test_post_analyses_persists_request_correlation_id(tmp_path: Path, monkeypatch) -> None:
+    expected_correlation_id = "corr-http-create"
+
+    def force_request_correlation_id(request: Request) -> str:
+        setattr(request.state, REQUEST_CORRELATION_ID_KEY, expected_correlation_id)
+        return expected_correlation_id
+
+    monkeypatch.setattr("app.main.ensure_request_correlation_id", force_request_correlation_id)
+    client = make_client(tmp_path)
+
+    response = client.post("/api/v1/analyses", json={"text": "Persistiere Request-ID"})
+
+    assert response.status_code == 201
+    run_id = response.json()["id"]
+
+    with sqlite3.connect(tmp_path / "api.db") as connection:
+        stored_correlation_id = connection.execute(
+            "SELECT correlation_id FROM runs WHERE id = ?",
+            (run_id,),
+        ).fetchone()
+
+    assert stored_correlation_id == (expected_correlation_id,)
 
 
 def test_get_analyses_returns_created_runs(tmp_path: Path) -> None:
