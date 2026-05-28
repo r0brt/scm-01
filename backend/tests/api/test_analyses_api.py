@@ -1,7 +1,9 @@
 from pathlib import Path
 
+from fastapi import Request
 from fastapi.testclient import TestClient
 
+from app.api.errors import ApiError, REQUEST_CORRELATION_ID_KEY
 from app.main import create_app
 
 
@@ -117,6 +119,33 @@ def test_get_unknown_analysis_returns_error_contract(tmp_path: Path) -> None:
     assert payload["error"]["message"] == "Analysis run not found"
     assert payload["error"]["details"]["analysis_id"] == 9999
     assert payload["error"]["correlation_id"]
+
+
+def test_api_error_reuses_request_scoped_correlation_id(tmp_path: Path) -> None:
+    client = make_client(tmp_path)
+    app = client.app
+
+    @app.get("/_test/api-error")
+    def trigger_api_error(request: Request) -> None:
+        raise ApiError(
+            status_code=409,
+            code="TEST_ERROR",
+            message="Triggered test error",
+            details={
+                "request_correlation_id": getattr(
+                    request.state, REQUEST_CORRELATION_ID_KEY
+                )
+            },
+        )
+
+    response = client.get("/_test/api-error")
+
+    assert response.status_code == 409
+    payload = response.json()
+    assert payload["error"]["code"] == "TEST_ERROR"
+    assert payload["error"]["correlation_id"] == payload["error"]["details"][
+        "request_correlation_id"
+    ]
 
 
 def test_post_analyses_returns_failed_run_for_low_language_confidence(tmp_path: Path) -> None:

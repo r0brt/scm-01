@@ -1,11 +1,16 @@
 import os
 from collections.abc import Iterator
 
-from fastapi import Depends, FastAPI, status
+from fastapi import Depends, FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.orm import Session
 
-from app.api.errors import ApiError, api_error_handler, request_validation_error_handler
+from app.api.errors import (
+    ApiError,
+    api_error_handler,
+    ensure_request_correlation_id,
+    request_validation_error_handler,
+)
 from app.api.schemas import AnalysisCreateRequest, AnalysisRunResponse
 from app.db.base import Base
 from app.db.session import create_engine, create_session_factory, get_database_url
@@ -58,6 +63,12 @@ def create_app(
 
     app.add_exception_handler(ApiError, api_error_handler)
     app.add_exception_handler(RequestValidationError, request_validation_error_handler)
+
+    @app.middleware("http")
+    async def attach_correlation_id(request: Request, call_next):
+        ensure_request_correlation_id(request)
+        response = await call_next(request)
+        return response
 
     @app.get("/health")
     def health() -> dict[str, str]:
