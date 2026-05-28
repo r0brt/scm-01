@@ -1,7 +1,24 @@
 import { defineConfig } from "@playwright/test";
 
-const e2eFrontendPort = Number(process.env.SCM_E2E_FRONTEND_PORT ?? "14173");
-const e2eBackendPort = Number(process.env.SCM_E2E_BACKEND_PORT ?? "18000");
+function parsePort(name: string, fallback: string): number {
+  const rawValue = process.env[name] ?? fallback;
+  const trimmedValue = rawValue.trim();
+
+  if (trimmedValue === "") {
+    throw new Error(`${name} must not be empty.`);
+  }
+
+  const port = Number.parseInt(trimmedValue, 10);
+
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+    throw new Error(`${name} must be a valid TCP port between 1 and 65535.`);
+  }
+
+  return port;
+}
+
+const e2eFrontendPort = parsePort("SCM_E2E_FRONTEND_PORT", "14173");
+const e2eBackendPort = parsePort("SCM_E2E_BACKEND_PORT", "18000");
 
 export default defineConfig({
   testDir: "./e2e",
@@ -19,7 +36,7 @@ export default defineConfig({
     },
     {
       command:
-        `SCM_API_BASE_URL=http://127.0.0.1:${e2eBackendPort} npm run dev -- --host 127.0.0.1 --port ${e2eFrontendPort}`,
+        `SCM_API_BASE_URL=http://127.0.0.1:${e2eBackendPort} npm run dev -- --host 127.0.0.1 --port ${e2eFrontendPort} --strictPort`,
       cwd: ".",
       url: `http://127.0.0.1:${e2eFrontendPort}`,
       reuseExistingServer: false,
