@@ -39,6 +39,7 @@ def test_create_app_uses_openai_adapter_when_configured(
 
     assert response.status_code == 201
     assert response.json()["model_id"] == "openai-test-model"
+    assert response.json()["correlation_id"]
 
 
 def test_create_app_prefers_explicit_adapter_over_env_provider(monkeypatch, tmp_path) -> None:
@@ -71,3 +72,4 @@ def test_create_app_prefers_explicit_adapter_over_env_provider(monkeypatch, tmp_
 
     assert response.status_code == 201
     assert response.json()["model_id"] == "explicit-model"
+    assert response.json()["correlation_id"]

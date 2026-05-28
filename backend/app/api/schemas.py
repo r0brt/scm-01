@@ -16,6 +16,7 @@ class AnalysisRunResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    correlation_id: str
     input_text: str
     analysis_json: dict[str, Any] | None
     validation_report: dict[str, Any]

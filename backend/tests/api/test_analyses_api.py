@@ -60,6 +60,7 @@ def test_post_analyses_creates_and_persists_run(tmp_path: Path) -> None:
 
     assert response.status_code == 201
     payload = response.json()
+    assert payload["correlation_id"]
     assert payload["input_text"] == "Wohnungsnot in der Stadt"
     assert payload["run_status"] == "completed"
     assert payload["validation_status"] == "valid"
@@ -84,7 +85,9 @@ def test_post_analyses_persists_request_correlation_id(tmp_path: Path, monkeypat
     response = client.post("/api/v1/analyses", json={"text": "Persistiere Request-ID"})
 
     assert response.status_code == 201
-    run_id = response.json()["id"]
+    payload = response.json()
+    assert payload["correlation_id"] == expected_correlation_id
+    run_id = payload["id"]
 
     with sqlite3.connect(tmp_path / "api.db") as connection:
         stored_correlation_id = connection.execute(
@@ -105,6 +108,7 @@ def test_get_analyses_returns_created_runs(tmp_path: Path) -> None:
     payload = response.json()
     assert len(payload) == 1
     assert payload[0]["id"] == created["id"]
+    assert payload[0]["correlation_id"] == created["correlation_id"]
     assert payload[0]["input_text"] == "Erster Text"
 
 
@@ -117,6 +121,7 @@ def test_get_analysis_by_id_returns_detail(tmp_path: Path) -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["id"] == created["id"]
+    assert payload["correlation_id"] == created["correlation_id"]
     assert payload["input_text"] == "Detailtext"
 
 
@@ -129,8 +134,36 @@ def test_post_rerun_creates_new_run_with_same_input(tmp_path: Path) -> None:
     assert response.status_code == 201
     payload = response.json()
     assert payload["id"] != created["id"]
+    assert payload["correlation_id"]
     assert payload["input_text"] == created["input_text"]
     assert payload["run_status"] == "completed"
+
+
+def test_run_api_exposes_persisted_correlation_ids_consistently(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def next_request_correlation_id(request: Request) -> str:
+        if request.method == "POST" and request.url.path == "/api/v1/analyses":
+            correlation_id = "corr-create"
+        elif request.method == "POST" and request.url.path.endswith("/rerun"):
+            correlation_id = "corr-rerun"
+        else:
+            correlation_id = "corr-read"
+        setattr(request.state, REQUEST_CORRELATION_ID_KEY, correlation_id)
+        return correlation_id
+
+    monkeypatch.setattr("app.main.ensure_request_correlation_id", next_request_correlation_id)
+    client = make_client(tmp_path)
+
+    created = client.post("/api/v1/analyses", json={"text": "Nachvollziehbarer Lauf"}).json()
+    listed = client.get("/api/v1/analyses").json()
+    detail = client.get(f"/api/v1/analyses/{created['id']}").json()
+    rerun = client.post(f"/api/v1/analyses/{created['id']}/rerun").json()
+
+    assert created["correlation_id"] == "corr-create"
+    assert listed[0]["correlation_id"] == "corr-create"
+    assert detail["correlation_id"] == "corr-create"
+    assert rerun["correlation_id"] == "corr-rerun"
 
 
 def test_get_unknown_analysis_returns_error_contract(tmp_path: Path) -> None:
