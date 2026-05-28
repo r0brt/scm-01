@@ -8,6 +8,10 @@ function parsePort(name: string, fallback: string): number {
     throw new Error(`${name} must not be empty.`);
   }
 
+  if (!/^\d+$/.test(trimmedValue)) {
+    throw new Error(`${name} must contain only decimal digits.`);
+  }
+
   const port = Number.parseInt(trimmedValue, 10);
 
   if (!Number.isInteger(port) || port <= 0 || port > 65535) {
