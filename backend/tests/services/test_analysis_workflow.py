@@ -1,6 +1,6 @@
 from app.db.base import Base
 from app.db.session import create_engine, create_session_factory
-from app.services.analysis_workflow import create_analysis_run
+from app.services.analysis_workflow import create_analysis_run, rerun_analysis
 
 
 class FakeLanguageDetector:
@@ -69,6 +69,7 @@ def test_create_analysis_run_uses_injected_adapter_metadata() -> None:
         run = create_analysis_run(
             session,
             "Adaptertext",
+            correlation_id="corr-workflow-success",
             adapter=adapter,
             language_detector=detector,
         )
@@ -76,6 +77,7 @@ def test_create_analysis_run_uses_injected_adapter_metadata() -> None:
     assert detector.calls[0] == "Adaptertext"
     assert len(detector.calls) == 2
     assert adapter.calls == [("Adaptertext", "de")]
+    assert run.correlation_id == "corr-workflow-success"
     assert run.detected_language == "de"
     assert run.language_confidence == 0.95
     assert run.model_id == "fake-model"
@@ -91,12 +93,14 @@ def test_create_analysis_run_fails_for_low_language_confidence() -> None:
         run = create_analysis_run(
             session,
             "Haus logement housing",
+            correlation_id="corr-workflow-low-confidence",
             adapter=adapter,
             language_detector=detector,
         )
 
     assert detector.calls == ["Haus logement housing"]
     assert adapter.calls == []
+    assert run.correlation_id == "corr-workflow-low-confidence"
     assert run.run_status == "failed"
     assert run.validation_status == "invalid"
     assert run.error_code == "LANGUAGE_CONFIDENCE_TOO_LOW"
@@ -111,12 +115,14 @@ def test_create_analysis_run_fails_for_unsupported_language() -> None:
         run = create_analysis_run(
             session,
             "La crisi abitativa colpisce molte famiglie.",
+            correlation_id="corr-workflow-unsupported",
             adapter=adapter,
             language_detector=detector,
         )
 
     assert detector.calls == ["La crisi abitativa colpisce molte famiglie."]
     assert adapter.calls == []
+    assert run.correlation_id == "corr-workflow-unsupported"
     assert run.run_status == "failed"
     assert run.validation_status == "invalid"
     assert run.error_code == "UNSUPPORTED_LANGUAGE"
@@ -149,11 +155,41 @@ def test_create_analysis_run_fails_when_output_language_does_not_match_input_lan
         run = create_analysis_run(
             session,
             "Die Einkommenschere geht immer weiter auf.",
+            correlation_id="corr-workflow-output-language",
             adapter=adapter,
             language_detector=detector,
         )
 
+    assert run.correlation_id == "corr-workflow-output-language"
     assert run.run_status == "failed"
     assert run.validation_status == "invalid"
     assert run.error_code == "OUTPUT_LANGUAGE_MISMATCH"
     assert run.analysis_json is None
+
+
+def test_rerun_analysis_persists_new_correlation_id() -> None:
+    adapter = FakeAdapter()
+    detector = FakeLanguageDetector()
+
+    with make_session() as session:
+        original = create_analysis_run(
+            session,
+            "Bitte nochmals analysieren",
+            correlation_id="corr-original",
+            adapter=adapter,
+            language_detector=detector,
+        )
+        original_id = original.id
+        original_input_text = original.input_text
+
+        rerun = rerun_analysis(
+            session,
+            original_id,
+            correlation_id="corr-rerun",
+            adapter=adapter,
+            language_detector=detector,
+        )
+
+    assert rerun.id != original_id
+    assert rerun.input_text == original_input_text
+    assert rerun.correlation_id == "corr-rerun"

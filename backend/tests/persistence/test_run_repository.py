@@ -32,6 +32,7 @@ def test_create_and_get_run_persists_full_payload() -> None:
     with session_factory() as session:
         created = create_run(
             session,
+            correlation_id="corr-test-123",
             input_text="Ein Testtext",
             analysis_json=analysis_json,
             validation_report=validation_report,
@@ -48,6 +49,7 @@ def test_create_and_get_run_persists_full_payload() -> None:
 
     assert loaded is not None
     assert loaded.id == created.id
+    assert loaded.correlation_id == "corr-test-123"
     assert loaded.input_text == "Ein Testtext"
     assert loaded.analysis_json == analysis_json
     assert loaded.validation_report == validation_report
@@ -68,6 +70,7 @@ def test_create_run_allows_failed_run_without_analysis_json() -> None:
     with session_factory() as session:
         created = create_run(
             session,
+            correlation_id="corr-test-failed-1",
             input_text="Fehlerhafter Testtext",
             analysis_json=None,
             validation_report={"checks": [{"stage": "repair", "status": "failed"}]},
@@ -83,6 +86,7 @@ def test_create_run_allows_failed_run_without_analysis_json() -> None:
         loaded = get_run(session, created.id)
 
     assert loaded is not None
+    assert loaded.correlation_id == "corr-test-failed-1"
     assert loaded.analysis_json is None
     assert loaded.run_status == "failed"
     assert loaded.validation_status == "invalid"
@@ -98,6 +102,7 @@ def test_list_runs_returns_newest_first() -> None:
     with session_factory() as session:
         first = create_run(
             session,
+            correlation_id="corr-first",
             input_text="Erster Lauf",
             analysis_json=analysis_json,
             validation_report=validation_report,
@@ -112,6 +117,7 @@ def test_list_runs_returns_newest_first() -> None:
         )
         second = create_run(
             session,
+            correlation_id="corr-second",
             input_text="Zweiter Lauf",
             analysis_json=analysis_json,
             validation_report=validation_report,
@@ -127,3 +133,4 @@ def test_list_runs_returns_newest_first() -> None:
         runs = list_runs(session)
 
     assert [run.id for run in runs] == [second.id, first.id]
+    assert [run.correlation_id for run in runs] == ["corr-second", "corr-first"]

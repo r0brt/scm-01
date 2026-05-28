@@ -13,6 +13,7 @@ class RunRecord(Base):
     __tablename__ = "runs"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    correlation_id: Mapped[str] = mapped_column(String(36), nullable=False)
     input_text: Mapped[str] = mapped_column(Text, nullable=False)
     analysis_json: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     validation_report: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)

@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from sqlalchemy.orm import Session
 
 from app.api.errors import ApiError
@@ -43,14 +45,21 @@ def _normalize_language_detection(
     )
 
 
+def _resolve_correlation_id(correlation_id: str | None) -> str:
+    """Return the caller-provided correlation ID or a compatibility fallback."""
+    return correlation_id or str(uuid4())
+
+
 def create_analysis_run(
     session: Session,
     text: str,
     *,
+    correlation_id: str | None = None,
     adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR,
     language_detector: LanguageDetector = DEFAULT_LANGUAGE_DETECTOR,
 ):
     """Generate, validate, and persist a new analysis run."""
+    resolved_correlation_id = _resolve_correlation_id(correlation_id)
     detection = _normalize_language_detection(language_detector.detect(text))
     language_error = detection.error_code
     if language_error is None and detection.language not in SUPPORTED_LANGUAGES:
@@ -59,6 +68,7 @@ def create_analysis_run(
     if language_error is not None:
         return create_run(
             session,
+            correlation_id=resolved_correlation_id,
             input_text=text,
             analysis_json=None,
             validation_report={
@@ -112,6 +122,7 @@ def create_analysis_run(
             }
             return create_run(
                 session,
+                correlation_id=resolved_correlation_id,
                 input_text=text,
                 analysis_json=None,
                 validation_report=validation_report,
@@ -127,6 +138,7 @@ def create_analysis_run(
 
     return create_run(
         session,
+        correlation_id=resolved_correlation_id,
         input_text=text,
         analysis_json=analysis_json,
         validation_report=validation_report,
@@ -178,6 +190,7 @@ def rerun_analysis(
     session: Session,
     run_id: int,
     *,
+    correlation_id: str | None = None,
     adapter: AnalysisGenerator = DEFAULT_ANALYSIS_GENERATOR,
     language_detector: LanguageDetector = DEFAULT_LANGUAGE_DETECTOR,
 ):
@@ -186,6 +199,7 @@ def rerun_analysis(
     return create_analysis_run(
         session,
         run.input_text,
+        correlation_id=correlation_id,
         adapter=adapter,
         language_detector=language_detector,
     )

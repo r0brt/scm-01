@@ -9,6 +9,7 @@ from app.db.models import RunRecord
 def create_run(
     session: Session,
     *,
+    correlation_id: str,
     input_text: str,
     analysis_json: dict[str, Any] | None,
     validation_report: dict[str, Any],
@@ -23,6 +24,7 @@ def create_run(
 ) -> RunRecord:
     """Persist and return a new analysis run."""
     run = RunRecord(
+        correlation_id=correlation_id,
         input_text=input_text,
         analysis_json=analysis_json,
         validation_report=validation_report,
