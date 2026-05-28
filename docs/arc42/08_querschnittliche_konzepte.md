@@ -26,7 +26,7 @@ Nach der strukturellen Validierung prüft das Backend zusätzlich die Sprache de
 
 ## Persistenz
 
-Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Persistiert werden Eingabetext, Analyse-JSON, Validierungsreport sowie die für Nachvollziehbarkeit relevanten Metadaten wie `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben.
+Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Persistiert werden Eingabetext, Analyse-JSON, Validierungsreport sowie die für Nachvollziehbarkeit relevanten Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben.
 
 Schemaänderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern über Alembic-Migrationen versioniert. Dadurch bleiben Datenbankstruktur und Anwendungsmodell reproduzierbar und auditiert.
 
@@ -44,7 +44,7 @@ Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/User
 
 ## API-Fehlervertrag
 
-Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine generierte `correlation_id`.
+Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine requestgebundene `correlation_id`, die bereits frueh im HTTP-Lebenszyklus erzeugt und danach im Request-Kontext weitergereicht wird.
 
 In M4 werden mindestens ungültige Requests und unbekannte Analyse-IDs explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
 
@@ -60,9 +60,11 @@ Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachli
 
 ## Traceability und Laufnachvollziehbarkeit
 
-Die Nachvollziehbarkeit eines Analyse-Runs stützt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` hält den technischen Prüfpfad über Schema-, Modell- und gegebenenfalls Sprachprüfungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gültig war. `created_at` ordnet den Run zeitlich ein.
+Die Nachvollziehbarkeit eines Analyse-Runs stuetzt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `correlation_id` verbindet neue Runs mit dem ausloesenden HTTP-Request. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` haelt den technischen Pruefpfad ueber Schema-, Modell- und gegebenenfalls Sprachpruefungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gueltig war. `created_at` ordnet den Run zeitlich ein.
 
-Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Insbesondere ist die in API-Fehlerantworten erzeugte `correlation_id` derzeit nur punktuell für Fehlerkommunikation nutzbar und noch kein durchgehend persistiertes Traceability-Feld eines Runs. Damit bleibt die Fehlerdiagnose für Einzelaufrufe unterstützt, während eine vollständige Ende-zu-Ende-Korrelation zwischen Frontend, API, Persistenz und optionalem Provider-Pfad noch nicht ausgebaut ist.
+Im aktuellen Stand wird pro HTTP-Request genau eine `correlation_id` erzeugt. Dieselbe ID erscheint bei Fehlerantworten und wird bei neu erzeugten Runs mitpersistiert und ueber die Run-API wieder sichtbar gemacht. Dadurch ist ein kleiner, aber klarer Request-to-Run-Nachvollziehbarkeitspfad vorhanden.
+
+Diese Felder reichen fuer die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgaengigen Audit-Kontext ueber alle Schichten. Es gibt weiterhin keine vollstaendige Ende-zu-Ende-Korrelation ueber Frontend, API, Persistenz, strukturierte Logs und optionalen Provider-Pfad. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
 
 ## Frontend-Praesentationskonzept
 

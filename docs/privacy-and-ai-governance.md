@@ -16,7 +16,7 @@ Während der Verarbeitung entstehen und verbleiben im System insbesondere folgen
 - `analysis_json` als strukturierter Analyse-Payload mit den sechs SCM-Ebenen
 - `validation_report` als technischer Prüfpfad über Schema-, Modell- und gegebenenfalls Sprachprüfungen
 - Sprachmetadaten wie `detected_language` und `language_confidence`
-- Traceability-Metadaten wie `prompt_version`, `model_id`, `run_status`, `validation_status`, `error_code`, `error_reason` und `created_at`
+- Traceability-Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status`, `error_code`, `error_reason` und `created_at`
 
 Diese Daten dienen im MVP nicht der Profilbildung über Personen, sondern der nachvollziehbaren Durchführung, Validierung, Anzeige und Wiederverwendung einzelner Analyse-Runs. Das System speichert keine Benutzerkonten und keine Mehrmandantenstruktur, aber der fachliche Inhalt eines Runs kann trotzdem Rückschlüsse auf Personen, Gruppen, Organisationen oder konkrete Situationen erlauben.
 
@@ -56,7 +56,7 @@ SCM ist als unterstützendes Analysewerkzeug konzipiert, nicht als autonom entsc
 - bei der Interpretation der erzeugten Analyse
 - bei jeder Weiterverwendung der Resultate in Diskussion, Lehre oder Entscheidungsprozessen
 
-Transparenz entsteht im MVP vor allem über die sichtbare Pipeline-Darstellung im Frontend sowie über die gespeicherten technischen Metadaten eines Runs. Nachvollziehbar sind heute insbesondere `prompt_version`, `model_id`, `validation_report`, `run_status`, `validation_status`, `error_code` und `created_at`. Nicht durchgängig gelöst ist dagegen ein Ende-zu-Ende-Auditkontext über alle Schichten hinweg; insbesondere wird die API-`correlation_id` aus Fehlerantworten derzeit nicht als persistiertes Traceability-Feld eines Runs weitergeführt.
+Transparenz entsteht im MVP vor allem ueber die sichtbare Pipeline-Darstellung im Frontend sowie ueber die gespeicherten technischen Metadaten eines Runs. Nachvollziehbar sind heute insbesondere `correlation_id`, `prompt_version`, `model_id`, `validation_report`, `run_status`, `validation_status`, `error_code` und `created_at`. Die `correlation_id` wird pro HTTP-Request erzeugt, bei Fehlerantworten wiederverwendet und bei neu erzeugten Runs mitpersistiert, sodass ein nachvollziehbarer Request-to-Run-Pfad vorhanden ist. Nicht durchgaengig geloest ist dagegen ein Ende-zu-Ende-Auditkontext ueber alle Schichten hinweg; insbesondere fehlen weiterhin ein vollstaendiger Frontend-zu-Backend-zu-Provider-Trace sowie eine ausformulierte Logging- und Monitoring-Sicht.
 
 ## AI-Act-Einordnung
 
@@ -80,7 +80,7 @@ Dieses Repository macht bewusst keine der folgenden Behauptungen:
 Weitere reale Grenzen des MVP sind:
 
 - kein Benutzer- und Rollenmodell für feingranulare Zugriffssteuerung
-- kein durchgehender Audit- oder Logging-Kontext über Frontend, API, Persistenz und externe Anbieter
+- kein vollstaendiger Audit- oder Logging-Kontext ueber Frontend, API, Persistenz und externe Anbieter; die requestgebundene `correlation_id` verbessert die Nachvollziehbarkeit neuer Runs, ersetzt aber noch keine vollstaendige Ende-zu-Ende-Observability
 - keine Aussage darüber, dass eingegebene Inhalte für jeden realen Einsatzkontext datenschutzrechtlich zulässig wären
 - keine Garantie, dass ein LLM-generiertes Analyseergebnis inhaltlich richtig, ausgewogen oder risikofrei ist
 

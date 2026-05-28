@@ -1,6 +1,6 @@
 # Test Report
 
-Stand: 2026-05-27
+Stand: 2026-05-29
 Baseline-Commit: `8186e05`
 
 ## Ausgeführte Commands
@@ -14,11 +14,11 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run pytest -q
 
 Resultat:
 
-- `45 passed in 1.52s`
+- `49 passed in 0.85s`
 
 Hinweis:
 
-- der Lauf wurde über `uv` mit der projektbezogenen Python-3.13-Umgebung ausgeführt
+- der Lauf wurde zuletzt auf der Branch `feat/traceability-hardening` ueber `uv` mit der projektbezogenen Python-3.13-Umgebung ausgefuehrt
 
 ### Frontend Unit/UI
 

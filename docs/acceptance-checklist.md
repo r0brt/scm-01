@@ -1,13 +1,13 @@
 # Abnahmecheckliste
 
-Stand: 2026-05-28
+Stand: 2026-05-29
 
 ## Produkt und Architektur
 
 - [x] Analysevertrag mit sechs Ebenen ist definiert und implementiert
 - [x] Strikte Validierungslogik ist im aktiven Laufzeitpfad vorhanden
 - [x] Bounded Repair-Logik ist im Repository vorbereitet, aber im aktuellen Standardpfad nicht verdrahtet
-- [x] Analyse-Runs werden mit Traceability-Metadaten persistiert
+- [x] Analyse-Runs werden mit Traceability-Metadaten inklusive `correlation_id` persistiert
 - [x] API-v1 fuer Analyse, Liste, Detail und Rerun ist vorhanden
 - [x] Frontend zeigt Eingabe, Pipeline, Run-Liste und JSON-Export
 - [x] Lokaler Zielbetrieb via Docker Compose ist dokumentiert
@@ -16,6 +16,7 @@ Stand: 2026-05-28
 
 - [x] Datenschutz- und KI-Governance-Annahmen sind dokumentiert
 - [x] Externe Datenpfade und Grenzen des MVP sind explizit beschrieben
+- [x] Requestgebundene `correlation_id` wird bei neuen Runs mitpersistiert und in Fehlerantworten wiederverwendet
 - [x] Traceability-Felder pro Run sind dokumentiert und im Datenmodell sichtbar
 - [x] Die Grenze zwischen Run-Nachvollziehbarkeit und vollstaendigem Ende-zu-Ende-Audit-Trail ist offengelegt
 
