@@ -39,7 +39,7 @@ Stand: 2026-05-28
 ## Nachweise mit bekannten Voraussetzungen oder Limitationen
 
 - [ ] `cd frontend && npm run test:e2e`
-  Der Testpfad ist vorhanden, startete lokal bis zum Browser-Launch korrekt, scheiterte im aktuellen Verifikationslauf aber an fehlenden Playwright-Browser-Binaries.
+  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports, startete im aktuellen Verifikationslauf lokal bis zum Browser-Launch korrekt, scheiterte dort aber an fehlenden Playwright-Browser-Binaries.
 - [ ] `docker compose up -d`
 - [ ] `docker compose ps`
 - [ ] `docker compose down`
@@ -49,4 +49,4 @@ Stand: 2026-05-28
 
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP
 - [ ] Mehrsprachigkeit ist bewusst auf `de`, `fr` und `en` begrenzt; weitere Sprachen bleiben moegliche Folgearbeit
-- [ ] Breitere E2E-Matrix, reproduzierbarere lokale E2E-Voraussetzungen (Playwright-Browser, freie lokale Ports) und produktionsnahe Observability bleiben moegliche Folgearbeit
+- [ ] Breitere E2E-Matrix, reproduzierbarere lokale E2E-Voraussetzungen (Playwright-Browser, frei verfügbare E2E-Ports) und produktionsnahe Observability bleiben moegliche Folgearbeit

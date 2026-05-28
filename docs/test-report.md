@@ -60,8 +60,12 @@ Resultat:
 
 Beobachtung:
 
+- das Playwright-Setup nutzt nun dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports:
+  - Frontend E2E: `14173`
+  - Backend E2E: `18000`
+- dadurch sind Konflikte mit den Standardports `4173` und `8000` deutlich weniger wahrscheinlich
+- benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bleiben weiterhin möglich
 - nach dem Stoppen des lokalen Compose-Stacks starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
-- lokale Portkonflikte auf `4173` oder `8000` bleiben eine bekannte Voraussetzung, wenn gleichzeitig ein Compose-Stack oder andere Dev-Server laufen
 - der Lauf scheiterte anschliessend an fehlenden lokal installierten Playwright-Browser-Binaries
 - empfohlener Folge-Command laut Playwright: `npx playwright install`
 
@@ -77,7 +81,7 @@ Beobachtung:
 
 - E2E deckt weiterhin nur einen kritischen Happy Path für UJ1 ab
 - der aktuelle E2E-Lauf benötigt lokal installierte Playwright-Browser-Binaries
-- fuer den lokalen E2E-Lauf muessen die benoetigten Dev-Ports frei sein; parallele Compose- oder andere lokale Dev-Server koennen den Start blockieren
+- der lokale E2E-Lauf nutzt eigene dedizierte Ports statt `4173` und `8000`, kann aber weiterhin durch benutzerdefinierte Konflikte auf den gewählten E2E-Ports blockiert werden
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
 - Compose ist im aktuellen Freeze-Prep nicht erneut end-to-end verifiziert worden

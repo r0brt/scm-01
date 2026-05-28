@@ -88,6 +88,24 @@ npm run test:e2e
 npm run build
 ```
 
+### Lokaler Playwright-Journey-Test
+
+Für den lokalen Playwright-Journey-Test gilt:
+
+- Playwright-Browser einmalig lokal installieren: `npx playwright install`
+- `npm run test:e2e` startet eigene lokale Dev-Server für Backend und Frontend
+- die Standardports für E2E sind bewusst getrennt von den normalen Dev-/Compose-Ports:
+  - Frontend E2E: `14173` statt `4173`
+  - Backend E2E: `18000` statt `8000`
+- die E2E-Ports lassen sich bei Bedarf überschreiben mit `SCM_E2E_FRONTEND_PORT` und `SCM_E2E_BACKEND_PORT`
+
+Beispiel mit expliziten Overrides:
+
+```bash
+cd frontend
+SCM_E2E_FRONTEND_PORT=15173 SCM_E2E_BACKEND_PORT=19000 npm run test:e2e
+```
+
 ## Docker Compose (M8)
 
 Der lokale Zielbetrieb besteht aus drei Containern: `frontend`, `api` und `db`.
