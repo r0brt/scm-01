@@ -1,6 +1,6 @@
 # Abnahmecheckliste
 
-Stand: 2026-05-29
+Stand: 2026-05-30
 
 ## Produkt und Architektur
 
@@ -33,18 +33,20 @@ Stand: 2026-05-29
 
 ## Aktuell erfolgreich verifizierte Commands
 
-- [x] `cd backend && uv run pytest -q`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
+- [x] GitHub Actions `CI` auf `main` für Commit `94e6575`
 
 ## Nachweise mit bekannten Voraussetzungen oder Limitationen
 
 - [x] `cd frontend && npm run test:e2e`
   Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief nach `npx playwright install` erfolgreich durch.
-- [ ] `docker compose up -d`
-- [ ] `docker compose ps`
-- [ ] `docker compose down`
-  Compose ist dokumentiert und war frueher Teil verifizierter Arbeitsschritte, wurde im aktuellen Freeze-/Re-Onboarding-Stand aber nicht erneut end-to-end als Bewertungsnachweis durchlaufen.
+- [x] `docker compose up -d --build`
+- [x] `docker compose ps`
+- [x] `docker compose down`
+  Compose wurde am 2026-05-30 als Start-/Status-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Ein zusätzlicher HTTP-End-to-End-Test über die veröffentlichten Host-Ports wurde in der aktuellen Codex-Sandbox nicht erfolgreich durchgeführt.
 
 ## Offene Restpunkte
 
