@@ -76,6 +76,10 @@ Beobachtung:
 - aktueller Re-Onboarding-Nachweis, dass `main` lokal sauber und mit `origin/main` ausgerichtet ist
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
+## Automatisierter Quality Gate
+
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+
 ## Bekannte Limitationen
 
 - E2E deckt weiterhin nur einen kritischen Happy Path für UJ1 ab

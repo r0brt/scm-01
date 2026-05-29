@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[3]
 PROMPT_PATH = ROOT / "prompts" / "v2" / "analysis.md"
 

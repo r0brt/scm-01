@@ -94,7 +94,8 @@ def create_analysis_run(
     if analysis_json is not None:
         output_text = _flatten_analysis_text(analysis_json)
         output_detection = _normalize_language_detection(language_detector.detect(output_text))
-        if output_detection.error_code is not None or output_detection.language != detection.language:
+        output_language_mismatch = output_detection.language != detection.language
+        if output_detection.error_code is not None or output_language_mismatch:
             validation_report = {
                 "checks": [
                     *validation.report["checks"],

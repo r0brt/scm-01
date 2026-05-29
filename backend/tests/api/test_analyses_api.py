@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi import Request
 from fastapi.testclient import TestClient
 
-from app.api.errors import ApiError, REQUEST_CORRELATION_ID_KEY
+from app.api.errors import REQUEST_CORRELATION_ID_KEY, ApiError
 from app.main import create_app
 
 
