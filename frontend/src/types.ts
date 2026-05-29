@@ -18,6 +18,7 @@ export type AnalysisJson = {
 
 export type AnalysisRun = {
   id: number;
+  correlation_id: string;
   input_text: string;
   analysis_json: AnalysisJson | null;
   validation_report: { checks: Array<Record<string, unknown>> };

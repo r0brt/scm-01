@@ -37,6 +37,6 @@ Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-bloc
 - `PipelineView` rendert die zwei Frontend-Betriebsarten der Filterstrecke:
   - Flow-Modus waehrend `submitting`/`result_received`/`revealing` mit genau einer sichtbaren aktiven Stage
   - Review-Modus nach `completed` mit allen sechs Stages, optionalen Details und hervorgehobener `Essenz`
-- `RunHistoryPanel` entkoppelt die Auswahl bereits persistierter Runs von der Pipeline-Darstellung und ist ueber den Archiv-Tab nur als sekundaere Arbeitsflaeche erreichbar.
+- `RunHistoryPanel` entkoppelt die Auswahl bereits persistierter Runs von der Pipeline-Darstellung und buendelt im Archiv-Tab Run-Liste, technische Nachweise, JSON-Export und die explizite Aktion zum Oeffnen eines Runs in der Analyseansicht.
 
 Die Frontend-Logik trennt damit bewusst zwischen Datenbeschaffung (`App.tsx`), Zustandsableitung (`usePipelineViewModel`) und visueller Darstellung (`AnalysisComposer`, `PipelineView`, `RunHistoryPanel`). Die Pipeline-Stages sind zentral in `frontend/src/pipeline.ts` definiert, damit Reihenfolge, Titel und Prompt-Texte nicht ueber mehrere Komponenten verstreut gepflegt werden muessen. Die UI behandelt den laufenden Analysepfad bewusst anders als die spaetere Run-Pruefung: waehrend des Reveal wird nur eine Stage fokussiert dargestellt, nach Abschluss bleibt der gesamte Run als reviewbare Uebersicht sichtbar.

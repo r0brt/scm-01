@@ -62,12 +62,20 @@ export default function App() {
       setError(null);
       const run = await getAnalysis(runId);
       setSelectedRun(run);
-      setText(run.input_text);
-      setActiveTab("analyse");
       setRevealToken(0);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Run konnte nicht geladen werden.");
     }
+  }
+
+  function handleOpenSelectedRunInAnalyse() {
+    if (!selectedRun) {
+      return;
+    }
+
+    setText(selectedRun.input_text);
+    setActiveTab("analyse");
+    setRevealToken(0);
   }
 
   return (
@@ -130,8 +138,10 @@ export default function App() {
         <section aria-labelledby="archiv-tab" className="archive-layout" id="archiv-panel" role="tabpanel">
           <RunHistoryPanel
             onRefresh={() => void refreshRuns()}
+            onOpenInAnalyse={handleOpenSelectedRunInAnalyse}
             onSelectRun={(runId) => void handleSelectRun(runId)}
             runs={runs}
+            selectedRun={selectedRun}
             selectedRunId={selectedRun?.id ?? null}
           />
         </section>

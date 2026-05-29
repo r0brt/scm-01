@@ -135,6 +135,7 @@ p {
 .composer-panel,
 .pipeline-panel,
 .runs-panel,
+.archive-detail-panel,
 .pipeline-empty-state {
   border: 1px solid var(--line-color);
   border-radius: 1.2rem;
@@ -259,8 +260,16 @@ p {
 }
 
 .pipeline-panel,
-.runs-panel {
+.runs-panel,
+.archive-detail-panel {
   padding: 1rem;
+}
+
+.archive-workspace {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.9fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  align-items: start;
 }
 
 .panel-header {
@@ -335,6 +344,92 @@ p {
 
 .run-item-status {
   font-size: 0.7rem;
+}
+
+.archive-detail-panel {
+  display: grid;
+  gap: 1rem;
+  min-height: 16rem;
+}
+
+.archive-detail-header {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.archive-detail-kicker {
+  color: var(--muted-text);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.archive-detail-header h2 {
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+  font-family: "Space Grotesk", "Avenir Next", sans-serif;
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.archive-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.archive-detail-actions button {
+  padding: 0.62rem 0.82rem;
+  border: 1px solid var(--line-color);
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.94);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.archive-detail-actions button:hover {
+  transform: translateY(-1px);
+}
+
+.archive-metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.archive-metadata-grid div {
+  min-width: 0;
+  padding: 0.62rem 0.7rem;
+  border: 1px solid rgba(31, 39, 49, 0.08);
+  border-radius: 0.75rem;
+  background: rgba(255, 253, 249, 0.62);
+}
+
+.archive-metadata-grid dt {
+  color: var(--muted-text);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.archive-metadata-grid dd {
+  margin: 0.18rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.archive-detail-empty {
+  display: grid;
+  min-height: 12rem;
+  place-items: center;
+  color: var(--muted-text);
+  text-align: center;
 }
 
 .pipeline-timeline {
@@ -531,6 +626,7 @@ p {
   .composer-panel,
   .pipeline-panel,
   .runs-panel,
+  .archive-detail-panel,
   .pipeline-empty-state {
     padding: 0.9rem;
     border-radius: 1rem;
@@ -545,8 +641,14 @@ p {
     align-items: stretch;
   }
 
+  .archive-workspace,
+  .archive-metadata-grid {
+    grid-template-columns: 1fr;
+  }
+
   .composer-panel button,
-  .runs-panel button {
+  .runs-panel button,
+  .archive-detail-actions button {
     width: 100%;
   }
 }

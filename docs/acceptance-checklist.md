@@ -9,7 +9,7 @@ Stand: 2026-05-29
 - [x] Bounded Repair-Logik ist im Repository vorbereitet, aber im aktuellen Standardpfad nicht verdrahtet
 - [x] Analyse-Runs werden mit Traceability-Metadaten inklusive `correlation_id` persistiert
 - [x] API-v1 fuer Analyse, Liste, Detail und Rerun ist vorhanden
-- [x] Frontend zeigt Eingabe, Pipeline, Run-Liste und JSON-Export
+- [x] Frontend zeigt Eingabe, Pipeline, Run-Liste, Archiv-Nachweise und JSON-Export
 - [x] Lokaler Zielbetrieb via Docker Compose ist dokumentiert
 
 ## Datenschutz, KI-Governance und Nachvollziehbarkeit
@@ -39,8 +39,8 @@ Stand: 2026-05-29
 
 ## Nachweise mit bekannten Voraussetzungen oder Limitationen
 
-- [ ] `cd frontend && npm run test:e2e`
-  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports, startete im aktuellen Verifikationslauf lokal bis zum Browser-Launch korrekt, scheiterte dort aber an fehlenden Playwright-Browser-Binaries.
+- [x] `cd frontend && npm run test:e2e`
+  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief nach `npx playwright install` erfolgreich durch.
 - [ ] `docker compose up -d`
 - [ ] `docker compose ps`
 - [ ] `docker compose down`
@@ -50,4 +50,4 @@ Stand: 2026-05-29
 
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP
 - [ ] Mehrsprachigkeit ist bewusst auf `de`, `fr` und `en` begrenzt; weitere Sprachen bleiben moegliche Folgearbeit
-- [ ] Breitere E2E-Matrix, reproduzierbarere lokale E2E-Voraussetzungen (Playwright-Browser, frei verfügbare E2E-Ports) und produktionsnahe Observability bleiben moegliche Folgearbeit
+- [ ] Breitere E2E-Matrix, frei verfügbare E2E-Ports und produktionsnahe Observability bleiben moegliche Folgearbeit

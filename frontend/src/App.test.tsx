@@ -10,6 +10,7 @@ import App from "./App";
 function buildSuccessfulRun() {
   return {
     id: 1,
+    correlation_id: "corr-ui-test",
     input_text: "Wohnungsnot",
     analysis_json: {
       symptome: {
@@ -118,12 +119,60 @@ test("loads a selected archived run into Analyse and copies its problem text", a
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
 
   await waitFor(() => {
-    expect(screen.getByRole("tab", { name: "Analyse" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Archiv" })).toHaveAttribute("aria-selected", "true");
   });
 
-  expect(screen.getByText("Social Cleanup Machine")).toBeInTheDocument();
+  expect(screen.getByRole("region", { name: "Archiv-Details" })).toBeInTheDocument();
+  expect(screen.getByText("corr-ui-test")).toBeInTheDocument();
+  expect(screen.getByText("fake-api-model")).toBeInTheDocument();
+  expect(screen.getByText("v-fake")).toBeInTheDocument();
+  const details = screen.getByRole("region", { name: "Archiv-Details" });
+  expect(within(details).getByText("completed · valid")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "JSON exportieren" })).toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: "In Analyse öffnen" }));
+
+  expect(screen.getByRole("tab", { name: "Analyse" })).toHaveAttribute("aria-selected", "true");
   expect(screen.getByLabelText("Problemtext")).toHaveValue("Wohnungsnot");
   expect(screen.getByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).toBeInTheDocument();
+});
+
+test("exports the selected archive run as JSON", async () => {
+  const run = buildSuccessfulRun();
+  globalThis.fetch = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify([run]), { status: 200 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify(run), { status: 200 }));
+  const createObjectURL = vi.fn().mockReturnValue("blob:scm-run");
+  const revokeObjectURL = vi.fn();
+  const click = vi.fn();
+  const originalCreateObjectURL = URL.createObjectURL;
+  const originalRevokeObjectURL = URL.revokeObjectURL;
+  const originalCreateElement = document.createElement.bind(document);
+  URL.createObjectURL = createObjectURL;
+  URL.revokeObjectURL = revokeObjectURL;
+  vi.spyOn(document, "createElement").mockImplementation((tagName) => {
+    const element = originalCreateElement(tagName);
+    if (tagName === "a") {
+      element.click = click;
+    }
+    return element;
+  });
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await user.click(await screen.findByRole("tab", { name: "Archiv" }));
+  await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+  await user.click(await screen.findByRole("button", { name: "JSON exportieren" }));
+
+  expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
+  expect(click).toHaveBeenCalled();
+  expect(revokeObjectURL).toHaveBeenCalledWith("blob:scm-run");
+
+  URL.createObjectURL = originalCreateObjectURL;
+  URL.revokeObjectURL = originalRevokeObjectURL;
+  vi.restoreAllMocks();
 });
 
 test("keeps Archiv active and shows an error if loading a run from the archive fails", async () => {
@@ -194,6 +243,7 @@ test("renders completed runs as a compact pipeline and emphasizes Essenz", async
 
   await user.click(screen.getByRole("tab", { name: "Archiv" }));
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+  await user.click(await screen.findByRole("button", { name: "In Analyse öffnen" }));
 
   await waitFor(() => {
     expect(screen.getAllByRole("article", { name: /Stage / })).toHaveLength(6);
@@ -244,6 +294,9 @@ test("defines the simplified stylesheet contract for tabs, archive, and analysis
   expect(stylesheet).toContain(".tab-button");
   expect(stylesheet).toContain(".analysis-layout");
   expect(stylesheet).toContain(".archive-layout");
+  expect(stylesheet).toContain(".archive-workspace");
+  expect(stylesheet).toContain(".archive-detail-panel");
+  expect(stylesheet).toContain(".archive-metadata-grid");
   expect(stylesheet).toContain(".analysis-context");
   expect(stylesheet).toContain(".pipeline-empty-state");
   expect(stylesheet).toContain(".composer-transparency");

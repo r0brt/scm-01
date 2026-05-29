@@ -70,7 +70,7 @@ Diese Felder reichen fuer die Nachvollziehbarkeit einzelner Runs im MVP bereits 
 
 Das Frontend trennt bewusst zwischen Flow- und Review-Nutzung desselben Runs. Waerend der synchronen Analyseantwort entfaltet die UI die bereits vollstaendig vorliegende Analyse deterministisch als sequentielle Filterstrecke. Dabei ist immer nur die aktive Stage als Arbeitsflaeche sichtbar; andere Stages werden im Flow nur als Fortschrittsknoten oder reduzierte Zustandsmarker dargestellt.
 
-Nach Abschluss wechselt dieselbe Analyse in einen Review-Modus. Dort werden alle sechs Stages gleichzeitig sichtbar, Details bleiben aber pro Stage standardmaessig reduziert und koennen gezielt aufgeklappt werden. Die `Essenz` bleibt als finaler Zielpunkt standardmaessig geoeffnet und optisch abgesetzt. Run-Historie, JSON-Export und technische Metadaten bleiben bewusst sekundaer, damit der primaere Fokus auf der Pipeline bleibt.
+Nach Abschluss wechselt dieselbe Analyse in einen Review-Modus. Dort werden alle sechs Stages gleichzeitig sichtbar, Details bleiben aber pro Stage standardmaessig reduziert und koennen gezielt aufgeklappt werden. Die `Essenz` bleibt als finaler Zielpunkt standardmaessig geoeffnet und optisch abgesetzt. Run-Historie, JSON-Export und technische Metadaten bleiben bewusst sekundaer und sind im Archiv-Kontext gebuendelt, damit der primaere Fokus der Analyseansicht auf der Pipeline bleibt.
 
 ## Betriebs- und Konfigurationskonzept
 
