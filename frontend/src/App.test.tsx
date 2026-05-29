@@ -137,6 +137,25 @@ test("loads a selected archived run into Analyse and copies its problem text", a
   expect(screen.getByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).toBeInTheDocument();
 });
 
+test("does not open an archived run when switching to Analyse manually", async () => {
+  const run = buildSuccessfulRun();
+  globalThis.fetch = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify([run]), { status: 200 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify(run), { status: 200 }));
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await user.click(await screen.findByRole("tab", { name: "Archiv" }));
+  await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+  await user.click(screen.getByRole("tab", { name: "Analyse" }));
+
+  expect(screen.getByLabelText("Problemtext")).toHaveValue("");
+  expect(screen.getByText("Noch keine Analyse gestartet")).toBeInTheDocument();
+  expect(screen.queryByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).not.toBeInTheDocument();
+});
+
 test("exports the selected archive run as JSON", async () => {
   const run = buildSuccessfulRun();
   globalThis.fetch = vi
@@ -149,6 +168,7 @@ test("exports the selected archive run as JSON", async () => {
   const originalCreateObjectURL = URL.createObjectURL;
   const originalRevokeObjectURL = URL.revokeObjectURL;
   const originalCreateElement = document.createElement.bind(document);
+  const originalSetTimeout = window.setTimeout.bind(window);
   URL.createObjectURL = createObjectURL;
   URL.revokeObjectURL = revokeObjectURL;
   vi.spyOn(document, "createElement").mockImplementation((tagName) => {
@@ -158,21 +178,33 @@ test("exports the selected archive run as JSON", async () => {
     }
     return element;
   });
+  const setTimeoutSpy = vi.spyOn(window, "setTimeout").mockImplementation((handler: TimerHandler, timeout?: number) => {
+    return originalSetTimeout(handler, timeout);
+  });
   const user = userEvent.setup();
 
-  render(<App />);
+  try {
+    render(<App />);
 
-  await user.click(await screen.findByRole("tab", { name: "Archiv" }));
-  await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
-  await user.click(await screen.findByRole("button", { name: "JSON exportieren" }));
+    await user.click(await screen.findByRole("tab", { name: "Archiv" }));
+    await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+    const appendChild = vi.spyOn(document.body, "appendChild");
+    const removeChild = vi.spyOn(document.body, "removeChild");
+    await user.click(await screen.findByRole("button", { name: "JSON exportieren" }));
 
-  expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
-  expect(click).toHaveBeenCalled();
-  expect(revokeObjectURL).toHaveBeenCalledWith("blob:scm-run");
-
-  URL.createObjectURL = originalCreateObjectURL;
-  URL.revokeObjectURL = originalRevokeObjectURL;
-  vi.restoreAllMocks();
+    expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
+    expect(appendChild).toHaveBeenCalled();
+    expect(click).toHaveBeenCalled();
+    expect(removeChild).toHaveBeenCalled();
+    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 0);
+    await waitFor(() => {
+      expect(revokeObjectURL).toHaveBeenCalledWith("blob:scm-run");
+    });
+  } finally {
+    URL.createObjectURL = originalCreateObjectURL;
+    URL.revokeObjectURL = originalRevokeObjectURL;
+    vi.restoreAllMocks();
+  }
 });
 
 test("keeps Archiv active and shows an error if loading a run from the archive fails", async () => {

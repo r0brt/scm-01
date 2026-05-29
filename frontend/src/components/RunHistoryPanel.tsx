@@ -29,8 +29,10 @@ export function RunHistoryPanel({
     const anchor = document.createElement("a");
     anchor.href = objectUrl;
     anchor.download = `scm-run-${selectedRun.id}.json`;
+    document.body.appendChild(anchor);
     anchor.click();
-    URL.revokeObjectURL(objectUrl);
+    document.body.removeChild(anchor);
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
   }
 
   return (

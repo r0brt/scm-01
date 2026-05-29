@@ -30,11 +30,11 @@ npm run test -- --run
 Resultat:
 
 - `1 file passed`
-- `8 tests passed`
+- `9 tests passed`
 
 Hinweis:
 
-- der UI-Testlauf deckt zentrale Struktur- und Darstellungsinvarianten der Analyse-/Archiv-Ansicht ab
+- der UI-Testlauf deckt zentrale Struktur- und Darstellungsinvarianten der Analyse-/Archiv-Ansicht sowie die Trennung zwischen Archiv-Auswahl und Analyse-Ansicht ab
 
 ### Frontend Build
 
@@ -45,7 +45,7 @@ npm run build
 
 Resultat:
 
-- `built in 1.74s`
+- `built in 569ms`
 
 ### Frontend E2E
 
@@ -56,7 +56,7 @@ npm run test:e2e
 
 Resultat:
 
-- `1 passed in 5.9s`
+- `1 passed in 3.6s`
 
 Beobachtung:
 
