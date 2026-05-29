@@ -2,7 +2,7 @@
 
 ## Ziel
 
-Dieser PR baut die Arc42-Dokumentation gezielt zu einer abgabefähigeren Architektur-Dokumentation aus, ohne Anwendungslogik zu verändern. Der Fokus liegt auf aktuellen, nachvollziehbaren Architekturdiagrammen, einem korrigierten Datenmodell-Nachweis und aktualisierten Bewertungsnachweisen auf dem aktuellen `main`.
+Dieser PR baut die Arc42-Dokumentation gezielt zu einer konsistenteren Architektur-Dokumentation aus, ohne Anwendungslogik zu verändern. Der Fokus liegt auf aktuellen, nachvollziehbaren Architekturdiagrammen, einem korrigierten Datenmodell-Nachweis und aktualisierten Test- und CI-Nachweisen auf dem aktuellen `main`.
 
 ## Scope
 
@@ -55,9 +55,9 @@ Die Dokumentation muss konsistent mit folgenden Implementierungsstellen sein:
 - `docs/diagrams/db-erd.puml`: ERD-Feldliste
 - `docs/arc42/08_querschnittliche_konzepte.md`: Persistenz- und Traceability-Beschreibung
 
-## Qualitäts- und Bewertungsfokus
+## Qualitäts- und Dokumentationsfokus
 
-Der Ausbau soll CAS-bewertungsrelevant sichtbar machen:
+Der Ausbau soll architektonisch sichtbar machen:
 
 - Systemgrenze und externe KI-Abhängigkeit
 - verteilte Laufzeit über Web UI, API und Persistenz
