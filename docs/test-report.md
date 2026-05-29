@@ -18,7 +18,7 @@ Resultat:
 
 Hinweis:
 
-- der Lauf wurde zuletzt auf der Branch `feat/traceability-hardening` ueber `uv` mit der projektbezogenen Python-3.13-Umgebung ausgefuehrt
+- der Lauf wurde zuletzt auf der Branch `feat/traceability-hardening` über `uv` mit der projektbezogenen Python-3.13-Umgebung ausgeführt
 
 ### Frontend Unit/UI
 
@@ -66,7 +66,7 @@ Beobachtung:
 - dadurch sind Konflikte mit den Standardports `4173` und `8000` deutlich weniger wahrscheinlich
 - benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bleiben weiterhin möglich
 - nach `npx playwright install` starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
-- der UJ1-Browserpfad wurde erfolgreich ausgefuehrt
+- der UJ1-Browserpfad wurde erfolgreich ausgeführt
 
 ## Abgedeckte Nachweise
 

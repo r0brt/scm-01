@@ -46,7 +46,7 @@ Für den MVP bestehen nur begrenzte Aufbewahrungs- und Löschannahmen:
 - Es gibt im aktuellen Stand keine fachliche Löschfunktion, keine Aufbewahrungsfristen pro Datenkategorie und keinen dokumentierten operativen Prozess für Auskunft, Berichtigung oder Löschung.
 - Für den optionalen OpenAI-Pfad werden im Repository selbst keine zusätzlichen Speicherzusagen gegenüber dem externen Anbieter gemacht; dafür wären die jeweils gültigen Anbieterbedingungen und ein separates Betriebssetup massgeblich.
 
-Lokale Bereinigung erfolgt im MVP deshalb nicht als fachlicher Nutzerprozess, sondern als bewusste Umgebungsbereinigung. Im Compose-Betrieb kann die lokale PostgreSQL-Persistenz zum Beispiel mit `docker compose down -v` entfernt werden. Lokale SQLite-Dateien aus Entwicklungs- oder E2E-Läufen koennen gezielt geloescht werden, etwa `backend/e2e.db` oder `backend/scm.db`, sofern diese Dateien in der jeweiligen Umgebung verwendet wurden.
+Lokale Bereinigung erfolgt im MVP deshalb nicht als fachlicher Nutzerprozess, sondern als bewusste Umgebungsbereinigung. Im Compose-Betrieb kann die lokale PostgreSQL-Persistenz zum Beispiel mit `docker compose down -v` entfernt werden. Lokale SQLite-Dateien aus Entwicklungs- oder E2E-Läufen können gezielt gelöscht werden, etwa `backend/e2e.db` oder `backend/scm.db`, sofern diese Dateien in der jeweiligen Umgebung verwendet wurden.
 
 Die Doku beschreibt damit den Ist-Zustand ehrlich: nachvollziehbare Speicherung ist technisch vorhanden, ausgereifte Privacy Operations für einen Produktivbetrieb jedoch nicht.
 
@@ -58,7 +58,7 @@ SCM ist als unterstützendes Analysewerkzeug konzipiert, nicht als autonom entsc
 - bei der Interpretation der erzeugten Analyse
 - bei jeder Weiterverwendung der Resultate in Diskussion, Lehre oder Entscheidungsprozessen
 
-Transparenz entsteht im MVP vor allem ueber die sichtbare Pipeline-Darstellung im Frontend sowie ueber die gespeicherten technischen Metadaten eines Runs. Nachvollziehbar sind heute insbesondere `correlation_id`, `prompt_version`, `model_id`, `validation_report`, `run_status`, `validation_status`, `error_code` und `created_at`. Die `correlation_id` wird pro HTTP-Request erzeugt, bei Fehlerantworten wiederverwendet und bei neu erzeugten Runs mitpersistiert, sodass ein nachvollziehbarer Request-to-Run-Pfad vorhanden ist. Nicht durchgaengig geloest ist dagegen ein Ende-zu-Ende-Auditkontext ueber alle Schichten hinweg; insbesondere fehlen weiterhin ein vollstaendiger Frontend-zu-Backend-zu-Provider-Trace sowie eine ausformulierte Logging- und Monitoring-Sicht.
+Transparenz entsteht im MVP vor allem über die sichtbare Pipeline-Darstellung im Frontend sowie über die gespeicherten technischen Metadaten eines Runs. Nachvollziehbar sind heute insbesondere `correlation_id`, `prompt_version`, `model_id`, `validation_report`, `run_status`, `validation_status`, `error_code` und `created_at`. Die `correlation_id` wird pro HTTP-Request erzeugt, bei Fehlerantworten wiederverwendet und bei neu erzeugten Runs mitpersistiert, sodass ein nachvollziehbarer Request-to-Run-Pfad vorhanden ist. Nicht durchgängig gelöst ist dagegen ein Ende-zu-Ende-Auditkontext über alle Schichten hinweg; insbesondere fehlen weiterhin ein vollständiger Frontend-zu-Backend-zu-Provider-Trace sowie eine ausformulierte Logging- und Monitoring-Sicht.
 
 ## AI-Act-Einordnung
 
@@ -82,7 +82,7 @@ Dieses Repository macht bewusst keine der folgenden Behauptungen:
 Weitere reale Grenzen des MVP sind:
 
 - kein Benutzer- und Rollenmodell für feingranulare Zugriffssteuerung
-- kein vollstaendiger Audit- oder Logging-Kontext ueber Frontend, API, Persistenz und externe Anbieter; die requestgebundene `correlation_id` verbessert die Nachvollziehbarkeit neuer Runs, ersetzt aber noch keine vollstaendige Ende-zu-Ende-Observability
+- kein vollständiger Audit- oder Logging-Kontext über Frontend, API, Persistenz und externe Anbieter; die requestgebundene `correlation_id` verbessert die Nachvollziehbarkeit neuer Runs, ersetzt aber noch keine vollständige Ende-zu-Ende-Observability
 - keine Aussage darüber, dass eingegebene Inhalte für jeden realen Einsatzkontext datenschutzrechtlich zulässig wären
 - keine Garantie, dass ein LLM-generiertes Analyseergebnis inhaltlich richtig, ausgewogen oder risikofrei ist
 

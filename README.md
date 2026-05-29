@@ -131,7 +131,7 @@ Erreichbarkeit nach `up`:
 
 ### Lokale Daten bereinigen
 
-Analyse-Runs werden im MVP lokal persistiert. Es gibt aktuell keine fachliche Loeschfunktion in der Anwendung; fuer lokale Entwicklungs- und Abgabenachweise erfolgt Bereinigung ueber die jeweilige Laufzeitumgebung.
+Analyse-Runs werden im MVP lokal persistiert. Es gibt aktuell keine fachliche Löschfunktion in der Anwendung; für lokale Entwicklungs- und Abgabenachweise erfolgt Bereinigung über die jeweilige Laufzeitumgebung.
 
 - Compose-Datenbank entfernen: `docker compose down -v`
 - Lokale E2E-SQLite-Datenbank entfernen: `rm -f backend/e2e.db`
