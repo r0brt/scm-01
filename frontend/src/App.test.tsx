@@ -156,6 +156,28 @@ test("does not open an archived run when switching to Analyse manually", async (
   expect(screen.queryByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).not.toBeInTheDocument();
 });
 
+test("scrolls archive details into view after selecting a run", async () => {
+  const run = buildSuccessfulRun();
+  globalThis.fetch = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify([run]), { status: 200 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify(run), { status: 200 }));
+  const scrollIntoView = vi.fn();
+  Element.prototype.scrollIntoView = scrollIntoView;
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await user.click(await screen.findByRole("tab", { name: "Archiv" }));
+  await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
+
+  await waitFor(() => {
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
+  });
+  expect(screen.getByRole("region", { name: "Archiv-Details" })).toBeInTheDocument();
+  expect(screen.getByRole("tab", { name: "Archiv" })).toHaveAttribute("aria-selected", "true");
+});
+
 test("exports the selected archive run as JSON", async () => {
   const run = buildSuccessfulRun();
   globalThis.fetch = vi
