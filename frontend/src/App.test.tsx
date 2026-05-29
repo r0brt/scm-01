@@ -69,11 +69,17 @@ test("renders two top-level tabs and keeps archive accessible without runs", asy
   expect(screen.getByRole("heading", { name: "Problem" })).toBeInTheDocument();
   expect(screen.getByText("Noch keine Analyse gestartet")).toBeInTheDocument();
   expect(screen.getByPlaceholderText("Beschreibe das Problem kurz...")).toBeInTheDocument();
-  expect(screen.getByRole("note", { name: "Transparenzhinweis" })).toBeInTheDocument();
-  expect(screen.getByText("KI-gestützte Analyse")).toBeInTheDocument();
-  expect(screen.getByText("Keine sensiblen oder personenbezogenen Daten eingeben")).toBeInTheDocument();
-  expect(screen.getByText("Eingaben und Resultate können gespeichert werden")).toBeInTheDocument();
-  expect(screen.getByText("Keine Wahrheits- oder Rechtsprüfung")).toBeInTheDocument();
+  const transparencyNotice = screen.getByRole("note", { name: "Transparenzhinweis" });
+  const noticeLines = Array.from(transparencyNotice.querySelectorAll("p")).map((line) =>
+    line.textContent?.trim(),
+  );
+  expect(noticeLines).toEqual([
+    "KI-gestützte Analyse",
+    "Keine sensiblen oder personenbezogenen Daten eingeben",
+    "Eingaben und Resultate können gespeichert werden",
+    "Keine Wahrheits- oder Rechtsprüfung",
+  ]);
+  expect(within(transparencyNotice).queryByText("Zusätzlicher Hinweis")).not.toBeInTheDocument();
   expect(screen.queryByText("Problem eingeben")).not.toBeInTheDocument();
   expect(screen.queryByPlaceholderText("Problemtext eingeben")).not.toBeInTheDocument();
   expect(screen.queryByText("Maschine einspeisen")).not.toBeInTheDocument();
