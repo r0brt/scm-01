@@ -235,6 +235,7 @@ test("defines the simplified stylesheet contract for tabs, archive, and analysis
   expect(stylesheet).toContain(".archive-layout");
   expect(stylesheet).toContain(".analysis-context");
   expect(stylesheet).toContain(".pipeline-empty-state");
+  expect(stylesheet).toContain(".composer-transparency");
   expect(stylesheet).toContain(".stage-card-essenz");
   expect(stylesheet).toContain(".run-item-title");
   expect(stylesheet).toContain("text-overflow: ellipsis;");

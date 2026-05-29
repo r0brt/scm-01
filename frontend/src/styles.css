@@ -176,6 +176,27 @@ p {
   box-shadow: 0 0 0 0.24rem rgba(39, 104, 199, 0.11);
 }
 
+.composer-transparency {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line-color);
+  border-radius: 0.95rem;
+  background: rgba(255, 253, 249, 0.68);
+  color: var(--muted-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.composer-transparency p {
+  margin: 0;
+}
+
+.composer-transparency p:first-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .composer-actions {
   display: flex;
   justify-content: flex-start;
