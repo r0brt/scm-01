@@ -18,6 +18,8 @@ Verfügbare Diagrammquellen:
 
 - `docs/diagrams/structurizr/c1-system-context.dsl`: C1-Systemkontext mit SCM-Systemgrenze, User und optionalem externem LLM Provider.
 - `docs/diagrams/structurizr/c2-scm-container.dsl`: C2-Containersicht mit Web UI, Backend/API, Persistenz und optionalem externem LLM Provider.
+- `docs/diagrams/structurizr/c3-backend-components.dsl`: C3-Komponentensicht des Backends mit API Layer, Workflow, Sprachdetektion, Validierung, LLM Adapter, Repository, DB-Zugriff und vorbereiteter Repair-Guardrail.
+- `docs/diagrams/structurizr/c3-web-ui-components.dsl`: C3-Komponentensicht der Web UI mit App Shell, Composer, Pipeline View, Archiv, API Client, Pipeline View Model und Frontend-Typen.
 - `docs/diagrams/system-context.puml`: Systemkontext für [docs/arc42/03_systemkontext_und_abgrenzung.md](/Users/robert/code/scm-01/docs/arc42/03_systemkontext_und_abgrenzung.md:1) mit `SCM` als Blackbox sowie den relevanten Umsystemen und Akteuren.
 - `docs/diagrams/uj1-sequence.puml`: UJ1-Ablauf für [docs/arc42/06_laufzeitsicht.md](/Users/robert/code/scm-01/docs/arc42/06_laufzeitsicht.md:1) mit Texteingabe, lokaler Sprachdetektion, Adapterpfad, Validierung und Persistenz.
 - `docs/diagrams/container-view.puml`: Container- und Compose-Sicht für [docs/arc42/07_verteilungssicht.md](/Users/robert/code/scm-01/docs/arc42/07_verteilungssicht.md:1) mit `frontend`, `api`, `db`, Portfreigaben und externer OpenAI-Abhängigkeit.
