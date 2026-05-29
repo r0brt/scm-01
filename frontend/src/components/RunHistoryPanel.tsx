@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import type { AnalysisRun } from "../types";
 
@@ -19,14 +19,12 @@ export function RunHistoryPanel({
   onOpenInAnalyse,
   onSelectRun,
 }: RunHistoryPanelProps) {
-  const detailPanelRef = useRef<HTMLElement | null>(null);
-
   useEffect(() => {
     if (!selectedRun) {
       return;
     }
 
-    detailPanelRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+    window.scrollTo({ behavior: "smooth", top: 0 });
   }, [selectedRun?.id]);
 
   function handleExportRun() {
@@ -78,7 +76,7 @@ export function RunHistoryPanel({
         </ul>
       </aside>
 
-      <section aria-label="Archiv-Details" className="archive-detail-panel" ref={detailPanelRef}>
+      <section aria-label="Archiv-Details" className="archive-detail-panel">
         {selectedRun ? (
           <>
             <div className="archive-detail-header">

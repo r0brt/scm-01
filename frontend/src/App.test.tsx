@@ -7,6 +7,10 @@ import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 
+beforeEach(() => {
+  window.scrollTo = vi.fn();
+});
+
 function buildSuccessfulRun() {
   return {
     id: 1,
@@ -156,14 +160,14 @@ test("does not open an archived run when switching to Analyse manually", async (
   expect(screen.queryByText("Sie hat staendig Angst vor der naechsten Mieterhoehung.")).not.toBeInTheDocument();
 });
 
-test("scrolls archive details into view after selecting a run", async () => {
+test("scrolls to the page top after selecting an archive run", async () => {
   const run = buildSuccessfulRun();
   globalThis.fetch = vi
     .fn()
     .mockResolvedValueOnce(new Response(JSON.stringify([run]), { status: 200 }))
     .mockResolvedValueOnce(new Response(JSON.stringify(run), { status: 200 }));
-  const scrollIntoView = vi.fn();
-  Element.prototype.scrollIntoView = scrollIntoView;
+  const scrollTo = vi.fn();
+  window.scrollTo = scrollTo;
   const user = userEvent.setup();
 
   render(<App />);
@@ -172,7 +176,7 @@ test("scrolls archive details into view after selecting a run", async () => {
   await user.click(screen.getByRole("button", { name: /Wohnungsnot/i }));
 
   await waitFor(() => {
-    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
+    expect(scrollTo).toHaveBeenCalledWith({ behavior: "smooth", top: 0 });
   });
   expect(screen.getByRole("region", { name: "Archiv-Details" })).toBeInTheDocument();
   expect(screen.getByRole("tab", { name: "Archiv" })).toHaveAttribute("aria-selected", "true");

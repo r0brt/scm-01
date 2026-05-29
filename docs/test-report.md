@@ -34,7 +34,7 @@ Resultat:
 
 Hinweis:
 
-- der UI-Testlauf deckt zentrale Struktur- und Darstellungsinvarianten der Analyse-/Archiv-Ansicht, die Trennung zwischen Archiv-Auswahl und Analyse-Ansicht sowie das Anspringen der Archiv-Details nach Run-Auswahl ab
+- der UI-Testlauf deckt zentrale Struktur- und Darstellungsinvarianten der Analyse-/Archiv-Ansicht, die Trennung zwischen Archiv-Auswahl und Analyse-Ansicht sowie das Scrollen zum oberen Seitenbereich nach Archiv-Run-Auswahl ab
 
 ### Frontend Build
 
@@ -45,7 +45,7 @@ npm run build
 
 Resultat:
 
-- `built in 420ms`
+- `built in 459ms`
 
 ### Frontend E2E
 
@@ -56,7 +56,7 @@ npm run test:e2e
 
 Resultat:
 
-- `1 passed in 3.3s`
+- `1 passed in 5.2s`
 
 Beobachtung:
 
