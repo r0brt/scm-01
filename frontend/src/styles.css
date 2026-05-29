@@ -178,23 +178,38 @@ p {
 
 .composer-transparency {
   display: grid;
-  gap: 0.3rem;
-  padding: 0.75rem 0.85rem;
-  border: 1px solid var(--line-color);
-  border-radius: 0.95rem;
-  background: rgba(255, 253, 249, 0.68);
+  width: min(100%, 32rem);
+  justify-self: start;
+  gap: 0.32rem;
+  padding: 0.44rem 0.58rem;
+  border: 1px solid rgba(31, 39, 49, 0.045);
+  border-radius: 0.72rem;
+  background: rgba(39, 104, 199, 0.024);
   color: var(--muted-text);
-  font-size: 0.82rem;
-  line-height: 1.4;
+  font-size: 0.68rem;
+  line-height: 1.28;
 }
 
 .composer-transparency p {
   margin: 0;
 }
 
-.composer-transparency p:first-child {
+.composer-transparency-title {
   color: var(--text);
   font-weight: 600;
+  letter-spacing: -0.01em;
+  font-size: 0.71rem;
+  margin-bottom: 0.02rem;
+}
+
+.composer-transparency-copy {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.composer-transparency-copy-secondary {
+  margin-top: 0.18rem;
+  color: rgba(104, 113, 125, 0.76);
 }
 
 .composer-actions {

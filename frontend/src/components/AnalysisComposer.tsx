@@ -29,10 +29,15 @@ export function AnalysisComposer({
         className="composer-transparency"
         role="note"
       >
-        <p>KI-gestützte Analyse</p>
-        <p>Keine sensiblen oder personenbezogenen Daten eingeben</p>
-        <p>Eingaben und Resultate können gespeichert werden</p>
-        <p>Keine Wahrheits- oder Rechtsprüfung</p>
+        <p className="composer-transparency-title">ⓘ Hinweis zur KI-Analyse</p>
+        <div className="composer-transparency-copy">
+          <p>Die Analyse strukturiert den eingegebenen Text, bewertet ihn aber nicht.</p>
+          <p>Sie ersetzt keine Fakten-, Wahrheits- oder Rechtsprüfung.</p>
+        </div>
+        <div className="composer-transparency-copy composer-transparency-copy-secondary">
+          <p>Bitte keine sensiblen oder personenbezogenen Daten eingeben.</p>
+          <p>Eingaben und Resultate können im Archiv gespeichert werden.</p>
+        </div>
       </div>
       <div className="composer-actions">
         <button disabled={loading || !text.trim()} type="submit">
