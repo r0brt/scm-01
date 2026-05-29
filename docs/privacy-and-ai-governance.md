@@ -46,6 +46,8 @@ Für den MVP bestehen nur begrenzte Aufbewahrungs- und Löschannahmen:
 - Es gibt im aktuellen Stand keine fachliche Löschfunktion, keine Aufbewahrungsfristen pro Datenkategorie und keinen dokumentierten operativen Prozess für Auskunft, Berichtigung oder Löschung.
 - Für den optionalen OpenAI-Pfad werden im Repository selbst keine zusätzlichen Speicherzusagen gegenüber dem externen Anbieter gemacht; dafür wären die jeweils gültigen Anbieterbedingungen und ein separates Betriebssetup massgeblich.
 
+Lokale Bereinigung erfolgt im MVP deshalb nicht als fachlicher Nutzerprozess, sondern als bewusste Umgebungsbereinigung. Im Compose-Betrieb kann die lokale PostgreSQL-Persistenz zum Beispiel mit `docker compose down -v` entfernt werden. Lokale SQLite-Dateien aus Entwicklungs- oder E2E-Läufen koennen gezielt geloescht werden, etwa `backend/e2e.db` oder `backend/scm.db`, sofern diese Dateien in der jeweiligen Umgebung verwendet wurden.
+
 Die Doku beschreibt damit den Ist-Zustand ehrlich: nachvollziehbare Speicherung ist technisch vorhanden, ausgereifte Privacy Operations für einen Produktivbetrieb jedoch nicht.
 
 ## Transparenz und menschliche Verantwortung

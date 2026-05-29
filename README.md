@@ -129,6 +129,14 @@ Erreichbarkeit nach `up`:
 - Frontend: `http://127.0.0.1:4173`
 - Backend-Health: `http://127.0.0.1:8000/health`
 
+### Lokale Daten bereinigen
+
+Analyse-Runs werden im MVP lokal persistiert. Es gibt aktuell keine fachliche Loeschfunktion in der Anwendung; fuer lokale Entwicklungs- und Abgabenachweise erfolgt Bereinigung ueber die jeweilige Laufzeitumgebung.
+
+- Compose-Datenbank entfernen: `docker compose down -v`
+- Lokale E2E-SQLite-Datenbank entfernen: `rm -f backend/e2e.db`
+- Lokale Backend-Default-SQLite-Datenbank entfernen, falls verwendet: `rm -f backend/scm.db`
+
 ## Finale Verifikation (M9)
 
 ```bash

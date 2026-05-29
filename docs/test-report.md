@@ -14,7 +14,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run pytest -q
 
 Resultat:
 
-- `49 passed in 0.85s`
+- `49 passed in 4.92s`
 
 Hinweis:
 
@@ -30,7 +30,7 @@ npm run test -- --run
 Resultat:
 
 - `1 file passed`
-- `7 tests passed`
+- `8 tests passed`
 
 Hinweis:
 
@@ -45,7 +45,7 @@ npm run build
 
 Resultat:
 
-- `built in 460ms`
+- `built in 1.74s`
 
 ### Frontend E2E
 
@@ -56,7 +56,7 @@ npm run test:e2e
 
 Resultat:
 
-- nicht erfolgreich abgeschlossen
+- `1 passed in 5.9s`
 
 Beobachtung:
 
@@ -65,9 +65,8 @@ Beobachtung:
   - Backend E2E: `18000`
 - dadurch sind Konflikte mit den Standardports `4173` und `8000` deutlich weniger wahrscheinlich
 - benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bleiben weiterhin möglich
-- im beobachteten Verifikationslauf starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt; ein gestoppter Compose-Stack ist dabei nur relevant, falls benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bestehen
-- der Lauf scheiterte anschliessend an fehlenden lokal installierten Playwright-Browser-Binaries
-- empfohlener Folge-Command laut Playwright: `npx playwright install`
+- nach `npx playwright install` starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
+- der UJ1-Browserpfad wurde erfolgreich ausgefuehrt
 
 ## Abgedeckte Nachweise
 
@@ -75,12 +74,12 @@ Beobachtung:
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
 - aktueller Re-Onboarding-Nachweis, dass `main` lokal sauber und mit `origin/main` ausgerichtet ist
-- E2E-Setup startet lokal korrekt bis zum Browser-Launch
+- E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Bekannte Limitationen
 
 - E2E deckt weiterhin nur einen kritischen Happy Path für UJ1 ab
-- der aktuelle E2E-Lauf benötigt lokal installierte Playwright-Browser-Binaries
+- der E2E-Lauf benötigt lokal installierte Playwright-Browser-Binaries
 - der lokale E2E-Lauf nutzt eigene dedizierte Ports statt `4173` und `8000`, kann aber weiterhin durch benutzerdefinierte Konflikte auf den gewählten E2E-Ports blockiert werden
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
