@@ -12,6 +12,12 @@ Als visuelle Ergänzung dient [docs/diagrams/system-context.puml](/Users/robert/
 
 Die C1-Sicht zeigt SCM als ein System innerhalb einer bewusst engen Systemgrenze. Innerhalb dieser Grenze liegen Web UI, Backend/API und lokale Persistenz; ausserhalb liegen die menschliche Nutzung und der optionale externe LLM Provider. Diese Sicht ist wichtig, weil sie die KI-Abhängigkeit nicht als internes Detail versteckt, sondern als bewusst benanntes Umsystem ausweist.
 
+| Element | Rolle im Kontext | Wichtige Hinweise |
+| --- | --- | --- |
+| `User` | Primärer Akteur | Erfasst Problemtexte, startet Analysen und prüft Resultate. |
+| `SCM` | System of Interest | Enthält Web UI, Backend/API und lokale Persistenz innerhalb der Systemgrenze. |
+| `LLM Provider` | Externes Umsystem | Wird nur im optionalen OpenAI-Pfad über den Adapter angesprochen. |
+
 - Primärer Akteur ist der `User`. Er gibt den fachlichen Ausgangstext über die SCM-Oberfläche ein, startet damit einen Analyse-Run und liest die erzeugten Resultate, Statusanzeigen und Fehlermeldungen wieder aus dem System.
 - Auf Ebene des Systemkontexts erscheint `SCM` bewusst als Blackbox. Frontend, Backend und lokale Persistenz gehören innerhalb dieser Abstraktion zur internen Systemgrenze und werden nicht als eigene Umsysteme modelliert.
 - Der zentrale Eintrittspunkt für fachliche Daten ist damit das Gesamtsystem `SCM`. Dort gelangt potenziell datenschutzsensitiver Freitext in die interne Verarbeitungskette aus UI, API, Validierung und Persistenz.

@@ -1,15 +1,15 @@
-workspace "SCM C1 System Context" "System context for the Social Cleanup Machine MVP" {
+workspace "SCM C1 System Context" "C1 view of the Social Cleanup Machine MVP" {
     model {
-        user = person "User" "Gibt Problemtexte ein, startet Analysen und prüft Ergebnisse."
+        user = person "User" "Nutzt SCM im Browser."
 
-        scm = softwareSystem "SCM" "Social Cleanup Machine: strukturiert Problemtexte in sechs Analyseebenen und persistiert nachvollziehbare Runs."
+        scm = softwareSystem "SCM" "Social Cleanup Machine."
 
-        llmProvider = softwareSystem "LLM Provider" "Externer KI-Anbieter für die optionale Analyseerzeugung im OpenAI-Pfad." {
+        llmProvider = softwareSystem "LLM Provider" "Externer KI-Anbieter." {
             tags "External"
         }
 
-        user -> scm "Nutzt über Webbrowser" "HTTP"
-        scm -> llmProvider "Sendet Problemtext, erkannte Sprache, Prompt und JSON-Schema, wenn Provider=openai" "HTTPS"
+        user -> scm "Nutzt" "HTTP"
+        scm -> llmProvider "Generiert Analyse optional" "HTTPS"
     }
 
     views {
@@ -21,15 +21,15 @@ workspace "SCM C1 System Context" "System context for the Social Cleanup Machine
         styles {
             element "Person" {
                 shape person
-                background "#1f2937"
+                background "#1e3a8a"
                 color "#ffffff"
             }
             element "Software System" {
-                background "#0f766e"
+                background "#2563eb"
                 color "#ffffff"
             }
             element "External" {
-                background "#92400e"
+                background "#64748b"
                 color "#ffffff"
             }
         }
