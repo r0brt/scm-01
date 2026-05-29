@@ -2,7 +2,9 @@
 
 ## Level-1-Zerlegung
 
-Als visuelle Ergänzung der Level-1-Sicht dient [docs/diagrams/building-blocks-level1.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level1.puml:1).
+Als visuelle Ergänzung der Level-1-Sicht dient [docs/diagrams/building-blocks-level1.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level1.puml:1). Als C2-Containersicht dient [docs/diagrams/structurizr/c2-scm-container.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c2-scm-container.dsl:1).
+
+Die C2-Sicht trennt die interne SCM-Laufzeit in `Web UI`, `Backend/API` und `Persistenz`. Der externe `LLM Provider` bleibt ausserhalb der SCM-Systemgrenze und wird nur vom Backend/API-Container über den Adapterpfad angesprochen.
 
 - `Frontend UI` (implementiert in M6): Texteingabe, Pipeline-Darstellung, Run-Historie und JSON-Export.
 - `Backend API` (implementiert bis M5): FastAPI-API für Analyse, Run-Liste, Detail und Rerun; Analyseerzeugung über Adapter-Schnittstelle.
@@ -20,7 +22,7 @@ Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue A
 
 ## Backend-Zerlegung (Level 2)
 
-Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-blocks-level2-backend.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level2-backend.puml:1).
+Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-blocks-level2-backend.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level2-backend.puml:1). Als C3-Komponentensicht des Backends dient [docs/diagrams/structurizr/c3-backend-components.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c3-backend-components.dsl:1).
 
 - `app/api`: FastAPI-Endpunkte, API-Schemas und zentrales Fehlermapping.
 - `app/services/analysis_workflow.py`: Orchestrierung von Spracherkennung, Analyseerzeugung, Validierung und Persistenz.
@@ -31,12 +33,16 @@ Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-bloc
 
 ## Frontend-Zerlegung (aktueller Stand)
 
+Als C3-Komponentensicht der Web UI dient [docs/diagrams/structurizr/c3-web-ui-components.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c3-web-ui-components.dsl:1).
+
 - `App.tsx` orchestriert Texteingabe, API-Aufrufe, Run-Selektion, Workspace-Tabs (`Pipeline`/`Archiv`), Export und den globalen Fehlerzustand.
 - `AnalysisComposer` kapselt die Eingabemaske für den Rohtext und den Start der Analyse.
-- `usePipelineViewModel` in `frontend/src/pipeline.ts` transformiert den gewaehlten Run in einen deterministischen UI-Zustand mit den Modi `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`.
+- `usePipelineViewModel` in `frontend/src/pipeline.ts` transformiert den gewählten Run in einen deterministischen UI-Zustand mit den Modi `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`.
 - `PipelineView` rendert die zwei Frontend-Betriebsarten der Filterstrecke:
   - Flow-Modus während `submitting`/`result_received`/`revealing` mit genau einer sichtbaren aktiven Stage
   - Review-Modus nach `completed` mit allen sechs Stages, optionalen Details und hervorgehobener `Essenz`
-- `RunHistoryPanel` entkoppelt die Auswahl bereits persistierter Runs von der Pipeline-Darstellung und buendelt im Archiv-Tab Run-Liste, technische Nachweise, JSON-Export und die explizite Aktion zum Oeffnen eines Runs in der Analyseansicht.
+- `RunHistoryPanel` entkoppelt die Auswahl bereits persistierter Runs von der Pipeline-Darstellung und bündelt im Archiv-Tab Run-Liste, technische Nachweise, JSON-Export und die explizite Aktion zum Öffnen eines Runs in der Analyseansicht.
 
 Die Frontend-Logik trennt damit bewusst zwischen Datenbeschaffung (`App.tsx`), Zustandsableitung (`usePipelineViewModel`) und visueller Darstellung (`AnalysisComposer`, `PipelineView`, `RunHistoryPanel`). Die Pipeline-Stages sind zentral in `frontend/src/pipeline.ts` definiert, damit Reihenfolge, Titel und Prompt-Texte nicht über mehrere Komponenten verstreut gepflegt werden müssen. Die UI behandelt den laufenden Analysepfad bewusst anders als die spätere Run-Prüfung: während des Reveal wird nur eine Stage fokussiert dargestellt, nach Abschluss bleibt der gesamte Run als reviewbare Übersicht sichtbar.
+
+Die Web-UI-C3-Sicht dokumentiert diese Trennung explizit: App-Orchestrierung, API Client, Pipeline-Zustandsableitung, Eingabe-Komponente und Archiv-/Export-Komponente sind eigene Verantwortungsbereiche, obwohl sie gemeinsam als eine React-SPA ausgeliefert werden.

@@ -8,7 +8,9 @@ SCM ist dabei ein Analyse- und Unterstützungswerkzeug. Das System strukturiert 
 
 ## Kontextdiagramm (textuell)
 
-Als visuelle Ergänzung dient [docs/diagrams/system-context.puml](/Users/robert/code/scm-01/docs/diagrams/system-context.puml:1).
+Als visuelle Ergänzung dient [docs/diagrams/system-context.puml](/Users/robert/code/scm-01/docs/diagrams/system-context.puml:1). Die C1-Sicht ist zusätzlich als Structurizr-Quelle in [docs/diagrams/structurizr/c1-system-context.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c1-system-context.dsl:1) dokumentiert.
+
+Die C1-Sicht zeigt SCM als ein System innerhalb einer bewusst engen Systemgrenze. Innerhalb dieser Grenze liegen Web UI, Backend/API und lokale Persistenz; ausserhalb liegen die menschliche Nutzung und der optionale externe LLM Provider. Diese Sicht ist wichtig, weil sie die KI-Abhängigkeit nicht als internes Detail versteckt, sondern als bewusst benanntes Umsystem ausweist.
 
 - Primärer Akteur ist der `User`. Er gibt den fachlichen Ausgangstext über die SCM-Oberfläche ein, startet damit einen Analyse-Run und liest die erzeugten Resultate, Statusanzeigen und Fehlermeldungen wieder aus dem System.
 - Auf Ebene des Systemkontexts erscheint `SCM` bewusst als Blackbox. Frontend, Backend und lokale Persistenz gehören innerhalb dieser Abstraktion zur internen Systemgrenze und werden nicht als eigene Umsysteme modelliert.
@@ -22,7 +24,7 @@ Die Systemgrenze von SCM endet bei der lokalen UI/API/DB-Kombination. Browser-Nu
 
 Für Datenschutz-, Transparenz- und Governance-Annahmen ergänzt [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1) dieses Kapitel. Das Zusatzdokument vertieft insbesondere Datenarten, externe Empfänger und MVP-Grenzen, während arc42 die primäre Architekturerzählung bleibt.
 
-## Externe Schnittstellen (Konzeptstand)
+## Externe Schnittstellen (MVP-Stand)
 
 - UI zu API: REST-Endpunkte über JSON.
 - API zu DB: ORM + SQL-Migrationen.

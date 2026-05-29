@@ -2,7 +2,7 @@
 
 Die initiale Deployment-Sicht bleibt bei einem containerisierten Setup aus UI, API und PostgreSQL via Docker Compose.
 
-Als visuelle Ergänzung dieser Verteilungssicht dient [docs/diagrams/container-view.puml](/Users/robert/code/scm-01/docs/diagrams/container-view.puml:1).
+Als visuelle Ergänzung dieser Verteilungssicht dient [docs/diagrams/container-view.puml](/Users/robert/code/scm-01/docs/diagrams/container-view.puml:1). Die C2-Containersicht in [docs/diagrams/structurizr/c2-scm-container.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c2-scm-container.dsl:1) beschreibt dieselbe Laufzeittopologie aus `frontend`, `api` und `db`.
 
 Die Persistenz im Backend ist relational modelliert. Die API schreibt Analyse-Runs in eine `runs`-Tabelle; für den lokalen Zielbetrieb und für Compose wird PostgreSQL verwendet. Die lokalen Persistenztests laufen weiterhin mit SQLite, um den Entwicklungs- und Testloop ohne externe Datenbank schnell zu halten.
 
@@ -15,10 +15,12 @@ Mit M6 ist nun auch das Frontend als eigenständiger Baustein vorhanden. Es spri
 Mit M8 ist der lokale Zielbetrieb über `docker compose` konkretisiert. Die Verteilung besteht aus drei Containern:
 
 - `frontend`: Nginx liefert das gebaute React/Vite-Frontend aus und leitet `/api` an die API weiter
-- `api`: FastAPI/Uvicorn-Anwendung; fuehrt beim Start zuerst `alembic upgrade head` aus
+- `api`: FastAPI/Uvicorn-Anwendung; führt beim Start zuerst `alembic upgrade head` aus
 - `db`: PostgreSQL als relationale Persistenz für Analyse-Runs
 
 Die Kommunikation bleibt bewusst einfach: Browserzugriffe gehen gegen das Frontend; interne API-Aufrufe laufen im Compose-Netz zwischen `frontend` und `api`, Datenbankzugriffe zwischen `api` und `db`.
+
+Docker Compose konkretisiert diese Sicht mit Port `4173` für die Web UI, Port `8000` für die API und Port `5432` für PostgreSQL.
 
 ## Datenpfad und Deployment-Narrativ
 
