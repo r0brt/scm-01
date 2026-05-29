@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from app.llm.openai_adapter import OpenAIAnalysisGenerator, PROMPT_PATH
+from app.llm.openai_adapter import PROMPT_PATH, OpenAIAnalysisGenerator
 
 
 def test_openai_analysis_generator_requires_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -53,11 +53,16 @@ def test_openai_analysis_generator_calls_responses_api_with_json_schema(
     assert adapter.client.responses.calls[0]["text"]["format"]["type"] == "json_schema"
     assert adapter.client.responses.calls[0]["text"]["format"]["strict"] is True
     assert "Detected input language: de" in adapter.client.responses.calls[0]["input"]
-    assert "All beschreibung and text fields must be written in German." in adapter.client.responses.calls[0]["input"]
+    assert (
+        "All beschreibung and text fields must be written in German."
+        in adapter.client.responses.calls[0]["input"]
+    )
     assert "Wohnungsnot in der Stadt" in adapter.client.responses.calls[0]["input"]
 
 
-def test_openai_analysis_generator_reads_prompt_from_v2_directory(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_openai_analysis_generator_reads_prompt_from_v2_directory(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
 
     class FakeResponse:

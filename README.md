@@ -147,3 +147,12 @@ docker compose up --build -d
 docker compose ps
 docker compose down
 ```
+
+## GitHub Actions CI
+
+Pull Requests und Pushes auf `main` werden durch einen Basic Quality Gate geprüft:
+
+- Backend: `ruff check` und `pytest`
+- Frontend: Vitest-Run und Produktions-Build
+
+E2E mit Playwright bleibt vorerst ein lokaler Nachweis und ist in `docs/test-report.md` dokumentiert.

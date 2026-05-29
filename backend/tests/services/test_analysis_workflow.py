@@ -140,12 +140,30 @@ def test_create_analysis_run_fails_when_output_language_does_not_match_input_lan
 
     adapter.generate_analysis = lambda text, language=None: {  # type: ignore[method-assign]
         "payload": {
-            "symptome": {"beschreibung": "Visible housing pressure", "eintraege": [{"text": "Housing costs rise"}]},
-            "ursachen": {"beschreibung": "Market concentration", "eintraege": [{"text": "Supply stays low"}]},
-            "emotionen": {"beschreibung": "Public frustration", "eintraege": [{"text": "Anger"}]},
-            "narrative": {"beschreibung": "Meritocracy frame", "eintraege": [{"text": "Work harder"}]},
-            "mythen": {"beschreibung": "Common simplification", "eintraege": [{"text": "Poverty is a choice"}]},
-            "essenz": {"beschreibung": "Core issue", "eintraege": [{"text": "Distribution conflict"}]},
+            "symptome": {
+                "beschreibung": "Visible housing pressure",
+                "eintraege": [{"text": "Housing costs rise"}],
+            },
+            "ursachen": {
+                "beschreibung": "Market concentration",
+                "eintraege": [{"text": "Supply stays low"}],
+            },
+            "emotionen": {
+                "beschreibung": "Public frustration",
+                "eintraege": [{"text": "Anger"}],
+            },
+            "narrative": {
+                "beschreibung": "Meritocracy frame",
+                "eintraege": [{"text": "Work harder"}],
+            },
+            "mythen": {
+                "beschreibung": "Common simplification",
+                "eintraege": [{"text": "Poverty is a choice"}],
+            },
+            "essenz": {
+                "beschreibung": "Core issue",
+                "eintraege": [{"text": "Distribution conflict"}],
+            },
         },
         "model_id": "fake-model",
         "prompt_version": "v-test",
