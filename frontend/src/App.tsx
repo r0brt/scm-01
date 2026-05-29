@@ -13,14 +13,15 @@ type TopLevelTab = "analyse" | "archiv";
 export default function App() {
   const [text, setText] = useState("");
   const [runs, setRuns] = useState<AnalysisRun[]>([]);
-  const [selectedRun, setSelectedRun] = useState<AnalysisRun | null>(null);
+  const [analysisRun, setAnalysisRun] = useState<AnalysisRun | null>(null);
+  const [archiveSelectedRun, setArchiveSelectedRun] = useState<AnalysisRun | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TopLevelTab>("analyse");
   const [revealToken, setRevealToken] = useState(0);
 
-  const pipelineViewModel = usePipelineViewModel(selectedRun, revealToken, loading);
-  const hasRun = loading || selectedRun !== null;
+  const pipelineViewModel = usePipelineViewModel(analysisRun, revealToken, loading);
+  const hasRun = loading || analysisRun !== null;
 
   useEffect(() => {
     void refreshRuns();
@@ -38,13 +39,13 @@ export default function App() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setActiveTab("analyse");
-    setSelectedRun(null);
+    setAnalysisRun(null);
     setLoading(true);
     setError(null);
 
     try {
       const run = await createAnalysis(text);
-      setSelectedRun(run);
+      setAnalysisRun(run);
       setRevealToken((current) => current + 1);
       setText("");
       await refreshRuns({ preserveSelection: true });
@@ -61,13 +62,21 @@ export default function App() {
     try {
       setError(null);
       const run = await getAnalysis(runId);
-      setSelectedRun(run);
-      setText(run.input_text);
-      setActiveTab("analyse");
-      setRevealToken(0);
+      setArchiveSelectedRun(run);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Run konnte nicht geladen werden.");
     }
+  }
+
+  function handleOpenSelectedRunInAnalyse() {
+    if (!archiveSelectedRun) {
+      return;
+    }
+
+    setAnalysisRun(archiveSelectedRun);
+    setText(archiveSelectedRun.input_text);
+    setActiveTab("analyse");
+    setRevealToken(0);
   }
 
   return (
@@ -130,9 +139,11 @@ export default function App() {
         <section aria-labelledby="archiv-tab" className="archive-layout" id="archiv-panel" role="tabpanel">
           <RunHistoryPanel
             onRefresh={() => void refreshRuns()}
+            onOpenInAnalyse={handleOpenSelectedRunInAnalyse}
             onSelectRun={(runId) => void handleSelectRun(runId)}
             runs={runs}
-            selectedRunId={selectedRun?.id ?? null}
+            selectedRun={archiveSelectedRun}
+            selectedRunId={archiveSelectedRun?.id ?? null}
           />
         </section>
       )}

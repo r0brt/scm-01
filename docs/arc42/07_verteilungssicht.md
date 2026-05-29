@@ -10,7 +10,7 @@ Die API bleibt der einzige Einstiegspunkt für Analysen, delegiert die eigentlic
 
 Die fachliche Quelle für die erzeugten Analyse-Payloads ist `docs/scm.md`. Deshalb müssen alle Laufzeitkomponenten im Compose-Betrieb denselben Vertrag für `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` verwenden; eine Rückwärtskompatibilität zu früheren Ebenennamen ist nicht vorgesehen.
 
-Mit M6 ist nun auch das Frontend als eigenständiger Baustein vorhanden. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermöglicht den Export des aktuell gewählten Runs als JSON.
+Mit M6 ist nun auch das Frontend als eigenständiger Baustein vorhanden. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermöglicht im Archiv den Export des aktuell gewählten Runs als JSON.
 
 Mit M8 ist der lokale Zielbetrieb über `docker compose` konkretisiert. Die Verteilung besteht aus drei Containern:
 

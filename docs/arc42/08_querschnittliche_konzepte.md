@@ -12,11 +12,11 @@ Der Vertragswechsel ist bewusst nicht rückwärtskompatibel. Bestehende alte Ana
 
 Die Backend-Validierung prüft Analyse-Payloads in zwei Stufen: zuerst gegen das JSON Schema, danach gegen die Pydantic-Modelle. Das Ergebnis ist ein strukturierter Validierungsreport mit Status, Fehlercode und Prüfschritten.
 
-Im aktuellen Standardpfad endet ein Lauf nach einer strukturell ungueltigen Payload explizit als Fehlerfall; es gibt keine stillen Fallbacks. Zusaetzlich existiert im Repository eine separate bounded Repair-Logik als vorbereitete Guardrail. Diese ist auf hoechstens zwei Reparaturversuche begrenzt und wuerde bei weiterem Scheitern explizit mit `REPAIR_LIMIT_EXCEEDED` enden, ist derzeit aber nicht im aktiven Standardpfad verdrahtet.
+Im aktuellen Standardpfad endet ein Lauf nach einer strukturell ungültigen Payload explizit als Fehlerfall; es gibt keine stillen Fallbacks. Zusätzlich existiert im Repository eine separate bounded Repair-Logik als vorbereitete Guardrail. Diese ist auf höchstens zwei Reparaturversuche begrenzt und würde bei weiterem Scheitern explizit mit `REPAIR_LIMIT_EXCEEDED` enden, ist derzeit aber nicht im aktiven Standardpfad verdrahtet.
 
 ## Sprachdetektion
 
-Vor jeder Analyse erkennt das Backend die dominante Sprache lokal. Aktuell werden `de`, `fr` und `en` unterstuetzt. Die Spracherkennung liefert immer `detected_language`, `language_confidence` und optional einen Fehlercode.
+Vor jeder Analyse erkennt das Backend die dominante Sprache lokal. Aktuell werden `de`, `fr` und `en` unterstützt. Die Spracherkennung liefert immer `detected_language`, `language_confidence` und optional einen Fehlercode.
 
 Liegt die Sicherheit unter `0.80`, endet der Lauf explizit mit `LANGUAGE_CONFIDENCE_TOO_LOW`. Wird eine Sprache ausserhalb des unterstützten Korridors erkannt, endet der Lauf mit `UNSUPPORTED_LANGUAGE`. In beiden Fällen wird kein stiller Fallback auf den LLM-Pfad versucht.
 
@@ -60,17 +60,17 @@ Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachli
 
 ## Traceability und Laufnachvollziehbarkeit
 
-Die Nachvollziehbarkeit eines Analyse-Runs stuetzt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `correlation_id` verbindet neue Runs mit dem ausloesenden HTTP-Request. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` haelt den technischen Pruefpfad ueber Schema-, Modell- und gegebenenfalls Sprachpruefungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gueltig war. `created_at` ordnet den Run zeitlich ein.
+Die Nachvollziehbarkeit eines Analyse-Runs stützt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `correlation_id` verbindet neue Runs mit dem auslösenden HTTP-Request. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` hält den technischen Prüfpfad über Schema-, Modell- und gegebenenfalls Sprachprüfungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gültig war. `created_at` ordnet den Run zeitlich ein.
 
-Im aktuellen Stand wird pro HTTP-Request genau eine `correlation_id` erzeugt. Dieselbe ID erscheint bei Fehlerantworten und wird bei neu erzeugten Runs mitpersistiert und ueber die Run-API wieder sichtbar gemacht. Dadurch ist ein kleiner, aber klarer Request-to-Run-Nachvollziehbarkeitspfad vorhanden.
+Im aktuellen Stand wird pro HTTP-Request genau eine `correlation_id` erzeugt. Dieselbe ID erscheint bei Fehlerantworten und wird bei neu erzeugten Runs mitpersistiert und über die Run-API wieder sichtbar gemacht. Dadurch ist ein kleiner, aber klarer Request-to-Run-Nachvollziehbarkeitspfad vorhanden.
 
-Diese Felder reichen fuer die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgaengigen Audit-Kontext ueber alle Schichten. Es gibt weiterhin keine vollstaendige Ende-zu-Ende-Korrelation ueber Frontend, API, Persistenz, strukturierte Logs und optionalen Provider-Pfad. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
+Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Es gibt weiterhin keine vollständige Ende-zu-Ende-Korrelation über Frontend, API, Persistenz, strukturierte Logs und optionalen Provider-Pfad. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
 
 ## Frontend-Praesentationskonzept
 
-Das Frontend trennt bewusst zwischen Flow- und Review-Nutzung desselben Runs. Waerend der synchronen Analyseantwort entfaltet die UI die bereits vollstaendig vorliegende Analyse deterministisch als sequentielle Filterstrecke. Dabei ist immer nur die aktive Stage als Arbeitsflaeche sichtbar; andere Stages werden im Flow nur als Fortschrittsknoten oder reduzierte Zustandsmarker dargestellt.
+Das Frontend trennt bewusst zwischen Flow- und Review-Nutzung desselben Runs. Während der synchronen Analyseantwort entfaltet die UI die bereits vollständig vorliegende Analyse deterministisch als sequentielle Filterstrecke. Dabei ist immer nur die aktive Stage als Arbeitsfläche sichtbar; andere Stages werden im Flow nur als Fortschrittsknoten oder reduzierte Zustandsmarker dargestellt.
 
-Nach Abschluss wechselt dieselbe Analyse in einen Review-Modus. Dort werden alle sechs Stages gleichzeitig sichtbar, Details bleiben aber pro Stage standardmaessig reduziert und koennen gezielt aufgeklappt werden. Die `Essenz` bleibt als finaler Zielpunkt standardmaessig geoeffnet und optisch abgesetzt. Run-Historie, JSON-Export und technische Metadaten bleiben bewusst sekundaer, damit der primaere Fokus auf der Pipeline bleibt.
+Nach Abschluss wechselt dieselbe Analyse in einen Review-Modus. Dort werden alle sechs Stages gleichzeitig sichtbar, Details bleiben aber pro Stage standardmässig reduziert und können gezielt aufgeklappt werden. Die `Essenz` bleibt als finaler Zielpunkt standardmässig geöffnet und optisch abgesetzt. Run-Historie, JSON-Export und technische Metadaten bleiben bewusst sekundär und sind im Archiv-Kontext gebündelt, damit der primäre Fokus der Analyseansicht auf der Pipeline bleibt.
 
 ## Betriebs- und Konfigurationskonzept
 
