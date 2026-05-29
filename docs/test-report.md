@@ -1,24 +1,31 @@
 # Test Report
 
-Stand: 2026-05-29
-Baseline-Commit: `8186e05`
+Stand: 2026-05-30
+Baseline-Commit: `94e6575`
 
 ## Ausgeführte Commands
+
+### Backend Linting
+
+```bash
+cd backend
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .
+```
+
+Resultat:
+
+- `All checks passed!`
 
 ### Backend Gesamt-Testlauf
 
 ```bash
 cd backend
-UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run pytest -q
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q
 ```
 
 Resultat:
 
-- `49 passed in 4.92s`
-
-Hinweis:
-
-- der Lauf wurde zuletzt auf der Branch `feat/traceability-hardening` über `uv` mit der projektbezogenen Python-3.13-Umgebung ausgeführt
+- `49 passed in 1.07s`
 
 ### Frontend Unit/UI
 
@@ -31,6 +38,7 @@ Resultat:
 
 - `1 file passed`
 - `10 tests passed`
+- `Duration 1.08s`
 
 Hinweis:
 
@@ -45,7 +53,26 @@ npm run build
 
 Resultat:
 
-- `built in 459ms`
+- `built in 432ms`
+
+### Docker Compose Laufzeitnachweis
+
+```bash
+docker compose up -d --build
+docker compose ps
+docker compose down
+```
+
+Resultat:
+
+- `docker compose up -d --build` baute `scm-01-api` und `scm-01-frontend`, zog `postgres:17-alpine` und startete `db`, `api` und `frontend`
+- `docker compose ps` zeigte `scm-01-db-1` als `Up ... (healthy)` sowie `scm-01-api-1` und `scm-01-frontend-1` als `Up`
+- veröffentlichte Ports laut Compose-Status: API `8000`, DB `5432`, Frontend `4173`
+- `docker compose down` stoppte und entfernte die drei Container sowie das Compose-Netzwerk erfolgreich
+
+Hinweis:
+
+- ein direkter Host-`curl` auf `127.0.0.1:8000` und `127.0.0.1:4173` war in der aktuellen Codex-Sandbox nicht erreichbar; der hier dokumentierte Nachweis ist deshalb ein Compose-Start-/Status-/Stop-Nachweis, kein zusätzlicher HTTP-End-to-End-Test
 
 ### Frontend E2E
 
@@ -73,12 +100,13 @@ Beobachtung:
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Re-Onboarding-Nachweis, dass `main` lokal sauber und mit `origin/main` ausgerichtet ist
+- aktueller Nachweis auf `main`-Commit `94e6575`
+- Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `94e6575` war erfolgreich (`CI`, Run `26665248878`, 2026-05-29T22:23:50Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
@@ -87,4 +115,4 @@ GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quali
 - der lokale E2E-Lauf nutzt eigene dedizierte Ports statt `4173` und `8000`, kann aber weiterhin durch benutzerdefinierte Konflikte auf den gewählten E2E-Ports blockiert werden
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
-- Compose ist im aktuellen Freeze-Prep nicht erneut end-to-end verifiziert worden
+- Compose wurde als Start-/Status-/Stop-Nachweis verifiziert; ein zusätzlicher HTTP-End-to-End-Test über die veröffentlichten Host-Ports wurde in der Codex-Sandbox nicht erfolgreich durchgeführt

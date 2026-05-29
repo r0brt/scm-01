@@ -71,6 +71,8 @@ Plausibel ist deshalb eine Einordnung als KI-gestütztes Analyse- und Strukturie
 - Resultate benötigen menschliche Prüfung und dürfen nicht als selbstgenügende Tatsachenfeststellung gelesen werden.
 - Traceability und klare Grenzen sind Teil der Systemverantwortung, auch wenn das MVP noch kein vollständiges Compliance-Betriebsmodell besitzt.
 
+Für die Rollenbetrachtung ist wichtig: Das Repository entwickelt kein eigenes General-Purpose-AI-Modell, sondern integriert im optionalen Produktivpfad ein externes Modell über einen Adapter. Die primäre Projektsicht liegt damit auf der verantwortungsvollen Bereitstellung und Nutzung einer KI-gestützten Analysefunktion: transparente Kennzeichnung, menschliche Letztverantwortung, dokumentierte Datenflüsse, nachvollziehbare Runs und klare Grenzen des MVP. Nach der offiziellen EU-Einordnung werden Pflichten zeitlich gestaffelt wirksam; insbesondere gelten Pflichten für Anbieter von General-Purpose-AI-Modellen früher als viele Transparenzpflichten für bestimmte KI-Systeme. Referenzpunkte sind die [EU-Übersicht zum AI Act](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) und die [EU-Seite zu GPAI-Pflichten](https://digital-strategy.ec.europa.eu/en/factpages/general-purpose-ai-obligations-under-ai-act). Dieses Dokument hält deshalb bewusst Architektur- und Governance-Massnahmen fest, ersetzt aber keine formale AI-Act-Konformitätsprüfung für einen konkreten Produktivbetrieb.
+
 ## Grenzen des MVP
 
 Dieses Repository macht bewusst keine der folgenden Behauptungen:
