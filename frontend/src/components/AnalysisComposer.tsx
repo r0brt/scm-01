@@ -24,6 +24,16 @@ export function AnalysisComposer({
         placeholder="Beschreibe das Problem kurz..."
         rows={3}
       />
+      <div
+        aria-label="Transparenzhinweis"
+        className="composer-transparency"
+        role="note"
+      >
+        <p>KI-gestützte Analyse</p>
+        <p>Keine sensiblen oder personenbezogenen Daten eingeben</p>
+        <p>Eingaben und Resultate können gespeichert werden</p>
+        <p>Keine Wahrheits- oder Rechtsprüfung</p>
+      </div>
       <div className="composer-actions">
         <button disabled={loading || !text.trim()} type="submit">
           {loading ? "Analysiere..." : "Analyse starten"}
