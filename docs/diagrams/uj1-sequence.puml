@@ -4,43 +4,56 @@ skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
 
 actor "User" as user
-participant "Browser / Frontend UI" as frontend
-participant "Backend API" as api
-participant "Local Language Detector" as detector
-participant "Analysis Adapter" as adapter
-participant "Stub Generator" as stub
+participant "Web UI" as frontend
+participant "Backend/API" as api
+participant "Language Detection" as detector
+participant "LLM Adapter" as adapter
 participant "OpenAI Provider API" as openai
 participant "Validation Service" as validation
 database "Run Repository / Persistence" as persistence
 
 user -> frontend : Problemtext erfassen\nund Analyse starten
 frontend -> api : POST /api/v1/analyses { text }
-api -> detector : dominante Sprache lokal erkennen
-detector --> api : detected_language,\nlanguage_confidence
+api -> api : correlation_id erzeugen
+api -> detector : Eingabesprache lokal erkennen
+detector --> api : detected_language,\nlanguage_confidence,\nerror_code?
 
 alt Sprache zu unsicher oder nicht unterstützt
-  api -> persistence : failed Run mit Sprachmetadaten\nund Fehlercode persistieren
+  api -> persistence : failed Run mit correlation_id,\nSprachmetadaten und Fehlercode speichern
   persistence --> api : gespeicherter Run
   api --> frontend : 201 Created mit failed Run
 else Sprache gültig
-  api -> adapter : Analyse für erkannte Sprache anfordern
-  alt Stub-Pfad / Offline-Test
-    adapter -> stub : generate(text, language)
-    stub --> adapter : Analyse-Payload + Metadaten
-  else OpenAI-Pfad
-    adapter -> openai : Responses-API Request\nmit Prompt-Inhalt + JSON-Schema
-    openai --> adapter : Analyse-Payload + Modellmetadaten
+  api -> adapter : generate_analysis(text,\nlanguage=detected_language)
+  alt Provider=stub
+    adapter --> api : deterministisches Analyse-Payload\nmodel_id=stub-analysis-generator
+  else Provider=openai
+    adapter -> openai : Responses API Request\nPrompt v2 + JSON Schema strict
+    openai --> adapter : JSON-Payload + Modellmetadaten
+    adapter --> api : Analyse-Payload,\nmodel_id, prompt_version
   end
-  adapter --> api : Analyse-Payload + Traceability
-  api -> validation : Schema- und Pydantic-\nPrüfung
-  validation --> api : validiertes Payload oder Fehlerstatus
-  api -> detector : Ausgabesprache lokal prüfen
-  detector --> api : Sprachresultat der Ausgabe
-  api -> persistence : Run mit Analyse oder Fehler,\nValidation-Report und Metadaten persistieren
-  persistence --> api : gespeicherter Run
-  api --> frontend : 201 Created mit gespeichertem Run
+
+  api -> validation : JSON Schema + Pydantic prüfen
+  validation --> api : validiertes Payload\noder Fehlerreport
+
+  alt Struktur ungültig
+    api -> persistence : failed Run mit validation_report\nund error_code speichern
+    persistence --> api : gespeicherter Run
+    api --> frontend : 201 Created mit failed Run
+  else Struktur gültig
+    api -> detector : Ausgabesprache lokal prüfen
+    detector --> api : output_language_result
+    alt Ausgabesprache passt nicht
+      api -> persistence : failed Run mit OUTPUT_LANGUAGE_MISMATCH speichern
+      persistence --> api : gespeicherter Run
+      api --> frontend : 201 Created mit failed Run
+    else Ausgabe gültig
+      api -> persistence : completed Run mit analysis_json,\nvalidation_report und Traceability speichern
+      persistence --> api : gespeicherter Run
+      api --> frontend : 201 Created mit completed Run
+    end
+  end
 end
 
-frontend --> user : Pipeline oder Fehlzustand anzeigen
+frontend --> user : Pipeline, Archivnachweis\noder Fehlzustand anzeigen
 
 @enduml
