@@ -19,17 +19,18 @@ Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm vi
 
 Die Quelle liegt in [docs/diagrams/uj1-sequence.puml](../diagrams/uj1-sequence.puml), das gerenderte SVG in [docs/diagrams/rendered/uj1-sequence.svg](../diagrams/rendered/uj1-sequence.svg).
 
-Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreichen Läufen. Auch Fehlerläufe werden persistiert, damit Sprachfehler, strukturelle Validierungsfehler und Ausgabesprachfehler später nachvollziehbar bleiben. Ein Repair-Schritt ist als Guardrail vorbereitet, aber nicht Teil dieses Standardablaufs.
+Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreichen Läufen. Auch Fehlerläufe werden persistiert, damit Sprachfehler, strukturelle Validierungsfehler und Ausgabesprachfehler später nachvollziehbar bleiben. Ein Repair-Schritt ist als Guardrail vorbereitet, aber nicht Teil dieses Standardablaufs. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload sind davon getrennt: Sie gehören im aktuellen MVP zum technischen API- und Betriebsfehlerpfad und werden nicht als validierter Analyse-Run modelliert.
 
 1. Ein Client sendet `POST /api/v1/analyses` mit einem Problemtext.
 2. Das Backend erkennt zuerst lokal die dominante Sprache und bewertet die Sicherheit der Erkennung.
 3. Bei zu geringer Sicherheit oder nicht unterstützter Sprache endet der Lauf sofort als `failed`; ein Run mit Fehlercode und Sprachmetadaten wird trotzdem persistiert.
 4. Bei erfolgreicher Spracherkennung übergibt das Backend die erkannte Sprache explizit an den konfigurierten Analyse-Adapter. Im Produktivpfad ist dies der OpenAI-Adapter, alternativ bleibt ein Stub-Pfad für Offline-Tests verfügbar.
 5. Der Adapter fordert die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` im versionierten SCM-Vertrag aus `docs/scm.md`, `prompts/v2/analysis.md` und `schemas/analysis.schema.json` an. Zusätzlich übergibt das Backend die erkannte Eingabesprache als explizite Prompt-Vorgabe.
-6. Das Backend validiert die Analyse gegen Schema und Pydantic-Modelle und prüft nachgelagert, ob die Ausgabesprache zur zuvor erkannten Eingabesprache passt. Schlägt eine dieser Prüfungen fehl, endet der aktuelle Standardpfad explizit als Fehlerlauf; eine separate bounded Repair-Logik ist im Repository vorbereitet, aber derzeit nicht in diesen Laufzeitpfad eingebunden.
-7. Anschliessend prüft das Backend die dominante Sprache der gesamten Analyseausgabe. Bei Abweichung oder zu geringer Sicherheit endet der Lauf mit `OUTPUT_LANGUAGE_MISMATCH`.
-8. Der Run wird mit Analyse-JSON oder Fehlerzustand, Validation-Report, Sprachmetadaten und Traceability-Feldern persistiert.
-9. Die API antwortet synchron mit dem gespeicherten Run.
+6. Wenn der Adapter ein verwertbares Payload liefert, validiert das Backend die Analyse gegen Schema und Pydantic-Modelle.
+7. Bei gültiger Struktur prüft das Backend zusätzlich die dominante Sprache der gesamten Analyseausgabe. Bei Abweichung oder zu geringer Sicherheit endet der Lauf mit `OUTPUT_LANGUAGE_MISMATCH`.
+8. Schlägt die Struktur- oder Ausgabesprachprüfung fehl, endet der aktuelle Standardpfad explizit als Fehlerlauf; eine separate bounded Repair-Logik ist im Repository vorbereitet, aber derzeit nicht in diesen Laufzeitpfad eingebunden.
+9. Der Run wird mit Analyse-JSON oder Fehlerzustand, Validation-Report, Sprachmetadaten und Traceability-Feldern persistiert.
+10. Die API antwortet synchron mit dem gespeicherten Run.
 
 ## Szenario 3: Retrieval und Rerun
 

@@ -54,10 +54,7 @@ Die Resultate:
 - liegen in einem maschinenlesbaren Format vor
 - koennen standardisiert weiterverarbeitet werden
 
-Bei Abweichungen, zum Beispiel fehlenden Ebenen oder Inkonsistenzen:
-
-- wird das Resultat als fehlerhaft markiert
-- erfolgt eine erneute Generierung ueber einen Korrekturschritt
+Bei Abweichungen, zum Beispiel fehlenden Ebenen oder Inkonsistenzen, wird das Resultat im aktuellen Standardlaufzeitpfad als fehlerhaft markiert und mit Validierungsreport sowie Fehlercode persistiert. Eine separate bounded Repair-Logik ist im Repository vorbereitet, aber nicht in den Standardlaufzeitpfad eingebunden.
 
 ---
 

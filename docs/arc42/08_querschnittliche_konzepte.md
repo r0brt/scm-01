@@ -66,6 +66,8 @@ Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivp
 
 Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen für jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
 
+Für die Fehlerbetrachtung ist die Abgrenzung wichtig: Persistierte `failed` Runs entstehen bei lokaler Sprachvorprüfung, Strukturvalidierung oder Ausgabesprachprüfung. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload, zum Beispiel fehlende Konfiguration, Provider-Ausfall oder nicht parsbare Providerantworten, sind im aktuellen MVP nicht als validierter Analyse-Run modelliert. Sie bleiben eine bewusst dokumentierte Grenze des Produktivpfads.
+
 ## Traceability und Laufnachvollziehbarkeit
 
 Die Nachvollziehbarkeit eines Analyse-Runs stützt sich nicht auf ein einzelnes Feld, sondern auf die Kombination mehrerer persistierter Metadaten. `correlation_id` verbindet neue Runs mit dem auslösenden HTTP-Request. `prompt_version` zeigt, welche versionierte Prompt-Grundlage verwendet wurde. `model_id` dokumentiert den konkret eingesetzten Modellpfad. `validation_report` hält den technischen Prüfpfad über Schema-, Modell- und gegebenenfalls Sprachprüfungen fest. `run_status`, `validation_status` und `error_code` machen sichtbar, ob ein Lauf erfolgreich war, an welcher Stelle er scheiterte und ob die Struktur gültig war. `created_at` ordnet den Run zeitlich ein.

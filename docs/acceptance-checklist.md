@@ -50,7 +50,7 @@ Stand: 2026-05-30
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `eb0bb66`, Run `26695462999`
+- [x] GitHub Actions `CI` auf `main` für Commit `107761a`, Run `26695777780`
 
 ## NFR-Nachweisstatus
 
