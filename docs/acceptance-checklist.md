@@ -1,6 +1,6 @@
 # Abnahmecheckliste
 
-Stand: 2026-05-30
+Stand: 2026-05-31
 
 ## Produkt und Architektur
 
@@ -50,7 +50,7 @@ Stand: 2026-05-30
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `107761a`, Run `26695777780`
+- [x] GitHub Actions `CI` auf `main` für Referenz-Commit `b619921`, Run `26696762837`
 
 ## NFR-Nachweisstatus
 
