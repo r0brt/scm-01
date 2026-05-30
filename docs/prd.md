@@ -139,7 +139,7 @@ Zu speichern:
 * `input_text` (raw)
 * `analysis_json` (validiert oder null bei failed)
 * `validation_report` (Checks, Errors)
-* Metadaten: `detected_language` (ISO-639-1), `language_confidence` [0..1], `model_id`, `prompt_version`, `run_status`, `validation_status`, `created_at`
+* Metadaten: `correlation_id`, `detected_language` (ISO-639-1), `language_confidence` [0..1], `model_id`, `prompt_version`, `run_status`, `validation_status`, `created_at`
 * Fehler bei `failed`: `error_code`, `error_reason`
 
 ## 14. Abnahmekriterien (Acceptance)

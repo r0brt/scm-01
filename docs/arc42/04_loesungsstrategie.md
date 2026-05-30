@@ -25,9 +25,13 @@ Jeder Analyse-Run speichert mindestens:
 
 - `prompt_version`
 - `model_id`
+- `correlation_id`
+- `validation_report`
+- `detected_language` und `language_confidence`
 - `run_status`
 - `validation_status`
 - `error_code` (bei Fehlschlag)
+- `created_at`
 
 Stille Fallback-Heuristiken sind nicht erlaubt.
 
