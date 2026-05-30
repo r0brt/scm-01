@@ -44,6 +44,8 @@ Transparenz entsteht im MVP über offen dokumentierte Datenpfade, die sichtbare 
 
 Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollständigkeit zu behaupten.
 
+Die Nachweise dazu verteilen sich bewusst: arc42 beschreibt die Architekturentscheidung, `docs/privacy-and-ai-governance.md` vertieft Datenflüsse und Grenzen, `docs/acceptance-checklist.md` hält den Abnahmestand fest und `docs/test-report.md` dokumentiert die technische Verifikation.
+
 Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](../privacy-and-ai-governance.md).
 
 ## API-Fehlervertrag
@@ -68,7 +70,7 @@ Die Nachvollziehbarkeit eines Analyse-Runs stützt sich nicht auf ein einzelnes 
 
 Im aktuellen Stand wird pro HTTP-Request genau eine `correlation_id` erzeugt. Dieselbe ID erscheint bei Fehlerantworten und wird bei neu erzeugten Runs mitpersistiert und über die Run-API wieder sichtbar gemacht. Dadurch ist ein kleiner, aber klarer Request-to-Run-Nachvollziehbarkeitspfad vorhanden.
 
-Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Es gibt weiterhin keine vollständige Ende-zu-Ende-Korrelation über Frontend, API, Persistenz, strukturierte Logs und optionalen Provider-Pfad. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
+Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Damit ist ein Run gut erklärbar, aber noch kein vollständiger Audit-Trail über Browser, API, Datenbank, Logs und externen Provider hinweg vorhanden. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
 
 ## Frontend-Präsentationskonzept
 
