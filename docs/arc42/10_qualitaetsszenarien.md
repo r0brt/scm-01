@@ -2,6 +2,8 @@
 
 Die folgenden Qualitätsszenarien konkretisieren die Qualitätsziele aus Kapitel 1. Sie prüfen vor allem Vertragstreue, Nachvollziehbarkeit, Reproduzierbarkeit, Sprachbehandlung und die Grenzen der KI-gestützten Analyse.
 
+Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getrennt ausgewiesen: Vertrag, Fehlerpfad, Traceability, Sprachdetektion, UI und E2E sind technisch nachgewiesen; die aggregierte NFR1-Quote, die NFR3-p95-Laufzeitmessung und das NFR5-Coverage-Ziel sind noch nicht automatisiert gemessen. Der aktuelle Stand ist in `docs/test-report.md` und `docs/acceptance-checklist.md` dokumentiert.
+
 ## QS1: Vertragskonforme Analyseausgabe
 
 - Szenario: Ein Nutzer startet eine Analyse über API oder UI.
@@ -64,3 +66,10 @@ Die folgenden Qualitätsszenarien konkretisieren die Qualitätsziele aus Kapitel
 - Stimulus: Ein gespeicherter Run wird über API oder Datenbank mit seinem Detailkontext geöffnet.
 - Erwartung: Der Run lässt sich mindestens über `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status`, `validation_status` und bekannte Audit-Lücken erklären. Damit bleibt der Interpretationsrahmen sichtbar, ohne einen vollständigen produktiven Ende-zu-Ende-Audit-Trail zu behaupten.
 - Nachweis: Persistenzmodell `runs`, Detailansicht der Analyse-Runs, Dokumentation zu Audit-Grenzen und gezielte Persistenztests.
+
+## QS10: Transparenter Umgang mit nicht gemessenen NFRs
+
+- Szenario: Ein Maintainer oder Reviewer prüft, ob quantitative Qualitätsziele tatsächlich gemessen wurden.
+- Stimulus: `docs/test-report.md`, `docs/acceptance-checklist.md` und die PRD-NFRs werden verglichen.
+- Erwartung: Die Dokumentation unterscheidet klar zwischen erfüllten technischen Nachweisen, Teilnachweisen und nicht gemessenen Zielgrössen. Insbesondere werden NFR1 `>=90%`, NFR3 `p95 < 5s` und NFR5 `80% Unit-Test-Coverage` nicht als erfüllt behauptet, solange keine passende Messung existiert.
+- Nachweis: NFR-Evidenzstatus in `docs/test-report.md` und `docs/acceptance-checklist.md`.

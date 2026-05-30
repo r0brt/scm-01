@@ -37,18 +37,30 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
-- [x] GitHub Actions `CI` auf `main` für Commit `33aa027`
+- [x] `cd frontend && npm run test:e2e`
+- [x] GitHub Actions `CI` auf `main` für Commit `6ca86e3`, Run `26692751002`
+
+## NFR-Nachweisstatus
+
+- [x] NFR1 Teilnachweis: 20 statische Eingabe-Fixtures sowie Contract-, Validation-, API- und Workflow-Tests sind vorhanden
+- [ ] NFR1 Zielmetrik: `>=90%` schema-valide generierte Analysen ohne Repair ist noch nicht automatisiert aggregiert gemessen
+- [x] NFR2 Teilnachweis: aktiver Fehlerpfad persistiert ungültige Payloads explizit als `failed`; bounded Repair ist separat getestet, aber nicht im Standardpfad aktiv
+- [ ] NFR3 Zielmetrik: `p95 < 5s` für Analyseantworten bis 1'000 Zeichen ist noch nicht über Benchmark oder Lasttest gemessen
+- [x] NFR4 Nachvollziehbarkeit: zentrale Traceability-Metadaten werden persistiert und über API/Archiv sichtbar
+- [x] NFR5 Teilnachweis: Backend-/Frontend-Tests und ein UJ1-E2E-Test laufen reproduzierbar
+- [ ] NFR5 Coverage-Ziel: `80% Unit-Test-Coverage` ist noch nicht gemessen, da kein Coverage-Tooling konfiguriert ist
+- [x] NFR6 Sprachdetektion: unterstützte Sprachen, Confidence-Schwelle und Fehlerfälle sind implementiert und getestet
 
 ## Nachweise mit bekannten Voraussetzungen oder Limitationen
 
-- [x] `cd frontend && npm run test:e2e`
-  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief nach `npx playwright install` erfolgreich durch.
 - [x] `docker compose up -d --build`
 - [x] `docker compose ps`
 - [x] `curl -fsS http://127.0.0.1:8000/health`
 - [x] `curl -fsS -I http://127.0.0.1:4173`
 - [x] `docker compose down`
-  Compose wurde am 2026-05-30 als Start-/Status-/HTTP-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Docker-Zugriff und Host-HTTP-Prüfung erfolgten ausserhalb der Codex-Sandbox, weil die Sandbox keinen direkten Zugriff auf Docker-Socket beziehungsweise veröffentlichte Host-Ports erlaubt.
+  Compose wurde am 2026-05-30 als Start-/Status-/HTTP-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Die Host-HTTP-Prüfung erfolgte ausserhalb der Codex-Sandbox, weil die Sandbox keinen direkten Zugriff auf veröffentlichte Host-Ports erlaubt.
+- [x] `cd frontend && npm run test:e2e`
+  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief erfolgreich durch. Playwright-Browser-Binaries müssen lokal vorhanden sein.
 
 ## Verweis auf Nachweisdokumente
 
@@ -62,3 +74,4 @@ Stand: 2026-05-30
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP
 - [ ] Mehrsprachigkeit ist bewusst auf `de`, `fr` und `en` begrenzt; weitere Sprachen bleiben mögliche Folgearbeit
 - [ ] Breitere E2E-Matrix, frei verfügbare E2E-Ports und produktionsnahe Observability bleiben mögliche Folgearbeit
+- [ ] Automatisierte NFR-Messungen für NFR1, NFR3 und Coverage-Anteil von NFR5 bleiben mögliche Folgearbeit
