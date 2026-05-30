@@ -4,7 +4,7 @@
 
 **Goal:** Version the FastAPI OpenAPI contract as a repository evidence artifact and keep it reproducibly in sync with the application.
 
-**Architecture:** FastAPI remains the source of truth for the runtime OpenAPI schema. A small backend script exports `create_app().openapi()` to `docs/api/openapi.json`; a contract test compares the committed snapshot with the current runtime schema. Documentation links the snapshot without changing API behaviour. The API title and version are made explicit in FastAPI metadata so the exported contract is identifiable.
+**Architecture:** FastAPI remains the source of truth for the runtime OpenAPI schema. A small backend script exports `create_app().openapi()` to `docs/api/openapi.json`; a contract test compares the committed snapshot with the current runtime schema. Documentation links the snapshot without changing API behaviour. The API title, version and public error response schema are made explicit in FastAPI metadata so the exported contract is identifiable and complete for documented success and error paths.
 
 **Tech Stack:** Python/FastAPI, pytest, JSON OpenAPI snapshot, Markdown docs.
 
@@ -17,10 +17,11 @@
 - Add a backend test that fails if the snapshot drifts from the runtime OpenAPI schema.
 - Link the API contract from README, arc42 and acceptance evidence.
 - Make OpenAPI `title` and `version` explicit.
+- Document the existing public API error envelope in OpenAPI.
 
 ## Non-Scope
 
-- Do not change API endpoints, request/response schemas or error handling. OpenAPI metadata such as API title/version may be made explicit.
+- Do not change API endpoints or runtime error handling. OpenAPI metadata and documentation-only response schemas may be made explicit.
 - Do not introduce an external OpenAPI generator.
 - Do not add UI changes.
 - Do not add performance, coverage or NFR tooling.
@@ -30,6 +31,7 @@
 - Create: `backend/scripts/export_openapi.py`
 - Create: `backend/tests/contracts/test_openapi_snapshot.py`
 - Create: `docs/api/openapi.json`
+- Modify: `backend/app/api/schemas.py`
 - Modify: `backend/app/main.py`
 - Modify: `README.md`
 - Modify: `docs/arc42/06_laufzeitsicht.md`
@@ -42,6 +44,7 @@
 **Files:**
 - Create: `backend/scripts/export_openapi.py`
 - Create: `docs/api/openapi.json`
+- Modify: `backend/app/api/schemas.py`
 - Modify: `backend/app/main.py`
 
 - [x] **Step 1: Make OpenAPI metadata explicit**
@@ -52,7 +55,25 @@ Set explicit FastAPI metadata in `backend/app/main.py`:
 app = FastAPI(title="Social Cleanup Machine API", version="0.1.0")
 ```
 
-- [x] **Step 2: Create the export script**
+- [x] **Step 2: Document the public error envelope**
+
+Add OpenAPI-facing models for the existing runtime error shape:
+
+```python
+class ErrorPayload(BaseModel):
+    code: str
+    message: str
+    details: dict[str, Any]
+    correlation_id: str
+
+
+class ErrorResponse(BaseModel):
+    error: ErrorPayload
+```
+
+Reference `ErrorResponse` in the documented `404` and `422` route responses.
+
+- [x] **Step 3: Create the export script**
 
 Create `backend/scripts/export_openapi.py`:
 
@@ -84,7 +105,7 @@ if __name__ == "__main__":
     main()
 ```
 
-- [x] **Step 3: Generate the snapshot**
+- [x] **Step 4: Generate the snapshot**
 
 Run:
 
@@ -92,7 +113,7 @@ Run:
 cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/export_openapi.py
 ```
 
-Expected result: `docs/api/openapi.json` exists and contains `/api/v1/analyses`, `/api/v1/analyses/{analysis_id}`, `/api/v1/analyses/{analysis_id}/rerun` and `/health`.
+Expected result: `docs/api/openapi.json` exists and contains `/api/v1/analyses`, `/api/v1/analyses/{analysis_id}`, `/api/v1/analyses/{analysis_id}/rerun`, `/health`, `ErrorPayload` and `ErrorResponse`.
 
 ## Task 2: Add snapshot drift test
 
@@ -121,7 +142,11 @@ def test_openapi_snapshot_matches_runtime_schema() -> None:
     assert app.openapi() == expected
 ```
 
-- [x] **Step 2: Verify the test passes**
+- [x] **Step 2: Add an error contract assertion**
+
+Extend the contract test to assert that `ErrorPayload`, `ErrorResponse` and the documented `404`/`422` responses are present in OpenAPI.
+
+- [x] **Step 3: Verify the test passes**
 
 Run:
 
@@ -170,12 +195,12 @@ Expected result: focused backend checks pass.
 Run:
 
 ```bash
-rg -n '"/api/v1/analyses"|"/api/v1/analyses/\\{analysis_id\\}"|"/api/v1/analyses/\\{analysis_id\\}/rerun"|"/health"' docs/api/openapi.json
+rg -n '"/api/v1/analyses"|"/api/v1/analyses/\\{analysis_id\\}"|"/api/v1/analyses/\\{analysis_id\\}/rerun"|"/health"|"ErrorPayload"|"ErrorResponse"' docs/api/openapi.json
 ```
 
-Expected result: all expected paths are present.
+Expected result: all expected paths and error schemas are present.
 
-- [ ] **Step 3: Check status**
+- [x] **Step 3: Check status**
 
 Run:
 
@@ -187,12 +212,12 @@ Expected result: only planned files are changed.
 
 ## Task 5: Commit and PR preparation
 
-- [ ] **Step 1: Review diff**
+- [x] **Step 1: Review diff**
 
 Run:
 
 ```bash
-git diff -- backend/app/main.py backend/scripts/export_openapi.py backend/tests/contracts/test_openapi_snapshot.py docs/api/openapi.json README.md docs/arc42/06_laufzeitsicht.md docs/arc42/08_querschnittliche_konzepte.md docs/acceptance-checklist.md docs/test-report.md docs/superpowers/plans/2026-05-30-openapi-contract-evidence.md
+git diff -- backend/app/api/schemas.py backend/app/main.py backend/scripts/export_openapi.py backend/tests/contracts/test_openapi_snapshot.py docs/api/openapi.json README.md docs/arc42/06_laufzeitsicht.md docs/arc42/08_querschnittliche_konzepte.md docs/acceptance-checklist.md docs/test-report.md docs/superpowers/plans/2026-05-30-openapi-contract-evidence.md
 ```
 
 Expected result: OpenAPI evidence only; no API behaviour changes.
@@ -202,7 +227,7 @@ Expected result: OpenAPI evidence only; no API behaviour changes.
 Run:
 
 ```bash
-git add backend/app/main.py backend/scripts/export_openapi.py backend/tests/contracts/test_openapi_snapshot.py docs/api/openapi.json README.md docs/arc42/06_laufzeitsicht.md docs/arc42/08_querschnittliche_konzepte.md docs/acceptance-checklist.md docs/test-report.md docs/superpowers/plans/2026-05-30-openapi-contract-evidence.md
+git add backend/app/api/schemas.py backend/app/main.py backend/scripts/export_openapi.py backend/tests/contracts/test_openapi_snapshot.py docs/api/openapi.json README.md docs/arc42/06_laufzeitsicht.md docs/arc42/08_querschnittliche_konzepte.md docs/acceptance-checklist.md docs/test-report.md docs/superpowers/plans/2026-05-30-openapi-contract-evidence.md
 git commit -m "docs: add openapi contract evidence"
 ```
 

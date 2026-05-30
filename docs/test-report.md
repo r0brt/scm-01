@@ -27,7 +27,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `51 passed in 0.94s`
+- `52 passed in 0.93s`
 
 ### OpenAPI Snapshot
 
@@ -40,7 +40,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 Resultat:
 
 - `docs/api/openapi.json` wurde aus `create_app().openapi()` erzeugt
-- `1 passed in 0.53s`
+- `2 passed in 0.55s`
 
 ### Frontend Unit/UI
 
