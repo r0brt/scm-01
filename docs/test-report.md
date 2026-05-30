@@ -1,7 +1,7 @@
 # Test Report
 
 Stand: 2026-05-30
-Baseline-Commit: `33aa027`
+Baseline-Commit: `6ca86e3`
 
 Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
 
@@ -27,7 +27,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `49 passed in 2.19s`
+- `50 passed in 1.41s`
 
 ### Frontend Unit/UI
 
@@ -40,7 +40,7 @@ Resultat:
 
 - `1 file passed`
 - `10 tests passed`
-- `Duration 2.33s`
+- `Duration 2.13s`
 
 Hinweis:
 
@@ -55,7 +55,7 @@ npm run build
 
 Resultat:
 
-- `built in 719ms`
+- `built in 965ms`
 
 ### Docker Compose Laufzeitnachweis
 
@@ -76,7 +76,7 @@ Resultat:
 
 Hinweis:
 
-- Docker-Zugriff und Host-HTTP-Prüfung wurden ausserhalb der Codex-Sandbox ausgeführt, weil die Sandbox keinen direkten Zugriff auf den Docker-Socket beziehungsweise die veröffentlichten Host-Ports erlaubt
+- die Host-HTTP-Prüfung wurde ausserhalb der Codex-Sandbox ausgeführt, weil die Sandbox keinen direkten Zugriff auf die veröffentlichten Host-Ports erlaubt
 
 ### Frontend E2E
 
@@ -87,7 +87,7 @@ npm run test:e2e
 
 Resultat:
 
-- `1 passed in 3.6s`
+- `1 passed in 4.1s`
 
 Beobachtung:
 
@@ -96,8 +96,21 @@ Beobachtung:
   - Backend E2E: `18000`
 - dadurch sind Konflikte mit den Standardports `4173` und `8000` deutlich weniger wahrscheinlich
 - benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bleiben weiterhin möglich
-- nach `npx playwright install` starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
+- bei vorhandenen Playwright-Browser-Binaries starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
 - der UJ1-Browserpfad wurde erfolgreich ausgeführt
+
+## NFR-Evidenzstatus
+
+Die folgenden Punkte trennen bewusst zwischen vorhandenen Nachweisen und noch nicht gemessenen Zielgrössen. Damit bleiben PRD-Anforderungen nachvollziehbar, ohne aus lokalen Smoke-, Contract- oder UI-Tests statistische Aussagen abzuleiten.
+
+| NFR | Status | Einordnung |
+| --- | --- | --- |
+| NFR1 Contract Compliance `>=90%` | Teilnachweis vorhanden, Zielmetrik nicht gemessen | Es existieren 20 statische Eingabe-Fixtures sowie Contract-, Validation-, API- und Workflow-Tests. Es gibt aber noch kein automatisiertes Aggregationsscript, das generierte Analysen über dieses Testset ausführt und die Quote schema-valider Läufe ohne Repair misst. |
+| NFR2 Fehlerpfad/Repair | Teilweise nachgewiesen | Der aktive Standardpfad persistiert strukturell ungültige Payloads explizit als `failed`. Die bounded Repair-Funktion ist getestet, aber nicht im Standardpfad verdrahtet. |
+| NFR3 Performance `p95 < 5s` | Nicht gemessen | Es gibt derzeit keinen Benchmark-, Last- oder p95-Messlauf für Analyseantwortzeiten bis 1'000 Zeichen. Die unten genannten Test- und Build-Dauern sind keine NFR3-Messung. |
+| NFR4 Nachvollziehbarkeit | Nachgewiesen im MVP-Rahmen | Run-Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben sind implementiert, persistiert und in Tests/Doku sichtbar. |
+| NFR5 Wartbarkeit/Testbarkeit | Teilnachweis vorhanden, Coverage-Ziel nicht gemessen | Backend- und Frontend-Tests sowie ein UJ1-E2E-Test laufen. Das Ziel `80% Unit-Test-Coverage` ist nicht gemessen, weil kein Coverage-Tooling konfiguriert ist. |
+| NFR6 Sprachdetektion | Nachgewiesen im MVP-Rahmen | Sprachdetektion, Confidence-Schwelle und Fehlerfälle sind im Backend implementiert und über Tests abgesichert. |
 
 ## Abgedeckte Nachweise
 
@@ -106,13 +119,13 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Nachweis auf `main`-Commit `33aa027`
+- aktueller Nachweis auf `main`-Commit `6ca86e3`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `33aa027` war erfolgreich (`CI`, Run `26683234622`, 2026-05-30T11:58:50Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `6ca86e3` war erfolgreich (`CI`, Run `26692751002`, 2026-05-30T19:23:45Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
@@ -122,3 +135,4 @@ GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quali
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
 - Compose wurde lokal als Start-/Status-/HTTP-/Stop-Nachweis verifiziert; dies ersetzt noch keinen produktionsnahen Betriebs- oder Lasttest
+- NFR1, NFR3 und der Coverage-Anteil von NFR5 sind als Zielgrössen dokumentiert, aber noch nicht automatisiert gemessen
