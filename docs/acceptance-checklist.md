@@ -37,7 +37,7 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
-- [x] GitHub Actions `CI` auf `main` für Commit `94e6575`
+- [x] GitHub Actions `CI` auf `main` für Commit `9cfa2b9`
 
 ## Nachweise mit bekannten Voraussetzungen oder Limitationen
 

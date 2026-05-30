@@ -4,6 +4,7 @@ skinparam linetype ortho
 
 entity "runs" as runs {
   *id : integer <<PK>>
+  correlation_id : varchar(36)
   --
   input_text : text
   analysis_json : json nullable

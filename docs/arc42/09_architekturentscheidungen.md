@@ -51,4 +51,6 @@ Die Frontend-Entscheidung zugunsten einer clientseitig gerenderten SPA passt zum
 
 Siehe: [ADR-0006](../adr/0006-frontend-spa-and-client-side-pipeline.md)
 
-Bewertung des aktuellen Repo-Stands: Fuer die juengsten Frontend-Anpassungen ist derzeit keine zusaetzliche ADR noetig. Der state-driven Flow-/Review-Modus, der Archiv-Tab und die reduzierte Export-/Metadateninszenierung sind Auspraegungen der bestehenden Frontend-Architektur und keine neue systemweite Struktur- oder Integrationsentscheidung. Dokumentationspflichtig war hier vor allem die Nachfuehrung von Baustein-, Laufzeit- und Querschnittssicht.
+Aktueller Repo-Stand: Für die jüngsten Frontend-Anpassungen ist derzeit keine zusätzliche ADR nötig. Der state-driven Flow-/Review-Modus, der Archiv-Tab und die reduzierte Export-/Metadateninszenierung sind Ausprägungen der bestehenden Frontend-Architektur und keine neue systemweite Struktur- oder Integrationsentscheidung. Dokumentationspflichtig war hier vor allem die Nachführung von Baustein-, Laufzeit- und Querschnittssicht.
+
+Die neuen Diagrammquellen präzisieren bestehende Architekturentscheidungen; sie führen keine zusätzliche Architekturentscheidung ein.

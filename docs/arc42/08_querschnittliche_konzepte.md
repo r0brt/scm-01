@@ -28,6 +28,10 @@ Nach der strukturellen Validierung prüft das Backend zusätzlich die Sprache de
 
 Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Persistiert werden Eingabetext, Analyse-JSON, Validierungsreport sowie die für Nachvollziehbarkeit relevanten Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben.
 
+![ERD runs](../diagrams/rendered/db-erd.svg)
+
+Das ERD bildet den aktuellen Stand der Tabelle `runs` ab. Die Quelle liegt in [docs/diagrams/db-erd.puml](../diagrams/db-erd.puml), das gerenderte SVG in [docs/diagrams/rendered/db-erd.svg](../diagrams/rendered/db-erd.svg). Es enthält neben dem Primärschlüssel `id` auch `correlation_id`, das über die Migration `20260529_01_add_correlation_id_to_runs.py` eingeführt wurde und in der API-Antwort `AnalysisRunResponse` sichtbar ist.
+
 Schemaänderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern über Alembic-Migrationen versioniert. Dadurch bleiben Datenbankstruktur und Anwendungsmodell reproduzierbar und auditiert.
 
 ## Datenschutz und KI-Governance
@@ -40,11 +44,11 @@ Transparenz entsteht im MVP über offen dokumentierte Datenpfade, die sichtbare 
 
 Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollständigkeit zu behaupten.
 
-Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1).
+Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](../privacy-and-ai-governance.md).
 
 ## API-Fehlervertrag
 
-Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine requestgebundene `correlation_id`, die bereits frueh im HTTP-Lebenszyklus erzeugt und danach im Request-Kontext weitergereicht wird.
+Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine requestgebundene `correlation_id`, die bereits früh im HTTP-Lebenszyklus erzeugt und danach im Request-Kontext weitergereicht wird.
 
 In M4 werden mindestens ungültige Requests und unbekannte Analyse-IDs explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
 
@@ -52,7 +56,7 @@ In M4 werden mindestens ungültige Requests und unbekannte Analyse-IDs explizit 
 
 Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sondern über einen expliziten Adapter-Port. Dadurch bleiben Stub-, Test- und Provider-Implementierungen austauschbar.
 
-Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt angefordertem JSON-Schema-Output. Offline-Tests injizieren weiterhin Fake- oder Stub-Adapter und fuehren keine Netzaufrufe aus.
+Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt angefordertem JSON-Schema-Output. Offline-Tests injizieren weiterhin Fake- oder Stub-Adapter und führen keine Netzaufrufe aus.
 
 Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivpfad verwendet `prompts/v2/analysis.md`. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die in `docs/scm.md` definierten sechs Ebenen exakt anfordern.
 
@@ -66,7 +70,7 @@ Im aktuellen Stand wird pro HTTP-Request genau eine `correlation_id` erzeugt. Di
 
 Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Es gibt weiterhin keine vollständige Ende-zu-Ende-Korrelation über Frontend, API, Persistenz, strukturierte Logs und optionalen Provider-Pfad. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
 
-## Frontend-Praesentationskonzept
+## Frontend-Präsentationskonzept
 
 Das Frontend trennt bewusst zwischen Flow- und Review-Nutzung desselben Runs. Während der synchronen Analyseantwort entfaltet die UI die bereits vollständig vorliegende Analyse deterministisch als sequentielle Filterstrecke. Dabei ist immer nur die aktive Stage als Arbeitsfläche sichtbar; andere Stages werden im Flow nur als Fortschrittsknoten oder reduzierte Zustandsmarker dargestellt.
 

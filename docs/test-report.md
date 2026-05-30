@@ -1,7 +1,7 @@
 # Test Report
 
 Stand: 2026-05-30
-Baseline-Commit: `94e6575`
+Baseline-Commit: `9cfa2b9`
 
 ## Ausgeführte Commands
 
@@ -100,13 +100,13 @@ Beobachtung:
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Nachweis auf `main`-Commit `94e6575`
+- aktueller Nachweis auf `main`-Commit `9cfa2b9`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `94e6575` war erfolgreich (`CI`, Run `26665248878`, 2026-05-29T22:23:50Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `9cfa2b9` war erfolgreich (`CI`, Run `26666182368`, 2026-05-29T22:49:54Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 

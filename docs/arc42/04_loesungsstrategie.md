@@ -38,7 +38,7 @@ Diese Traceability-Felder sind kein Selbstzweck. Sie bilden die minimale technis
 Die gewählte Strategie passt zum Projekt, weil sie die wichtigsten Spannungen des Vorhabens direkt adressiert:
 
 - LLM-Nutzung erzeugt Unsicherheit; deshalb wird die Ausgabe strikt validiert.
-- Dokumentations- und Bewertungskontext verlangen Nachvollziehbarkeit; deshalb werden Metadaten und Architekturentscheidungen konsequent mitgeführt.
+- Dokumentations- und Nachvollziehbarkeitskontext verlangen Transparenz; deshalb werden Metadaten und Architekturentscheidungen konsequent mitgeführt.
 - Der verteilte Mindestbetrieb soll sichtbar sein, ohne unnötig in Microservices auszuufern; deshalb bleibt die Laufzeit bei `frontend`, `api` und `db` im Compose-Setup.
 
 Die Lösungsstrategie ist damit weniger auf maximale technische Raffinesse ausgerichtet als auf einen kontrollierbaren, prüfbaren und sauber dokumentierten MVP.
