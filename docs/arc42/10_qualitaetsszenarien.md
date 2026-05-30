@@ -2,7 +2,7 @@
 
 Die folgenden Qualitätsszenarien konkretisieren die Qualitätsziele aus Kapitel 1. Sie prüfen vor allem Vertragstreue, Nachvollziehbarkeit, Reproduzierbarkeit, Sprachbehandlung und die Grenzen der KI-gestützten Analyse.
 
-Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getrennt ausgewiesen: Vertrag, Fehlerpfad, Traceability, Sprachdetektion, UI und E2E sind technisch nachgewiesen. Die NFR1-Quote ist im Offline-Fixture-Harness über das definierte Eingabeset gemessen; die NFR3-p95-Laufzeitmessung und das NFR5-Coverage-Ziel sind noch nicht automatisiert gemessen. Der aktuelle Stand ist in `docs/test-report.md` und `docs/acceptance-checklist.md` dokumentiert.
+Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getrennt ausgewiesen: Vertrag, Fehlerpfad, Traceability, Sprachdetektion, UI und E2E sind technisch nachgewiesen. Die NFR1-Quote ist im Offline-Fixture-Harness über das definierte Eingabeset gemessen; die NFR3-p95-Laufzeitmessung ist als Offline-API-Benchmark dokumentiert. Das NFR5-Coverage-Ziel ist noch nicht automatisiert gemessen. Der aktuelle Stand ist in `docs/test-report.md` und `docs/acceptance-checklist.md` dokumentiert.
 
 ## QS1: Vertragskonforme Analyseausgabe
 
@@ -71,5 +71,12 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 
 - Szenario: Ein Maintainer oder Reviewer prüft, welche quantitativen Qualitätsziele tatsächlich gemessen wurden.
 - Stimulus: `docs/test-report.md`, `docs/acceptance-checklist.md` und die PRD-NFRs werden verglichen.
-- Erwartung: Die Dokumentation unterscheidet klar zwischen erfüllten technischen Nachweisen, offline gemessenen Zielgrössen, Teilnachweisen und nicht gemessenen Zielgrössen. NFR1 `>=90%` wird nur als Offline-Fixture-Harness-Messung eingeordnet; NFR3 `p95 < 5s` und NFR5 `80% Unit-Test-Coverage` werden nicht als erfüllt behauptet, solange keine passende Messung existiert.
+- Erwartung: Die Dokumentation unterscheidet klar zwischen erfüllten technischen Nachweisen, offline gemessenen Zielgrössen, Teilnachweisen und nicht gemessenen Zielgrössen. NFR1 `>=90%` wird nur als Offline-Fixture-Harness-Messung eingeordnet; NFR3 `p95 < 5s` wird nur als lokale Offline-API-Messung ohne externen LLM-Provider eingeordnet. NFR5 `80% Unit-Test-Coverage` wird nicht als erfüllt behauptet, solange keine passende Coverage-Messung existiert.
 - Nachweis: NFR-Evidenzstatus in `docs/test-report.md` und `docs/acceptance-checklist.md`.
+
+## QS11: Offline gemessene API-Antwortzeit
+
+- Szenario: Ein Maintainer oder Reviewer prüft die PRD-Zielgrösse `p95 < 5s` für Analyseantworten bis 1'000 Zeichen.
+- Stimulus: `scripts/measure_nfr3_performance.py` führt die 20 statischen Eingabe-Fixtures plus einen deterministischen 1'000-Zeichen-Grenzfall über `POST /api/v1/analyses` aus.
+- Erwartung: Alle gemessenen Requests laufen nach App-Initialisierung und Warm-up erfolgreich durch; die Eingabetexte bleiben innerhalb der PRD-Grenze von 1'000 Zeichen und die p95-Antwortzeit liegt unter 5 Sekunden.
+- Nachweis: `docs/test-report.md` dokumentiert den Offline-Messlauf mit `21/21` erfolgreichen API-Analysen, einem 1'000-Zeichen-Grenzfall, `p95 0.003s` und langsamstem Request `0.005s`. Die Messung nutzt deterministische Fixture-Doubles und ersetzt keinen produktionsnahen Lasttest mit externem Provider.

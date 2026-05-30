@@ -40,18 +40,20 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_openapi_snapshot.py`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/measure_contract_compliance.py`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_nfr1_contract_compliance.py`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/measure_nfr3_performance.py`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_nfr3_performance.py`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/services/test_analysis_workflow.py tests/api/test_analyses_api.py`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `0d7aff2`, Run `26693986690`
+- [x] GitHub Actions `CI` auf `main` für Commit `b7bc6e3`, Run `26694380069`
 
 ## NFR-Nachweisstatus
 
 - [x] NFR1 Teilnachweis: 20 statische Eingabe-Fixtures sowie Contract-, Validation-, API- und Workflow-Tests sind vorhanden
 - [x] NFR1 Zielmetrik: Offline-Fixture-Harness misst `20/20` schema-valide Läufe ohne Repair (`100.0%`) gegen das definierte Eingabeset; dies ist keine Aussage zur Live-Providerqualität
 - [x] NFR2 Teilnachweis: aktiver Fehlerpfad persistiert ungültige Payloads explizit als `failed`; bounded Repair ist separat getestet, aber nicht im Standardpfad aktiv
-- [ ] NFR3 Zielmetrik: `p95 < 5s` für Analyseantworten bis 1'000 Zeichen ist noch nicht über Benchmark oder Lasttest gemessen
+- [x] NFR3 Zielmetrik: Offline-API-Benchmark misst `21/21` erfolgreiche Analyseantworten inklusive 1'000-Zeichen-Grenzfall mit `p95 0.003s` gegen den Zielwert `< 5s`; dies ist kein produktionsnaher Lasttest und keine Aussage zur Live-Providerlatenz
 - [x] NFR4 Nachvollziehbarkeit: zentrale Traceability-Metadaten werden persistiert und über API/Archiv sichtbar
 - [x] NFR5 Teilnachweis: Backend-/Frontend-Tests und ein UJ1-E2E-Test laufen reproduzierbar
 - [ ] NFR5 Coverage-Ziel: `80% Unit-Test-Coverage` ist noch nicht gemessen, da kein Coverage-Tooling konfiguriert ist
@@ -80,4 +82,4 @@ Stand: 2026-05-30
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP
 - [ ] Mehrsprachigkeit ist bewusst auf `de`, `fr` und `en` begrenzt; weitere Sprachen bleiben mögliche Folgearbeit
 - [ ] Breitere E2E-Matrix, frei verfügbare E2E-Ports und produktionsnahe Observability bleiben mögliche Folgearbeit
-- [ ] Automatisierte NFR-Messungen für NFR3 und den Coverage-Anteil von NFR5 bleiben mögliche Folgearbeit
+- [ ] Produktionsnahe NFR3-Lastmessung mit externem Provider und automatisierte Messung des Coverage-Anteils von NFR5 bleiben mögliche Folgearbeit
