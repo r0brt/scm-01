@@ -37,7 +37,7 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
-- [x] GitHub Actions `CI` auf `main` für Commit `9cfa2b9`
+- [x] GitHub Actions `CI` auf `main` für Commit `33aa027`
 
 ## Nachweise mit bekannten Voraussetzungen oder Limitationen
 
@@ -45,8 +45,10 @@ Stand: 2026-05-30
   Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief nach `npx playwright install` erfolgreich durch.
 - [x] `docker compose up -d --build`
 - [x] `docker compose ps`
+- [x] `curl -fsS http://127.0.0.1:8000/health`
+- [x] `curl -fsS -I http://127.0.0.1:4173`
 - [x] `docker compose down`
-  Compose wurde am 2026-05-30 als Start-/Status-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Ein zusätzlicher HTTP-End-to-End-Test über die veröffentlichten Host-Ports wurde in der aktuellen Codex-Sandbox nicht erfolgreich durchgeführt.
+  Compose wurde am 2026-05-30 als Start-/Status-/HTTP-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Docker-Zugriff und Host-HTTP-Prüfung erfolgten ausserhalb der Codex-Sandbox, weil die Sandbox keinen direkten Zugriff auf Docker-Socket beziehungsweise veröffentlichte Host-Ports erlaubt.
 
 ## Verweis auf Nachweisdokumente
 
