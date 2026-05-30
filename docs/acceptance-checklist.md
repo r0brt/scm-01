@@ -10,6 +10,7 @@ Stand: 2026-05-30
 - [x] Analyse-Runs werden mit Traceability-Metadaten inklusive `correlation_id` persistiert
 - [x] API-v1 für Analyse, Liste, Detail und Rerun ist vorhanden
 - [x] API-v1 ist als OpenAPI-Snapshot unter `docs/api/openapi.json` versioniert
+- [x] Rerun erzeugt auch aus fehlgeschlagenen Quell-Runs einen neuen unveränderlichen Analyseversuch
 - [x] Frontend zeigt Eingabe, Pipeline, Run-Liste, Archiv-Nachweise und JSON-Export
 - [x] Lokaler Zielbetrieb via Docker Compose ist dokumentiert
 
@@ -39,10 +40,11 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_openapi_snapshot.py`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/measure_contract_compliance.py`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_nfr1_contract_compliance.py`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/services/test_analysis_workflow.py tests/api/test_analyses_api.py`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `0a01025`, Run `26693638006`
+- [x] GitHub Actions `CI` auf `main` für Commit `0d7aff2`, Run `26693986690`
 
 ## NFR-Nachweisstatus
 

@@ -108,6 +108,7 @@ SCM ist ein Instrument zur strukturellen Klärung komplexer gesellschaftlicher P
 
 * `rerun` erzeugt **immer** einen neuen Lauf mit eigener ID.
 * Der ursprüngliche Lauf bleibt unverändert (auditierbar).
+* Rerun ist unabhängig vom Status des ursprünglichen Laufs möglich; auch ein `failed` Lauf kann als neuer Versuch erneut ausgeführt werden.
 
 ## 11. API (v1) — minimaler Umfang
 

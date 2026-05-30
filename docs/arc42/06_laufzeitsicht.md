@@ -35,6 +35,8 @@ Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreich
 
 Neben der initialen Analyse unterstützt der Laufzeitpfad das spätere Wiederfinden und bewusste Neuerzeugen von Runs. Bestehende Runs bleiben dabei unverändert.
 
+Der Quell-Run kann erfolgreich oder fehlgeschlagen sein; Rerun ist keine Reparatur des alten Laufs, sondern ein neuer Versuch mit demselben Eingabetext.
+
 1. Ein Client ruft `GET /api/v1/analyses` oder `GET /api/v1/analyses/{id}` auf.
 2. Das Backend liest die gespeicherten Runs aus der Persistenz und liefert sie als API-Responses aus.
 3. Bei `POST /api/v1/analyses/{id}/rerun` wird der ursprüngliche `input_text` erneut verarbeitet.
