@@ -36,15 +36,15 @@ Schemaänderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern über 
 
 ## Datenschutz und KI-Governance
 
-Die Architektur behandelt Datenschutz und KI-Governance im MVP als querschnittliche Leitplanken, nicht als nachgelagerte Formalität. Fachlich relevante Datenkategorien sind vor allem `input_text`, `analysis_json`, `validation_report`, Sprachmetadaten und technische Traceability-Metadaten. Weil der freie Eingabetext personenbezogene, sensible oder situativ heikle Inhalte enthalten kann, wird er architektonisch nicht als harmlose Testnutzlast behandelt.
+Die Architektur behandelt Datenschutz und KI-Governance im MVP als querschnittliche Leitplanken, nicht als nachgelagerte Formalität. Fachlich relevante Datenkategorien sind vor allem `input_text`, `analysis_json`, `validation_report`, Sprachmetadaten und technische Traceability-Metadaten. Da der freie Eingabetext personenbezogene, sensible oder situativ heikle Inhalte enthalten kann, wird er architektonisch nicht als harmlose Testnutzlast behandelt.
 
 Die Aufbewahrung ist im aktuellen Stand technisch nachvollziehbar, aber operativ nur begrenzt ausdefiniert. Runs bleiben lokal gespeichert, bis die zugrunde liegende Datenbank bewusst bereinigt wird. Es gibt derzeit keine fachliche Löschfunktion, keine dokumentierten Aufbewahrungsfristen pro Datenkategorie und keine vollständig ausgearbeitete Privacy-Operations-Sicht für Auskunft, Berichtigung oder Löschung.
 
 Transparenz entsteht im MVP über offen dokumentierte Datenpfade, die sichtbare Pipeline im Frontend und die persistierten technischen Metadaten pro Run. Die Anwendung ist als unterstützendes Analysewerkzeug konzipiert; sie trifft keine autonomen Sachentscheide und ersetzt keine menschliche Beurteilung. Menschliche Aufsicht bleibt insbesondere bei der Auswahl des Eingangstexts, bei der Interpretation der Analyse und bei jeder Weiterverwendung der Resultate erforderlich.
 
-Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollständigkeit zu behaupten.
+Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Diese Grenzen werden explizit benannt, statt regulatorische Vollständigkeit zu behaupten.
 
-Die Nachweise dazu verteilen sich bewusst: arc42 beschreibt die Architekturentscheidung, `docs/privacy-and-ai-governance.md` vertieft Datenflüsse und Grenzen, `docs/acceptance-checklist.md` hält den Abnahmestand fest und `docs/test-report.md` dokumentiert die technische Verifikation.
+Die Nachweise sind auf mehrere Dokumente verteilt: arc42 beschreibt die Architekturentscheidung, `docs/privacy-and-ai-governance.md` vertieft Datenflüsse und Grenzen, `docs/acceptance-checklist.md` hält den Abnahmestand fest und `docs/test-report.md` dokumentiert die technische Verifikation.
 
 Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](../privacy-and-ai-governance.md).
 
@@ -52,7 +52,7 @@ Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](../pr
 
 Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine requestgebundene `correlation_id`, die bereits früh im HTTP-Lebenszyklus erzeugt und danach im Request-Kontext weitergereicht wird.
 
-In M4 werden mindestens ungültige Requests und unbekannte Analyse-IDs explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
+Ungültige Requests und unbekannte Analyse-IDs werden explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
 
 ## LLM-Adapter und Prompt-Versionierung
 
@@ -70,7 +70,7 @@ Die Nachvollziehbarkeit eines Analyse-Runs stützt sich nicht auf ein einzelnes 
 
 Im aktuellen Stand wird pro HTTP-Request genau eine `correlation_id` erzeugt. Dieselbe ID erscheint bei Fehlerantworten und wird bei neu erzeugten Runs mitpersistiert und über die Run-API wieder sichtbar gemacht. Dadurch ist ein kleiner, aber klarer Request-to-Run-Nachvollziehbarkeitspfad vorhanden.
 
-Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Damit ist ein Run gut erklärbar, aber noch kein vollständiger Audit-Trail über Browser, API, Datenbank, Logs und externen Provider hinweg vorhanden. Der aktuelle Ausbau verbessert somit die Laufnachvollziehbarkeit deutlich, ersetzt aber noch keine produktionsreife Observability.
+Diese Felder reichen für die Nachvollziehbarkeit einzelner Runs im MVP bereits weit, bilden aber noch keinen durchgängigen Audit-Kontext über alle Schichten. Ein Run ist damit gut erklärbar; ein vollständiger Audit-Trail über Browser, API, Datenbank, Logs und externen Provider hinweg ist jedoch noch nicht vorhanden. Die Laufnachvollziehbarkeit ist dadurch deutlich verbessert, ersetzt aber keine produktionsreife Observability.
 
 ## Frontend-Präsentationskonzept
 
@@ -80,6 +80,6 @@ Nach Abschluss wechselt dieselbe Analyse in einen Review-Modus. Dort werden alle
 
 ## Betriebs- und Konfigurationskonzept
 
-Der lokale Standardbetrieb erfolgt ab M8 über Docker Compose. Konfiguration wird dabei ausschliesslich über Umgebungsvariablen injiziert; für den MVP sind insbesondere `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `SCM_DATABASE_URL`, `SCM_ANALYSIS_PROVIDER`, `SCM_OPENAI_MODEL` und `OPENAI_API_KEY` relevant.
+Der lokale Standardbetrieb erfolgt über Docker Compose. Konfiguration wird dabei ausschliesslich über Umgebungsvariablen injiziert; für den MVP sind insbesondere `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `SCM_DATABASE_URL`, `SCM_ANALYSIS_PROVIDER`, `SCM_OPENAI_MODEL` und `OPENAI_API_KEY` relevant.
 
-Die API verwendet PostgreSQL im Compose-Betrieb als einziges Zielsystem und führt Datenbankschema-Änderungen nicht implizit über ORM-Erzeugung aus, sondern explizit über `alembic upgrade head` beim Containerstart. Dadurch bleibt der Container-Start reproduzierbar und das Schema im laufenden System entspricht der versionierten Migration-Historie.
+Die API verwendet PostgreSQL im Compose-Betrieb als Zielsystem und führt Datenbankschema-Änderungen nicht implizit über ORM-Erzeugung aus, sondern explizit über `alembic upgrade head` beim Containerstart. Dadurch bleibt der Containerstart reproduzierbar und das Schema im laufenden System entspricht der versionierten Migration-Historie.

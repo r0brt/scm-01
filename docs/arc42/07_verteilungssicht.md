@@ -12,15 +12,15 @@ Die API bleibt der einzige Einstiegspunkt für Analysen, delegiert die eigentlic
 
 Die fachliche Quelle für die erzeugten Analyse-Payloads ist `docs/scm.md`. Deshalb müssen alle Laufzeitkomponenten im Compose-Betrieb denselben Vertrag für `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` verwenden; eine Rückwärtskompatibilität zu früheren Ebenennamen ist nicht vorgesehen.
 
-Mit M6 ist nun auch das Frontend als eigenständiger Baustein vorhanden. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermöglicht im Archiv den Export des aktuell gewählten Runs als JSON.
+Das Frontend ist als eigenständiger Baustein Teil dieser Verteilung. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermöglicht im Archiv den Export des aktuell gewählten Runs als JSON.
 
-Mit M8 ist der lokale Zielbetrieb über `docker compose` konkretisiert. Die Verteilung besteht aus drei Containern:
+Der lokale Zielbetrieb ist über `docker compose` konkretisiert. Die Verteilung besteht aus drei Containern:
 
 - `frontend`: Nginx liefert das gebaute React/Vite-Frontend aus und leitet `/api` an die API weiter
 - `api`: FastAPI/Uvicorn-Anwendung; führt beim Start zuerst `alembic upgrade head` aus
 - `db`: PostgreSQL als relationale Persistenz für Analyse-Runs
 
-Die Kommunikation bleibt bewusst einfach: Browserzugriffe gehen gegen das Frontend; interne API-Aufrufe laufen im Compose-Netz zwischen `frontend` und `api`, Datenbankzugriffe zwischen `api` und `db`.
+Die Kommunikation bleibt bewusst einfach. Browserzugriffe gehen gegen das Frontend, interne API-Aufrufe laufen im Compose-Netz zwischen `frontend` und `api`, Datenbankzugriffe zwischen `api` und `db`.
 
 Docker Compose konkretisiert diese Sicht mit Port `4173` für die Web UI, Port `8000` für die API und Port `5432` für PostgreSQL.
 

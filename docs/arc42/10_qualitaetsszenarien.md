@@ -1,5 +1,7 @@
 # 10 Qualitätsszenarien
 
+Die folgenden Qualitätsszenarien konkretisieren die Qualitätsziele aus Kapitel 1. Sie prüfen vor allem Vertragstreue, Nachvollziehbarkeit, Reproduzierbarkeit, Sprachbehandlung und die Grenzen der KI-gestützten Analyse.
+
 ## QS1: Vertragskonforme Analyseausgabe
 
 - Szenario: Ein Nutzer startet eine Analyse über API oder UI.
@@ -9,7 +11,7 @@
 
 ## QS2: Nachvollziehbarer Analyse-Run
 
-- Szenario: Ein Maintainer oder Evaluator prüft einen bereits gelaufenen Analyse-Run.
+- Szenario: Ein Maintainer oder Reviewer prüft einen bereits gelaufenen Analyse-Run.
 - Stimulus: Ein Run wird über API oder Datenbank erneut betrachtet.
 - Erwartung: `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status` und `validation_status` sind nachvollziehbar gespeichert und über API beziehungsweise Archivansicht erklärbar.
 - Nachweis: Persistenztests, API-Detailabruf, Frontend-Archivverhalten und Datenmodell `runs`.
