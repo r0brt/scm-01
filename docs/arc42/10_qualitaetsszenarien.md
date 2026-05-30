@@ -15,8 +15,8 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 
 - Szenario: Ein Maintainer oder Reviewer prüft einen bereits gelaufenen Analyse-Run.
 - Stimulus: Ein Run wird über API oder Datenbank erneut betrachtet.
-- Erwartung: `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status` und `validation_status` sind nachvollziehbar gespeichert und über API beziehungsweise Archivansicht erklärbar.
-- Nachweis: Persistenztests, API-Detailabruf, Frontend-Archivverhalten und Datenmodell `runs`.
+- Erwartung: `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status` und `validation_status` sind nachvollziehbar gespeichert und über API beziehungsweise Archivansicht erklärbar. Die requestgebundene `correlation_id` ist zusätzlich im `X-Correlation-ID` Response-Header und im Request-Log-Kontext sichtbar.
+- Nachweis: Persistenztests, API-Detailabruf, API-Observability-Test, Frontend-Archivverhalten und Datenmodell `runs`.
 
 ## QS3: Reproduzierbare lokale Ausführung
 
@@ -64,8 +64,8 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 
 - Szenario: Ein Maintainer untersucht nachträglich, weshalb ein bestimmter Run zustande kam oder weshalb er fehlgeschlagen ist.
 - Stimulus: Ein gespeicherter Run wird über API oder Datenbank mit seinem Detailkontext geöffnet.
-- Erwartung: Der Run lässt sich mindestens über `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status`, `validation_status` und bekannte Audit-Lücken erklären. Damit bleibt der Interpretationsrahmen sichtbar, ohne einen vollständigen produktiven Ende-zu-Ende-Audit-Trail zu behaupten.
-- Nachweis: Persistenzmodell `runs`, Detailansicht der Analyse-Runs, Dokumentation zu Audit-Grenzen und gezielte Persistenztests.
+- Erwartung: Der Run lässt sich mindestens über `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status`, `validation_status`, den API-Response-Header, den Request-Log-Kontext und bekannte Audit-Lücken erklären. Damit bleibt der Interpretationsrahmen sichtbar, ohne einen vollständigen produktiven Ende-zu-Ende-Audit-Trail zu behaupten.
+- Nachweis: Persistenzmodell `runs`, Detailansicht der Analyse-Runs, Dokumentation zu Audit-Grenzen sowie gezielte Persistenz- und API-Observability-Tests.
 
 ## QS10: Transparenter Umgang mit gemessenen und nicht gemessenen NFRs
 

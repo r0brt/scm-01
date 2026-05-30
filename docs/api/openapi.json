@@ -186,7 +186,15 @@
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Successful Response",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summary": "Get Analyses"
@@ -212,7 +220,15 @@
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Successful Response",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
@@ -222,7 +238,15 @@
                 }
               }
             },
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summary": "Create Analysis"
@@ -251,7 +275,15 @@
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Successful Response",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "404": {
             "content": {
@@ -261,7 +293,15 @@
                 }
               }
             },
-            "description": "Analysis run not found"
+            "description": "Analysis run not found",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
@@ -271,7 +311,15 @@
                 }
               }
             },
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summary": "Get Analysis"
@@ -300,7 +348,15 @@
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Successful Response",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "404": {
             "content": {
@@ -310,7 +366,15 @@
                 }
               }
             },
-            "description": "Analysis run not found"
+            "description": "Analysis run not found",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
@@ -320,7 +384,15 @@
                 }
               }
             },
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summary": "Rerun Existing Analysis"
@@ -342,7 +414,15 @@
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Successful Response",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summary": "Health"
