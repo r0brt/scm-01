@@ -2,14 +2,14 @@
 
 Die folgenden Qualitätsszenarien konkretisieren die Qualitätsziele aus Kapitel 1. Sie prüfen vor allem Vertragstreue, Nachvollziehbarkeit, Reproduzierbarkeit, Sprachbehandlung und die Grenzen der KI-gestützten Analyse.
 
-Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getrennt ausgewiesen: Vertrag, Fehlerpfad, Traceability, Sprachdetektion, UI und E2E sind technisch nachgewiesen; die aggregierte NFR1-Quote, die NFR3-p95-Laufzeitmessung und das NFR5-Coverage-Ziel sind noch nicht automatisiert gemessen. Der aktuelle Stand ist in `docs/test-report.md` und `docs/acceptance-checklist.md` dokumentiert.
+Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getrennt ausgewiesen: Vertrag, Fehlerpfad, Traceability, Sprachdetektion, UI und E2E sind technisch nachgewiesen. Die NFR1-Quote ist im Offline-Fixture-Harness über das definierte Eingabeset gemessen; die NFR3-p95-Laufzeitmessung und das NFR5-Coverage-Ziel sind noch nicht automatisiert gemessen. Der aktuelle Stand ist in `docs/test-report.md` und `docs/acceptance-checklist.md` dokumentiert.
 
 ## QS1: Vertragskonforme Analyseausgabe
 
 - Szenario: Ein Nutzer startet eine Analyse über API oder UI.
 - Stimulus: Der Analyse-Workflow erzeugt ein JSON-Payload.
 - Erwartung: Das Payload ist schema-valide im aktiven SCM-Vertrag mit `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz`, oder der Run wird explizit als `failed` mit `validation_report` und `error_code` persistiert.
-- Nachweis: Contract-, Validation-, API- und Integrationstests im Backend sowie persistierte Run-Metadaten gemäss `docs/test-report.md`.
+- Nachweis: Contract-, Validation-, API- und Integrationstests im Backend, der Offline-NFR1-Messlauf über 20 Eingabe-Fixtures sowie persistierte Run-Metadaten gemäss `docs/test-report.md`.
 
 ## QS2: Nachvollziehbarer Analyse-Run
 
@@ -67,9 +67,9 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 - Erwartung: Der Run lässt sich mindestens über `input_text`, `analysis_json`, `validation_report`, `correlation_id`, `model_id`, `prompt_version`, `run_status`, `validation_status` und bekannte Audit-Lücken erklären. Damit bleibt der Interpretationsrahmen sichtbar, ohne einen vollständigen produktiven Ende-zu-Ende-Audit-Trail zu behaupten.
 - Nachweis: Persistenzmodell `runs`, Detailansicht der Analyse-Runs, Dokumentation zu Audit-Grenzen und gezielte Persistenztests.
 
-## QS10: Transparenter Umgang mit nicht gemessenen NFRs
+## QS10: Transparenter Umgang mit gemessenen und nicht gemessenen NFRs
 
-- Szenario: Ein Maintainer oder Reviewer prüft, ob quantitative Qualitätsziele tatsächlich gemessen wurden.
+- Szenario: Ein Maintainer oder Reviewer prüft, welche quantitativen Qualitätsziele tatsächlich gemessen wurden.
 - Stimulus: `docs/test-report.md`, `docs/acceptance-checklist.md` und die PRD-NFRs werden verglichen.
-- Erwartung: Die Dokumentation unterscheidet klar zwischen erfüllten technischen Nachweisen, Teilnachweisen und nicht gemessenen Zielgrössen. Insbesondere werden NFR1 `>=90%`, NFR3 `p95 < 5s` und NFR5 `80% Unit-Test-Coverage` nicht als erfüllt behauptet, solange keine passende Messung existiert.
+- Erwartung: Die Dokumentation unterscheidet klar zwischen erfüllten technischen Nachweisen, offline gemessenen Zielgrössen, Teilnachweisen und nicht gemessenen Zielgrössen. NFR1 `>=90%` wird nur als Offline-Fixture-Harness-Messung eingeordnet; NFR3 `p95 < 5s` und NFR5 `80% Unit-Test-Coverage` werden nicht als erfüllt behauptet, solange keine passende Messung existiert.
 - Nachweis: NFR-Evidenzstatus in `docs/test-report.md` und `docs/acceptance-checklist.md`.

@@ -37,15 +37,17 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_openapi_snapshot.py`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/measure_contract_compliance.py`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_nfr1_contract_compliance.py`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `758ba0d`, Run `26693076964`
+- [x] GitHub Actions `CI` auf `main` für Commit `0a01025`, Run `26693638006`
 
 ## NFR-Nachweisstatus
 
 - [x] NFR1 Teilnachweis: 20 statische Eingabe-Fixtures sowie Contract-, Validation-, API- und Workflow-Tests sind vorhanden
-- [ ] NFR1 Zielmetrik: `>=90%` schema-valide generierte Analysen ohne Repair ist noch nicht automatisiert aggregiert gemessen
+- [x] NFR1 Zielmetrik: Offline-Fixture-Harness misst `20/20` schema-valide Läufe ohne Repair (`100.0%`) gegen das definierte Eingabeset; dies ist keine Aussage zur Live-Providerqualität
 - [x] NFR2 Teilnachweis: aktiver Fehlerpfad persistiert ungültige Payloads explizit als `failed`; bounded Repair ist separat getestet, aber nicht im Standardpfad aktiv
 - [ ] NFR3 Zielmetrik: `p95 < 5s` für Analyseantworten bis 1'000 Zeichen ist noch nicht über Benchmark oder Lasttest gemessen
 - [x] NFR4 Nachvollziehbarkeit: zentrale Traceability-Metadaten werden persistiert und über API/Archiv sichtbar
@@ -76,4 +78,4 @@ Stand: 2026-05-30
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP
 - [ ] Mehrsprachigkeit ist bewusst auf `de`, `fr` und `en` begrenzt; weitere Sprachen bleiben mögliche Folgearbeit
 - [ ] Breitere E2E-Matrix, frei verfügbare E2E-Ports und produktionsnahe Observability bleiben mögliche Folgearbeit
-- [ ] Automatisierte NFR-Messungen für NFR1, NFR3 und Coverage-Anteil von NFR5 bleiben mögliche Folgearbeit
+- [ ] Automatisierte NFR-Messungen für NFR3 und den Coverage-Anteil von NFR5 bleiben mögliche Folgearbeit

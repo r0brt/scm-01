@@ -1,7 +1,7 @@
 # Test Report
 
 Stand: 2026-05-30
-Baseline-Commit: `758ba0d`
+Baseline-Commit: `0a01025`
 
 Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
 
@@ -27,7 +27,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `52 passed in 0.93s`
+- `54 passed in 0.98s`
 
 ### OpenAPI Snapshot
 
@@ -41,6 +41,27 @@ Resultat:
 
 - `docs/api/openapi.json` wurde aus `create_app().openapi()` erzeugt
 - `2 passed in 0.55s`
+
+### NFR1 Contract Compliance
+
+```bash
+cd backend
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/measure_contract_compliance.py
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_nfr1_contract_compliance.py
+```
+
+Resultat:
+
+- `NFR1 contract compliance: 20/20 valid without repair (100.0%)`
+- `Minimum threshold: 90.0%`
+- `Repair attempts: 0`
+- `2 passed in 0.35s`
+
+Hinweis:
+
+- die Messung läuft offline mit deterministischen Fixture-Doubles für Spracherkennung und Analyseerzeugung
+- sie prüft den lokalen Analyse-, Validierungs- und Persistenzpfad gegen das definierte Eingabeset
+- sie ist kein Qualitätsnachweis für Antworten eines externen LLM-Providers
 
 ### Frontend Unit/UI
 
@@ -114,11 +135,11 @@ Beobachtung:
 
 ## NFR-Evidenzstatus
 
-Die folgenden Punkte trennen bewusst zwischen vorhandenen Nachweisen und noch nicht gemessenen Zielgrössen. Damit bleiben PRD-Anforderungen nachvollziehbar, ohne aus lokalen Smoke-, Contract- oder UI-Tests statistische Aussagen abzuleiten.
+Die folgenden Punkte trennen bewusst zwischen vorhandenen Nachweisen, offline gemessenen Zielgrössen und weiterhin nicht gemessenen Zielgrössen. Damit bleiben PRD-Anforderungen nachvollziehbar, ohne aus lokalen Smoke-, Contract- oder UI-Tests statistische Aussagen für nicht gemessene Bereiche abzuleiten.
 
 | NFR | Status | Einordnung |
 | --- | --- | --- |
-| NFR1 Contract Compliance `>=90%` | Teilnachweis vorhanden, Zielmetrik nicht gemessen | Es existieren 20 statische Eingabe-Fixtures sowie Contract-, Validation-, API- und Workflow-Tests. Es gibt aber noch kein automatisiertes Aggregationsscript, das generierte Analysen über dieses Testset ausführt und die Quote schema-valider Läufe ohne Repair misst. |
+| NFR1 Contract Compliance `>=90%` | Offline gemessen | `scripts/measure_contract_compliance.py` führt die 20 statischen Eingabe-Fixtures durch den lokalen Analyse-Workflow mit deterministischen Fixture-Doubles. Ergebnis: `20/20` schema-valide Läufe ohne Repair (`100.0%`). Dies misst nicht die Qualität eines externen LLM-Providers. |
 | NFR2 Fehlerpfad/Repair | Teilweise nachgewiesen | Der aktive Standardpfad persistiert strukturell ungültige Payloads explizit als `failed`. Die bounded Repair-Funktion ist getestet, aber nicht im Standardpfad verdrahtet. |
 | NFR3 Performance `p95 < 5s` | Nicht gemessen | Es gibt derzeit keinen Benchmark-, Last- oder p95-Messlauf für Analyseantwortzeiten bis 1'000 Zeichen. Die unten genannten Test- und Build-Dauern sind keine NFR3-Messung. |
 | NFR4 Nachvollziehbarkeit | Nachgewiesen im MVP-Rahmen | Run-Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben sind implementiert, persistiert und in Tests/Doku sichtbar. |
@@ -131,15 +152,16 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - versionierter OpenAPI-Snapshot für den API-v1-Vertrag inklusive Drift-Test gegen die FastAPI-Laufzeit
+- Offline-NFR1-Messlauf über 20 Eingabe-Fixtures mit `20/20` schema-validen Läufen ohne Repair
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Nachweis auf `main`-Commit `758ba0d`
+- aktueller Nachweis auf `main`-Commit `0a01025`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `758ba0d` war erfolgreich (`CI`, Run `26693076964`, 2026-05-30T19:39:08Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `0a01025` war erfolgreich (`CI`, Run `26693638006`, 2026-05-30T20:05:04Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
@@ -148,5 +170,6 @@ GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quali
 - der lokale E2E-Lauf nutzt eigene dedizierte Ports statt `4173` und `8000`, kann aber weiterhin durch benutzerdefinierte Konflikte auf den gewählten E2E-Ports blockiert werden
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
+- der NFR1-Messlauf nutzt deterministische Fixture-Doubles und ersetzt keinen Qualitätsnachweis für einen externen LLM-Provider
 - Compose wurde lokal als Start-/Status-/HTTP-/Stop-Nachweis verifiziert; dies ersetzt noch keinen produktionsnahen Betriebs- oder Lasttest
-- NFR1, NFR3 und der Coverage-Anteil von NFR5 sind als Zielgrössen dokumentiert, aber noch nicht automatisiert gemessen
+- NFR3 und der Coverage-Anteil von NFR5 sind als Zielgrössen dokumentiert, aber noch nicht automatisiert gemessen
