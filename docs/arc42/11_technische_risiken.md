@@ -30,7 +30,7 @@ Die technischen Risiken beschreiben die wichtigsten Grenzen des aktuellen MVP. S
 
 - Risiko: Die fachliche Qualität der sechs Analyseebenen hängt langfristig vom verwendeten Modell und Prompt ab.
 - Auswirkung: Vertragstreue ist technisch abgesichert, semantische Qualität jedoch nur begrenzt objektivierbar.
-- Gegenmassnahme: Prompt-Versionierung, `model_id`-Persistenz, Validation-/Repair-Mechanik und explizite Fehlersemantik statt stiller Fallbacks. Die Dokumentation beschreibt SCM deshalb als Analysehilfe und nicht als Wahrheitsmaschine.
+- Gegenmassnahme: Prompt-Versionierung, `model_id`-Persistenz, aktive Validierung, vorbereitete Repair-Mechanik und explizite Fehlersemantik statt stiller Fallbacks. Die Dokumentation beschreibt SCM deshalb als Analysehilfe und nicht als Wahrheitsmaschine.
 
 ## R6: Testkonfigurationsdrift zwischen Unit- und E2E-Tooling
 

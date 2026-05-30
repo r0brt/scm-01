@@ -34,7 +34,8 @@ def _build_analysis_adapter(analysis_adapter: AnalysisGenerator | None) -> Analy
 
     provider = os.getenv("SCM_ANALYSIS_PROVIDER", "stub").strip().lower()
     if provider == "openai":
-        return OpenAIAnalysisGenerator()
+        model_id = os.getenv("SCM_OPENAI_MODEL", "gpt-5.2").strip() or "gpt-5.2"
+        return OpenAIAnalysisGenerator(model_id=model_id)
 
     return StubAnalysisGenerator()
 

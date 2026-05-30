@@ -59,11 +59,11 @@ SCM ist ein Instrument zur strukturellen Klärung komplexer gesellschaftlicher P
 
 * **UC1 — Problemtext erfassen**
 * **UC2 — Schichtenanalyse durchführen (6 Ebenen)**
-* **UC3 — Ergebnis validieren & reparieren**
+* **UC3 — Ergebnis validieren & Repair-Grenze behandeln**
 
   * Schema-Validierung (strict)
   * Konsistenzchecks
-  * Repair-Loop: max. 2 Re-Generationen
+  * Aktueller Standardpfad: Contract-Verletzungen werden als `failed` persistiert; bounded Repair ist als Guardrail vorbereitet, aber nicht automatisch verdrahtet.
 * **UC4 — Ergebnis anzeigen (Filterstrecke)**
 * **UC5 — Persistieren & abrufen**
 
@@ -75,7 +75,7 @@ SCM ist ein Instrument zur strukturellen Klärung komplexer gesellschaftlicher P
 * **FR1:** API Endpoint zur Analyse (synchron).
 * **FR2:** Striktes JSON Output-Format (Contract).
 * **FR3:** Schema-Validierung vor Persistenz.
-* **FR4:** Repair-Loop bei Contract-Verletzung (max 2 Retries).
+* **FR4:** Bounded Repair ist als Guardrail für Contract-Verletzungen vorbereitet (max. 2 Retries); der aktive Standardpfad persistiert ungültige Payloads explizit als `failed`.
 * **FR5:** Speicherung in relationaler DB.
 * **FR6:** UI zeigt die 6 Stufen als Pipeline (Filterstrecke).
 * **FR7:** Anzeige der Metadaten (Prompt-Version, Modell, Timestamp, Status).
@@ -85,7 +85,7 @@ SCM ist ein Instrument zur strukturellen Klärung komplexer gesellschaftlicher P
 ## 9. Qualitätsanforderungen (SMART, MVP)
 
 * **NFR1 — Contract Compliance:** In einem definierten Testset bestehen mindestens 90% der Analysen die Schema-Validierung ohne Repair-Loop.
-* **NFR2 — Robustheit Repair:** Bei Schema-Fehlern wird max. 2x repariert; danach wird der Lauf als `failed` markiert und gespeichert.
+* **NFR2 — Robustheit Fehlerpfad/Repair:** Bei Schema-Fehlern wird der Lauf im aktuellen Standardpfad als `failed` markiert und gespeichert. Falls der vorbereitete Repair-Pfad aktiviert wird, bleibt er auf max. 2 Versuche begrenzt und endet danach ebenfalls explizit als `failed`.
 * **NFR3 — Performance:** p95 Antwortzeit Analyse (ohne Cold Start) < 5s bei Texten bis 1'000 Zeichen.
 * **NFR4 — Nachvollziehbarkeit:** Jeder gespeicherte Lauf enthält Prompt-Version, Modell-ID, Timestamp, Validierungsstatus und Run-Status.
 * **NFR5 — Wartbarkeit/Testbarkeit:** Mindestens 80% Unit-Test-Coverage auf Domain/Application Layer (ohne UI). Zusätzlich: mindestens 1 E2E-Test für UJ1 (kritischer Pfad).
@@ -101,7 +101,7 @@ SCM ist ein Instrument zur strukturellen Klärung komplexer gesellschaftlicher P
 ### 10.2 LLM Parameter (MVP Defaults)
 
 * Temperatur: low (stabilitätsorientiert)
-* Max retries: 2 (Repair-Loop)
+* Repair-Guardrail: max. 2 Versuche, falls der separate Repair-Pfad aktiviert wird.
 * Prompt ist versioniert (siehe `prompt_version`)
 
 ### 10.3 Rerun Semantik
@@ -154,7 +154,7 @@ Zu speichern:
 
 ## 15. Risiken & Mitigations
 
-* **R1:** LLM Format drift → strict schema + bounded repair.
+* **R1:** LLM Format drift → strict schema, expliziter Fehlerlauf und bounded Repair als vorbereitete Guardrail.
 * **R2:** Halluzination bei Ursachen → neutraler Prompt, „Hypothesen“-Wording, keine Faktbehauptungs-Sprache.
 * **R3:** Scope creep → NGs strikt, Backlog separat.
 * **R4:** UI Aufwand → pipeline-first, Fancy später.

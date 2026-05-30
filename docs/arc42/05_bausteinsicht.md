@@ -58,7 +58,7 @@ Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/
 | `Pipeline View Model` | Deterministische Ableitung von UI-Zuständen aus Run, Loading und Reveal Token | `frontend/src/pipeline.ts` |
 | `Frontend Types` | Typen für Run, Analyse-JSON und Pipeline-Viewmodelle | `frontend/src/types.ts` |
 
-- `App.tsx` orchestriert Texteingabe, API-Aufrufe, Run-Selektion, Workspace-Tabs (`Pipeline`/`Archiv`), Export und den globalen Fehlerzustand.
+- `App.tsx` orchestriert Texteingabe, API-Aufrufe, Run-Selektion, Workspace-Tabs (`Analyse`/`Archiv`), Export und den globalen Fehlerzustand.
 - `AnalysisComposer` kapselt die Eingabemaske für den Rohtext und den Start der Analyse.
 - `usePipelineViewModel` in `frontend/src/pipeline.ts` transformiert den gewählten Run in einen deterministischen UI-Zustand mit den Modi `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`.
 - `PipelineView` rendert die zwei Frontend-Betriebsarten der Filterstrecke:

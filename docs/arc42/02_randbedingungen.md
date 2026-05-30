@@ -11,7 +11,7 @@
 
 - Contract-First-Entwicklung für Analyse-Payloads.
 - Docs-as-code mit arc42- und ADR-Updates bei architekturrelevanten Änderungen.
-- Verbindliche Tests und reproduzierbare Commands pro Meilenstein.
+- Verbindliche Tests und reproduzierbare Commands für relevante Änderungen.
 
 ## Organisatorische Randbedingungen
 
