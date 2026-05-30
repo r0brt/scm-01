@@ -14,20 +14,20 @@ Providerzugriff wird hinter einem expliziten Adapter-Port gekapselt. Prompt-Date
 
 ## Kontext
 
-Die Analyseerzeugung ist modellabhaengig und soll spaeter mit einem echten Provider verbunden werden, ohne API, Validierung oder Persistenz direkt an einen einzelnen Anbieter zu koppeln. Gleichzeitig muss die Herkunft eines erzeugten Analyse-Runs nachvollziehbar bleiben.
+Die Analyseerzeugung ist modellabhängig und mit Stub-, Test- und OpenAI-Pfad bewusst hinter derselben Schnittstelle gekapselt. API, Validierung und Persistenz sollen nicht direkt an einen einzelnen Anbieter gekoppelt werden. Gleichzeitig muss die Herkunft eines erzeugten Analyse-Runs nachvollziehbar bleiben.
 
 ## Konsequenzen
 
 Positiv:
 
-- Stub-, Test- und spaetere Provider-Implementierungen bleiben austauschbar.
+- Stub-, Test- und OpenAI-Implementierungen bleiben austauschbar.
 - Prompt- und Modellherkunft eines Runs ist auditierbar.
-- Tests koennen komplett ohne Netz laufen.
+- Tests können komplett ohne Netz laufen.
 
 Negativ:
 
 - Zusätzliche Abstraktionsebene im Backend.
-- Ein echter Provideradapter muss spaeter noch separat operationalisiert werden.
+- Der OpenAI-Pfad benötigt gültige Runtime-Konfiguration und bleibt von externer Provider-Verfügbarkeit abhängig.
 
 ## Betrachtete Alternativen
 
@@ -37,4 +37,4 @@ Negativ:
 
 ## Begründung
 
-Der Adapter-Port ist die passende technische Grenze fuer Zuverlaessigkeit, Testbarkeit und spaetere Evolvierbarkeit. Prompt-Versionierung und persistierte Traceability-Felder machen Analyseergebnisse nachvollziehbar, ohne die restliche Architektur an einen Provider zu koppeln.
+Der Adapter-Port ist die passende technische Grenze für Zuverlässigkeit, Testbarkeit und spätere Evolvierbarkeit. Prompt-Versionierung und persistierte Traceability-Felder machen Analyseergebnisse nachvollziehbar, ohne die restliche Architektur an einen Provider zu koppeln.

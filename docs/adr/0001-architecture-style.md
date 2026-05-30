@@ -14,14 +14,14 @@ Als initialer Architekturstil wird ein modularer Monolith mit klaren internen Mo
 
 ## Kontext
 
-Das Projekt startet als Solo-Umsetzung mit strengen Anforderungen an Reproduzierbarkeit, Vertragsvalidierung und Dokumentation. Für frühe Meilensteine ist geringe Betriebs- und Integrationskomplexität entscheidend, bei gleichzeitiger Evolvierbarkeit.
+Das Projekt startet als Solo-Umsetzung mit strengen Anforderungen an Reproduzierbarkeit, Vertragsvalidierung und Dokumentation. Für die frühen Projektphasen ist geringe Betriebs- und Integrationskomplexität entscheidend, bei gleichzeitiger Evolvierbarkeit.
 
 ## Konsequenzen
 
 Positiv:
 
 - Schnellere Implementierung und Tests mit weniger verteilten Fehlermodi.
-- Einfacheres lokales Setup und Debugging für milestone-basierte Lieferung.
+- Einfacheres lokales Setup und Debugging für eine schrittweise Lieferung.
 - Höhere Konsistenz für Contract-First-Validierung und Persistenzlogik.
 
 Negativ:

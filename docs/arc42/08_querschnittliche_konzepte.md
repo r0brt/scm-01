@@ -2,7 +2,7 @@
 
 ## Analyse-Contract
 
-Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Quelle dafür ist `docs/scm.md`. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusätzliche Felder sind nicht erlaubt. Vertiefte semantische Prüfungen erfolgen erst in den späteren Validierungs- und Repair-Milestones.
+Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Quelle dafür ist `docs/scm.md`. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusätzliche Felder sind nicht erlaubt. Die aktive Validierung prüft Struktur und Modellvertrag; vertiefte semantische Prüfungen bleiben im MVP bewusst begrenzt.
 
 Jede Ebene folgt derselben Struktur mit `beschreibung` und `eintraege[].text`. Der Vertrag wird in Prompt, JSON Schema, Pydantic-Modellen, Persistenz-Payload und Frontend-Typen konsistent nachgezogen.
 
