@@ -6,9 +6,11 @@ SCM umfasst im MVP das Frontend, die Backend-API und die lokale Persistenz der A
 
 SCM ist dabei ein Analyse- und Unterstützungswerkzeug. Das System strukturiert Eingaben, macht Verarbeitungszustände sichtbar und liefert einen fachlich vorbereiteten Analysevorschlag. Es trifft jedoch keine autonomen Entscheidungen über Personen, Situationen oder organisatorische Massnahmen und ersetzt keine menschliche Beurteilung.
 
-## Kontextdiagramm (textuell)
+## Kontextdiagramm (C1)
 
-Als visuelle Ergänzung dient [docs/diagrams/system-context.puml](/Users/robert/code/scm-01/docs/diagrams/system-context.puml:1). Die C1-Sicht ist zusätzlich als Structurizr-Quelle in [docs/diagrams/structurizr/c1-system-context.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c1-system-context.dsl:1) dokumentiert.
+![C1 System Context](../diagrams/rendered/c1-system-context.svg)
+
+Die C1-Sicht ist als Structurizr-Quelle in [docs/diagrams/structurizr/c1-system-context.dsl](../diagrams/structurizr/c1-system-context.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c1-system-context.svg](../diagrams/rendered/c1-system-context.svg) gerendert.
 
 Die C1-Sicht zeigt SCM als ein System innerhalb einer bewusst engen Systemgrenze. Innerhalb dieser Grenze liegen Web UI, Backend/API und lokale Persistenz; ausserhalb liegen die menschliche Nutzung und der optionale externe LLM Provider. Diese Sicht ist wichtig, weil sie die KI-Abhängigkeit nicht als internes Detail versteckt, sondern als bewusst benanntes Umsystem ausweist.
 
@@ -28,7 +30,7 @@ Die C1-Sicht zeigt SCM als ein System innerhalb einer bewusst engen Systemgrenze
 
 Die Systemgrenze von SCM endet bei der lokalen UI/API/DB-Kombination. Browser-Nutzung, menschliche Interpretation der Analyse und ein optional angebundener externer KI-Anbieter bilden den relevanten Umgebungskontext ausserhalb dieser Grenze.
 
-Für Datenschutz-, Transparenz- und Governance-Annahmen ergänzt [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1) dieses Kapitel. Das Zusatzdokument vertieft insbesondere Datenarten, externe Empfänger und MVP-Grenzen, während arc42 die primäre Architekturerzählung bleibt.
+Für Datenschutz-, Transparenz- und Governance-Annahmen ergänzt [docs/privacy-and-ai-governance.md](../privacy-and-ai-governance.md) dieses Kapitel. Das Zusatzdokument vertieft insbesondere Datenarten, externe Empfänger und MVP-Grenzen, während arc42 die primäre Architekturerzählung bleibt.
 
 ## Externe Schnittstellen (MVP-Stand)
 

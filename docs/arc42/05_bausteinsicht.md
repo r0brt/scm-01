@@ -2,7 +2,9 @@
 
 ## Level-1-Zerlegung
 
-Als visuelle Ergänzung der Level-1-Sicht dient [docs/diagrams/building-blocks-level1.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level1.puml:1). Als C2-Containersicht dient [docs/diagrams/structurizr/c2-scm-container.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c2-scm-container.dsl:1).
+![C2 SCM Container](../diagrams/rendered/c2-scm-container.svg)
+
+Die C2-Containersicht ist als Structurizr-Quelle in [docs/diagrams/structurizr/c2-scm-container.dsl](../diagrams/structurizr/c2-scm-container.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c2-scm-container.svg](../diagrams/rendered/c2-scm-container.svg) gerendert.
 
 Die C2-Sicht trennt die interne SCM-Laufzeit in `Web UI`, `Backend/API` und `Persistenz`. Der externe `LLM Provider` bleibt ausserhalb der SCM-Systemgrenze und wird nur vom Backend/API-Container über den Adapterpfad angesprochen.
 
@@ -29,7 +31,9 @@ Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue A
 
 ## Backend-Zerlegung (Level 2)
 
-Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-blocks-level2-backend.puml](/Users/robert/code/scm-01/docs/diagrams/building-blocks-level2-backend.puml:1). Als C3-Komponentensicht des Backends dient [docs/diagrams/structurizr/c3-backend-components.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c3-backend-components.dsl:1).
+![C3 Backend Components](../diagrams/rendered/c3-backend-components.svg)
+
+Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-backend-components.dsl](../diagrams/structurizr/c3-backend-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-backend-components.svg](../diagrams/rendered/c3-backend-components.svg) gerendert.
 
 | Komponente | Verantwortung | Fundstelle |
 | --- | --- | --- |
@@ -51,7 +55,9 @@ Als visuelle Ergänzung der Backend-Zerlegung dient [docs/diagrams/building-bloc
 
 ## Frontend-Zerlegung (aktueller Stand)
 
-Als C3-Komponentensicht der Web UI dient [docs/diagrams/structurizr/c3-web-ui-components.dsl](/Users/robert/code/scm-01/docs/diagrams/structurizr/c3-web-ui-components.dsl:1).
+![C3 Web UI Components](../diagrams/rendered/c3-web-ui-components.svg)
+
+Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-web-ui-components.dsl](../diagrams/structurizr/c3-web-ui-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-web-ui-components.svg](../diagrams/rendered/c3-web-ui-components.svg) gerendert.
 
 | Komponente | Verantwortung | Fundstelle |
 | --- | --- | --- |

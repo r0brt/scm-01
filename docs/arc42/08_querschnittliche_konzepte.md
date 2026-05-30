@@ -28,7 +28,9 @@ Nach der strukturellen Validierung prüft das Backend zusätzlich die Sprache de
 
 Analyse-Runs werden relational in einer einzelnen Tabelle `runs` gespeichert. Persistiert werden Eingabetext, Analyse-JSON, Validierungsreport sowie die für Nachvollziehbarkeit relevanten Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben.
 
-Das ERD in [docs/diagrams/db-erd.puml](/Users/robert/code/scm-01/docs/diagrams/db-erd.puml:1) bildet den aktuellen Stand der Tabelle `runs` ab. Es enthält neben dem Primärschlüssel `id` auch `correlation_id`, das über die Migration `20260529_01_add_correlation_id_to_runs.py` eingeführt wurde und in der API-Antwort `AnalysisRunResponse` sichtbar ist.
+![ERD runs](../diagrams/rendered/db-erd.svg)
+
+Das ERD bildet den aktuellen Stand der Tabelle `runs` ab. Die Quelle liegt in [docs/diagrams/db-erd.puml](../diagrams/db-erd.puml), das gerenderte SVG in [docs/diagrams/rendered/db-erd.svg](../diagrams/rendered/db-erd.svg). Es enthält neben dem Primärschlüssel `id` auch `correlation_id`, das über die Migration `20260529_01_add_correlation_id_to_runs.py` eingeführt wurde und in der API-Antwort `AnalysisRunResponse` sichtbar ist.
 
 Schemaänderungen werden nicht implizit aus ORM-Modellen erzeugt, sondern über Alembic-Migrationen versioniert. Dadurch bleiben Datenbankstruktur und Anwendungsmodell reproduzierbar und auditiert.
 
@@ -42,7 +44,7 @@ Transparenz entsteht im MVP über offen dokumentierte Datenpfade, die sichtbare 
 
 Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Die Architektur macht diese Grenzen explizit, statt regulatorische Vollständigkeit zu behaupten.
 
-Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](/Users/robert/code/scm-01/docs/privacy-and-ai-governance.md:1).
+Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](../privacy-and-ai-governance.md).
 
 ## API-Fehlervertrag
 

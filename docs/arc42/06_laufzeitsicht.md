@@ -9,7 +9,11 @@
 
 ## Szenario 2: Analyse eines Problemtexts via API v1
 
-Die folgende textuelle Abfolge wird zusätzlich durch [docs/diagrams/uj1-sequence.puml](/Users/robert/code/scm-01/docs/diagrams/uj1-sequence.puml:1) visualisiert.
+Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert.
+
+![UJ1 Sequenzdiagramm](../diagrams/rendered/uj1-sequence.svg)
+
+Die Quelle liegt in [docs/diagrams/uj1-sequence.puml](../diagrams/uj1-sequence.puml), das gerenderte SVG in [docs/diagrams/rendered/uj1-sequence.svg](../diagrams/rendered/uj1-sequence.svg).
 
 Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreichen Läufen. Auch Fehlerläufe werden persistiert, damit Sprachfehler, strukturelle Validierungsfehler und Ausgabesprachfehler später nachvollziehbar bleiben. Ein Repair-Schritt ist als Guardrail vorbereitet, aber nicht Teil dieses Standardablaufs.
 

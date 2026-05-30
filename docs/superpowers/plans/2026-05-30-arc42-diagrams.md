@@ -600,6 +600,61 @@ git commit -m "docs: integrate architecture diagrams into arc42"
 
 Expected: commit succeeds. If chapter 09 was not modified, omit it from `git add`.
 
+### Task 5a: Render SVG Diagrams and Remove Superseded Sources
+
+**Files:**
+- Create: `docs/diagrams/rendered/c1-system-context.svg`
+- Create: `docs/diagrams/rendered/c2-scm-container.svg`
+- Create: `docs/diagrams/rendered/c3-backend-components.svg`
+- Create: `docs/diagrams/rendered/c3-web-ui-components.svg`
+- Create: `docs/diagrams/rendered/uj1-sequence.svg`
+- Create: `docs/diagrams/rendered/db-erd.svg`
+- Modify: `docs/diagrams/README.md`
+- Modify: `docs/arc42/03_systemkontext_und_abgrenzung.md`
+- Modify: `docs/arc42/05_bausteinsicht.md`
+- Modify: `docs/arc42/06_laufzeitsicht.md`
+- Modify: `docs/arc42/07_verteilungssicht.md`
+- Modify: `docs/arc42/08_querschnittliche_konzepte.md`
+- Delete: `docs/diagrams/system-context.puml`
+- Delete: `docs/diagrams/container-view.puml`
+- Delete: `docs/diagrams/building-blocks-level1.puml`
+- Delete: `docs/diagrams/building-blocks-level2-backend.puml`
+
+- [ ] **Step 1: Render Structurizr DSL sources to C4-PlantUML and SVG**
+
+Run the existing Structurizr Docker image to export each DSL source to C4-PlantUML, then render the generated PlantUML files to SVG with the PlantUML Docker image.
+
+Expected: `docs/diagrams/rendered/` contains SVGs for C1, C2, Backend C3 and Web UI C3.
+
+- [ ] **Step 2: Render PlantUML sequence and ERD sources to SVG**
+
+Run PlantUML SVG export for `docs/diagrams/uj1-sequence.puml` and `docs/diagrams/db-erd.puml`.
+
+Expected: `docs/diagrams/rendered/uj1-sequence.svg` and `docs/diagrams/rendered/db-erd.svg` exist.
+
+- [ ] **Step 3: Update arc42 chapters to embed rendered diagrams**
+
+Replace source-only references with Markdown image embeds that point to the SVGs while keeping source links to the `.dsl` and `.puml` files.
+
+Expected: chapters 03, 05, 06, 07 and 08 show rendered diagrams when viewed as Markdown.
+
+- [ ] **Step 4: Remove superseded PlantUML structure diagrams**
+
+Delete the old PlantUML structure diagrams that are now replaced by the C1-C3 Structurizr sources and rendered SVGs.
+
+Expected: `system-context.puml`, `container-view.puml`, `building-blocks-level1.puml` and `building-blocks-level2-backend.puml` are gone, while `uj1-sequence.puml` and `db-erd.puml` remain.
+
+- [ ] **Step 5: Verify references and commit**
+
+Run:
+
+```bash
+rg -n "system-context\.puml|container-view\.puml|building-blocks-level1\.puml|building-blocks-level2-backend\.puml" docs/arc42 docs/diagrams/README.md
+git diff --check
+```
+
+Expected: no stale references, no whitespace errors.
+
 ### Task 6: Final Documentation Verification
 
 **Files:**
