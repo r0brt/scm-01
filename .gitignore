@@ -2,5 +2,6 @@
 __pycache__/
 backend/e2e.db
 backend/scm.db
+backend/.coverage
 .env
 .env (from backup)

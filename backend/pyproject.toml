@@ -17,6 +17,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+  "coverage>=7.6,<8",
   "httpx>=0.28,<0.29",
   "pytest>=8.3,<9",
   "ruff>=0.11,<0.12",
@@ -25,6 +26,19 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+source = [
+  "app/language",
+  "app/llm",
+  "app/models",
+  "app/repositories",
+  "app/services",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
 
 [tool.ruff]
 line-length = 100

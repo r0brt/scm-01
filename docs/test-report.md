@@ -1,7 +1,7 @@
 # Test Report
 
 Stand: 2026-05-30
-Baseline-Commit: `b7bc6e3`
+Baseline-Commit: `491450a`
 
 Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
 
@@ -27,7 +27,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `58 passed in 1.29s`
+- `59 passed in 1.14s`
 
 ### OpenAPI Snapshot
 
@@ -86,6 +86,26 @@ Hinweis:
 - die Messung läuft offline über den FastAPI-TestClient mit deterministischen Fixture-Doubles
 - App-Erzeugung, Schema-Initialisierung und ein Warm-up-Request liegen ausserhalb der gemessenen Requests
 - sie misst den lokalen API-/Analysepfad ohne externen LLM-Provider, ohne Docker/Compose und ohne Lasttestcharakter
+
+### NFR5 Backend Coverage
+
+```bash
+cd backend
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 coverage run -m pytest -q tests/contracts/test_analysis_models.py tests/contracts/test_analysis_schema.py tests/language tests/llm tests/services tests/validation tests/persistence
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 coverage report
+```
+
+Resultat:
+
+- `34 passed in 1.21s`
+- `TOTAL 232 12 95%`
+- `fail_under = 80`
+
+Hinweis:
+
+- der Messbereich ist in `backend/pyproject.toml` auf `app/language`, `app/llm`, `app/models`, `app/repositories` und `app/services` begrenzt
+- damit wird der im PRD beschriebene Domain-/Application-Layer ohne UI gemessen
+- API-Schicht, App-Bootstrapping, Datenbank-Session-Infrastruktur, Alembic-Migrationen und Frontend-Code sind bewusst nicht Teil dieser Coverage-Kennzahl
 
 ### Rerun Fehlerfälle
 
@@ -176,7 +196,7 @@ Beobachtung:
 
 ## NFR-Evidenzstatus
 
-Die folgenden Punkte trennen bewusst zwischen vorhandenen Nachweisen, offline gemessenen Zielgrössen und weiterhin nicht gemessenen Zielgrössen. Damit bleiben PRD-Anforderungen nachvollziehbar, ohne aus lokalen Smoke-, Contract- oder UI-Tests statistische Aussagen für nicht gemessene Bereiche abzuleiten.
+Die folgenden Punkte trennen bewusst zwischen vorhandenen Nachweisen, offline gemessenen Zielgrössen und bekannten Grenzen. Damit bleiben PRD-Anforderungen nachvollziehbar, ohne aus lokalen Smoke-, Contract- oder UI-Tests statistische Aussagen für nicht gemessene Bereiche abzuleiten.
 
 | NFR | Status | Einordnung |
 | --- | --- | --- |
@@ -184,7 +204,7 @@ Die folgenden Punkte trennen bewusst zwischen vorhandenen Nachweisen, offline ge
 | NFR2 Fehlerpfad/Repair | Teilweise nachgewiesen | Der aktive Standardpfad persistiert strukturell ungültige Payloads explizit als `failed`. Die bounded Repair-Funktion ist getestet, aber nicht im Standardpfad verdrahtet. |
 | NFR3 Performance `p95 < 5s` | Offline gemessen | `scripts/measure_nfr3_performance.py` misst 20 statische Eingabe-Fixtures plus einen deterministischen 1'000-Zeichen-Grenzfall über die lokale API mit deterministischen Fixture-Doubles. Ergebnis: `21/21` erfolgreich, `p95 0.003s`, langsamster Request `0.005s`. Dies ist kein Lasttest und keine Aussage zur Latenz eines externen LLM-Providers. |
 | NFR4 Nachvollziehbarkeit | Nachgewiesen im MVP-Rahmen | Run-Metadaten wie `correlation_id`, `prompt_version`, `model_id`, `run_status`, `validation_status` und Fehlerangaben sind implementiert, persistiert und in Tests/Doku sichtbar. |
-| NFR5 Wartbarkeit/Testbarkeit | Teilnachweis vorhanden, Coverage-Ziel nicht gemessen | Backend- und Frontend-Tests sowie ein UJ1-E2E-Test laufen. Das Ziel `80% Unit-Test-Coverage` ist nicht gemessen, weil kein Coverage-Tooling konfiguriert ist. |
+| NFR5 Wartbarkeit/Testbarkeit | Gemessen im Backend-Domain-/Application-Scope | Die Coverage-Konfiguration misst `app/language`, `app/llm`, `app/models`, `app/repositories` und `app/services` mit backendnahen Contract-, Language-, LLM-, Service-, Validation- und Persistence-Tests. Ergebnis: `95%` Statement Coverage gegen `fail_under = 80`. Frontend und API-/Bootstrapping-Code sind nicht Teil dieser PRD-Kennzahl. |
 | NFR6 Sprachdetektion | Nachgewiesen im MVP-Rahmen | Sprachdetektion, Confidence-Schwelle und Fehlerfälle sind im Backend implementiert und über Tests abgesichert. |
 
 ## Abgedeckte Nachweise
@@ -195,16 +215,17 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - versionierter OpenAPI-Snapshot für den API-v1-Vertrag inklusive Drift-Test gegen die FastAPI-Laufzeit
 - Offline-NFR1-Messlauf über 20 Eingabe-Fixtures mit `20/20` schema-validen Läufen ohne Repair
 - Offline-NFR3-Messlauf über 21 API-Analysen inklusive 1'000-Zeichen-Grenzfall mit `p95 0.003s` gegen den Zielwert `< 5s`
+- NFR5-Backend-Coverage im Domain-/Application-Scope mit `95%` gegen den Zielwert `>=80%`
 - Rerun aus fehlgeschlagenen Quell-Runs als neuer unveränderlicher Analyseversuch
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Nachweis auf `main`-Commit `b7bc6e3`
+- aktueller Nachweis auf `main`-Commit `491450a`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `b7bc6e3` war erfolgreich (`CI`, Run `26694380069`, 2026-05-30T20:39:48Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `491450a` war erfolgreich (`CI`, Run `26695035311`, 2026-05-30T21:11:36Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
@@ -215,5 +236,5 @@ GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quali
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
 - der NFR1-Messlauf nutzt deterministische Fixture-Doubles und ersetzt keinen Qualitätsnachweis für einen externen LLM-Provider
 - der NFR3-Messlauf nutzt deterministische Fixture-Doubles, FastAPI-TestClient und lokale SQLite-Persistenz; er ersetzt keinen produktionsnahen Lasttest und keine Messung mit externem LLM-Provider
+- die NFR5-Coverage-Kennzahl bezieht sich auf den Backend-Domain-/Application-Scope gemäss PRD und nicht auf UI, API-Bootstrapping oder produktionsnahe Systemabdeckung
 - Compose wurde lokal als Start-/Status-/HTTP-/Stop-Nachweis verifiziert; dies ersetzt noch keinen produktionsnahen Betriebs- oder Lasttest
-- der Coverage-Anteil von NFR5 ist als Zielgrösse dokumentiert, aber noch nicht automatisiert gemessen
