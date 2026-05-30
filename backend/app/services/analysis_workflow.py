@@ -140,7 +140,7 @@ def create_analysis_run(
         run_status=validation.run_status,
         validation_status=validation.validation_status,
         error_code=validation.error_code,
-        error_reason=None if validation.error_code is None else "Stub validation failed",
+        error_reason=None if validation.error_code is None else "Analysis validation failed",
     )
 
 
