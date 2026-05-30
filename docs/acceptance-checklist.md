@@ -29,7 +29,7 @@ Stand: 2026-05-30
 - [x] AC2: schema-valide Ausgabe oder expliziter `failed`-Zustand mit Report
 - [x] AC3: UI zeigt Pipeline oder klaren Fehlerzustand
 - [x] AC4: Analysen sind persistiert und abrufbar
-- [x] AC5: Unit-/Integrations-Tests reproduzierbar; ein UJ1-E2E-Testpfad ist vorhanden und dokumentiert
+- [x] AC5: Unit-/Integrations-Tests reproduzierbar; ein frontendseitiger UJ1-E2E-Testpfad mit gemockter Analyse-API ist vorhanden und dokumentiert
 - [x] AC6: lokale Sprachdetektion für `de`, `fr` und `en` ist umgesetzt
 - [x] AC7: API-v1-Endpunkte sind implementiert und dokumentiert
 - [x] AC8: Sprachdetektionsfehler für geringe Confidence und nicht unterstützte Sprache sind separat implementiert
@@ -59,7 +59,7 @@ Stand: 2026-05-30
 - [x] NFR2 Teilnachweis: aktiver Fehlerpfad persistiert ungültige Payloads explizit als `failed`; bounded Repair ist separat getestet, aber nicht im Standardpfad aktiv
 - [x] NFR3 Zielmetrik: Offline-API-Benchmark misst `21/21` erfolgreiche Analyseantworten inklusive 1'000-Zeichen-Grenzfall mit `p95 0.003s` gegen den Zielwert `< 5s`; dies ist kein produktionsnaher Lasttest und keine Aussage zur Live-Providerlatenz
 - [x] NFR4 Nachvollziehbarkeit: zentrale Traceability-Metadaten werden persistiert und über API/Archiv sichtbar; requestgebundene `correlation_id` wird über Response-Header und Request-Log-Kontext nachgewiesen
-- [x] NFR5 Teilnachweis: Backend-/Frontend-Tests und ein UJ1-E2E-Test laufen reproduzierbar
+- [x] NFR5 Teilnachweis: Backend-/Frontend-Tests und ein frontendseitiger UJ1-E2E-Test laufen reproduzierbar
 - [x] NFR5 Coverage-Ziel: Backend-Domain-/Application-Scope erreicht `95%` Statement Coverage gegen den Zielwert `>=80%`; UI, API-Bootstrapping und produktionsnahe Systemabdeckung sind nicht Teil dieser Kennzahl
 - [x] NFR6 Sprachdetektion: unterstützte Sprachen, Confidence-Schwelle und Fehlerfälle sind implementiert und getestet
 
@@ -72,7 +72,7 @@ Stand: 2026-05-30
 - [x] `docker compose down`
   Compose wurde am 2026-05-30 als Start-/Status-/HTTP-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Die Host-HTTP-Prüfung erfolgte ausserhalb der Codex-Sandbox, weil die Sandbox keinen direkten Zugriff auf veröffentlichte Host-Ports erlaubt.
 - [x] `cd frontend && npm run test:e2e`
-  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief erfolgreich durch. Playwright-Browser-Binaries müssen lokal vorhanden sein.
+  Der Testpfad nutzt dedizierte lokale E2E-Ports statt der normalen Dev-/Compose-Ports und lief erfolgreich durch. Die Analyse-API wird im UJ1-Test kontrolliert gemockt; der reale Backend-/API-/Persistenzpfad ist über separate Tests abgedeckt. Playwright-Browser-Binaries müssen lokal vorhanden sein.
 
 ## Verweis auf Nachweisdokumente
 

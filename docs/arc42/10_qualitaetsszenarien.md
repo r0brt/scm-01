@@ -22,7 +22,7 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 
 - Szenario: Das System soll auf einer frischen lokalen Umgebung erneut gestartet und getestet werden.
 - Stimulus: Ein Maintainer führt die dokumentierten `uv`, `npm` und `docker compose` Commands aus.
-- Erwartung: Backend-Tests, Frontend-Tests, Frontend-Build, lokaler UJ1-E2E-Pfad und Compose-Startfähigkeit sind reproduzierbar. Bekannte Voraussetzungen wie Playwright-Browser-Binaries, Docker-Zugriff und lokale Portbelegung sind sichtbar dokumentiert.
+- Erwartung: Backend-Tests, Frontend-Tests, Frontend-Build, lokaler frontendseitiger UJ1-E2E-Pfad und Compose-Startfähigkeit sind reproduzierbar. Bekannte Voraussetzungen wie Playwright-Browser-Binaries, Docker-Zugriff und lokale Portbelegung sind sichtbar dokumentiert.
 - Nachweis: README-Kommandos, `docs/test-report.md`, `docs/acceptance-checklist.md` sowie die dort beschriebenen lokalen Voraussetzungen für Compose und Playwright.
 
 ## QS4: Kritische Nutzerreise UJ1
@@ -30,7 +30,7 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 - Szenario: Ein Endnutzer gibt einen Problemtext ein und startet eine Analyse im Frontend.
 - Stimulus: Texteingabe und Klick auf `Analyse starten`.
 - Erwartung: Ein neuer Run wird erzeugt und die Pipeline mit den sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` wird sichtbar. Archiv-, Export- und Metadatenfunktionen bleiben davon getrennt, damit die Analyseansicht auf den aktuellen Run fokussiert bleibt.
-- Nachweis: Playwright-Journey-Test für UJ1 sowie ergänzende Backend-, API-, Frontend- und Persistenztests für den darunterliegenden Laufzeitpfad.
+- Nachweis: Playwright-Journey-Test für UJ1 mit kontrolliert gemockter Analyse-API sowie ergänzende Backend-, API-, Frontend- und Persistenztests für den realen Analyse-, Validierungs- und Speicherpfad.
 
 ## QS5: Deterministische Sprachvorprüfung
 
