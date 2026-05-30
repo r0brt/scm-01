@@ -15,17 +15,11 @@ Die C2-Sicht trennt die interne SCM-Laufzeit in `Web UI`, `Backend/API` und `Per
 | `Persistenz` | Speicherung von Runs, Validierungsreport und Traceability-Metadaten | PostgreSQL im Compose-Betrieb |
 | `LLM Provider` | Optionale externe Analyseerzeugung | OpenAI Responses API über `backend/app/llm/openai_adapter.py` |
 
-- `Frontend UI` (implementiert in M6): Texteingabe, Pipeline-Darstellung, Run-Historie und JSON-Export.
-- `Backend API` (implementiert bis M5): FastAPI-API für Analyse, Run-Liste, Detail und Rerun; Analyseerzeugung über Adapter-Schnittstelle.
-- `Lokale Persistenz` (Compose-Zielbetrieb: PostgreSQL, ausserhalb davon optional SQLite): Speicherung von Analyse-Runs und Metadaten.
-- `LLM Provider` (extern): Erzeugung von Analyseinhalten über Adapter-Integration.
+Die Bausteine bilden eine einfache Verarbeitungskette: Die Web UI nimmt Problemtexte entgegen und zeigt Analyse- sowie Archivsicht. Das Backend stellt die API bereit, orchestriert den Analysepfad und kapselt den optionalen Provider-Zugriff. Die Persistenz speichert Runs, Validierungsreport und Traceability-Metadaten. Der externe LLM Provider bleibt ausserhalb der Systemgrenze und liefert nur im entsprechend konfigurierten Pfad generierte Analyseinhalte.
 
-## Verantwortlichkeiten (Konzept)
+## Verantwortlichkeiten
 
-- UI übernimmt Präsentation und Nutzerinteraktion.
-- API stellt Verträge, Orchestrierung, Fehlermapping und Persistenzzugriff bereit.
-- Persistenz stellt dauerhafte, abfragbare Run-Historie sicher.
-- LLM-Provider liefert generierte Analyseinhalte unter strikten Contract-Checks.
+Die UI übernimmt Präsentation und Nutzerinteraktion. Die API stellt Verträge, Orchestrierung, Fehlermapping und Persistenzzugriff bereit. Die Persistenz sorgt für eine dauerhafte, abfragbare Run-Historie. Der LLM-Provider liefert generierte Analyseinhalte, die erst nach strikten Contract-Checks in den weiteren Verarbeitungspfad gelangen.
 
 Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs müssen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rückwärtskompatibel unterstützt.
 
@@ -46,12 +40,7 @@ Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagram
 | `DB Model + Session` | SQLAlchemy-Modell, Engine und Session Factory | `backend/app/db/` |
 | `Repair Guardrail` | Vorbereitete bounded Repair-Logik, nicht im Standardpfad aktiv | `backend/app/services/repair.py` |
 
-- `app/api`: FastAPI-Endpunkte, API-Schemas und zentrales Fehlermapping.
-- `app/services/analysis_workflow.py`: Orchestrierung von Spracherkennung, Analyseerzeugung, Validierung und Persistenz.
-- `app/language`: lokale Sprachdetektion für Eingabe- und Ausgabesprache.
-- `app/services/validation.py`: strukturelle Prüfung gegen JSON-Schema und Pydantic-Modelle.
-- `app/llm`: Stub- und OpenAI-Adapter hinter einer gemeinsamen Generator-Schnittstelle.
-- `app/repositories` und `app/db`: Persistenzzugriff, Datenmodell und Session-Verwaltung.
+Die Backend-Komponenten trennen HTTP-Vertrag, fachlichen Workflow, Validierung, Providerzugriff und Persistenz bewusst voneinander. Dadurch bleibt der zentrale Analysepfad nachvollziehbar: Die API nimmt Requests entgegen und ordnet Fehler dem Fehlervertrag zu, der Workflow koordiniert Sprache, Analyse, Validierung und Speicherung, und Repository- sowie DB-Schicht kapseln den Zugriff auf persistierte Runs.
 
 ## Frontend-Zerlegung (aktueller Stand)
 

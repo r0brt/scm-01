@@ -20,11 +20,11 @@ Die C1-Sicht zeigt SCM als ein System innerhalb einer bewusst engen Systemgrenze
 | `SCM` | System of Interest | Enthält Web UI, Backend/API und lokale Persistenz innerhalb der Systemgrenze. |
 | `LLM Provider` | Externes Umsystem | Wird nur im optionalen OpenAI-Pfad über den Adapter angesprochen. |
 
-- Primärer Akteur ist der `User`. Er gibt den fachlichen Ausgangstext über die SCM-Oberfläche ein, startet damit einen Analyse-Run und liest die erzeugten Resultate, Statusanzeigen und Fehlermeldungen wieder aus dem System.
-- Auf Ebene des Systemkontexts erscheint `SCM` bewusst als Blackbox. Frontend, Backend und lokale Persistenz gehören innerhalb dieser Abstraktion zur internen Systemgrenze und werden nicht als eigene Umsysteme modelliert.
-- Der zentrale Eintrittspunkt für fachliche Daten ist damit das Gesamtsystem `SCM`. Dort gelangt potenziell datenschutzsensitiver Freitext in die interne Verarbeitungskette aus UI, API, Validierung und Persistenz.
-- Daten verlassen die lokale Systemgrenze nur dort, wo `SCM` über den internen Adapter ein externes `LLM Provider API` anspricht. Dieser Schritt ist optional konfiguriert und macht den KI-Anbieter zu einer bewusst benannten externen Abhängigkeit.
-- Die vom System ausgegebenen Resultate fliessen aus `SCM` zurück an den `User`. Damit bleibt der letzte Interpretations- und Entscheidungsschritt ausdrücklich beim Menschen und nicht beim System.
+Primärer Akteur ist der `User`. Er gibt den fachlichen Ausgangstext über die SCM-Oberfläche ein, startet damit einen Analyse-Run und liest die erzeugten Resultate, Statusanzeigen und Fehlermeldungen wieder aus dem System.
+
+Auf Ebene des Systemkontexts erscheint `SCM` bewusst als Blackbox. Frontend, Backend und lokale Persistenz gehören innerhalb dieser Abstraktion zur internen Systemgrenze und werden nicht als eigene Umsysteme modelliert. Potenziell datenschutzsensitiver Freitext gelangt damit zuerst in das Gesamtsystem und erst danach in die interne Verarbeitungskette aus UI, API, Validierung und Persistenz.
+
+Daten verlassen die lokale Systemgrenze nur dort, wo `SCM` über den internen Adapter ein externes `LLM Provider API` anspricht. Dieser Schritt ist optional konfiguriert und macht den KI-Anbieter zu einer bewusst benannten externen Abhängigkeit. Die Resultate fliessen anschliessend zurück an den `User`; der letzte Interpretations- und Entscheidungsschritt bleibt ausdrücklich beim Menschen.
 
 ## Kontext und Verantwortung
 

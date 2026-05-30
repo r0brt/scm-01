@@ -5,10 +5,10 @@
 1. Zuerst ein modularer Monolith für schnelle, konsistente und betrieblich einfache Umsetzung.
 2. Contract-First-JSON-Schema für Analyseausgaben.
 3. Schema-Validierung strikt vor Persistenz.
-4. Begrenzte Repair-Logik fuer ungueltige Modellausgaben ist als Guardrail vorbereitet (max. 2 Retries), im aktuellen Standardpfad aber noch nicht aktiv verdrahtet.
+4. Begrenzte Repair-Logik für ungültige Modellausgaben ist als Guardrail vorbereitet (max. 2 Retries), im aktuellen Standardpfad aber noch nicht aktiv verdrahtet.
 5. Unveränderliche Run-Datensätze mit vollständiger Traceability persistieren.
 
-Diese Kernstrategie verfolgt einen bewusst pragmatischen Mittelweg: Das System soll technisch robust genug sein, um Verträge, Persistenz und Provider-Grenzen nachvollziehbar abzubilden, gleichzeitig aber klein genug bleiben, damit Implementierung, Testen und Dokumentation in einem Solo-Projekt beherrschbar bleiben.
+Diese Kernstrategie verfolgt einen pragmatischen Mittelweg. Das System soll robust genug sein, um Verträge, Persistenz und Provider-Grenzen nachvollziehbar abzubilden. Gleichzeitig bleibt es klein genug, damit Implementierung, Testen und Dokumentation in einem Solo-Projekt beherrschbar bleiben.
 
 ## Strategische Leitgedanken
 
@@ -41,4 +41,4 @@ Die gewählte Strategie passt zum Projekt, weil sie die wichtigsten Spannungen d
 - Dokumentations- und Nachvollziehbarkeitskontext verlangen Transparenz; deshalb werden Metadaten und Architekturentscheidungen konsequent mitgeführt.
 - Der verteilte Mindestbetrieb soll sichtbar sein, ohne unnötig in Microservices auszuufern; deshalb bleibt die Laufzeit bei `frontend`, `api` und `db` im Compose-Setup.
 
-Die Lösungsstrategie ist damit weniger auf maximale technische Raffinesse ausgerichtet als auf einen kontrollierbaren, prüfbaren und sauber dokumentierten MVP.
+Die Lösungsstrategie ist damit auf einen kontrollierbaren, prüfbaren und sauber dokumentierten MVP ausgerichtet, nicht auf vorgezogene Produktionskomplexität.

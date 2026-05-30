@@ -1,5 +1,7 @@
 # 11 Technische Risiken
 
+Die technischen Risiken beschreiben die wichtigsten Grenzen des aktuellen MVP. Sie zeigen, wo Architekturentscheidungen bewusst absichern, aber noch keine produktionsreife Vollständigkeit herstellen.
+
 ## R1: Reale Provider-Integration bringt externe Laufzeitrisiken mit
 
 - Risiko: Der OpenAI-Pfad hängt von externer Verfügbarkeit, Latenz, Rate Limits und gültiger API-Konfiguration ab.

@@ -2,6 +2,8 @@
 
 ## Szenario 1: Verfügbarkeitsprüfung des Backends
 
+Die Verfügbarkeitsprüfung ist der kleinste Laufzeitpfad des Systems. Sie dient als technische Start- und Betriebsprüfung der API.
+
 1. Ein Client ruft `GET /health` am Backend auf.
 2. Die FastAPI-Anwendung nimmt die Anfrage ohne weitere Abhängigkeiten entgegen.
 3. Das Backend antwortet mit HTTP `200`.
@@ -29,6 +31,8 @@ Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreich
 
 ## Szenario 3: Retrieval und Rerun
 
+Neben der initialen Analyse unterstützt der Laufzeitpfad das spätere Wiederfinden und bewusste Neuerzeugen von Runs. Bestehende Runs bleiben dabei unverändert.
+
 1. Ein Client ruft `GET /api/v1/analyses` oder `GET /api/v1/analyses/{id}` auf.
 2. Das Backend liest die gespeicherten Runs aus der Persistenz und liefert sie als API-Responses aus.
 3. Bei `POST /api/v1/analyses/{id}/rerun` wird der ursprüngliche `input_text` erneut verarbeitet.
@@ -37,6 +41,8 @@ Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreich
 6. Eine Übersetzung alter Analyse-Payloads in den neuen Vertrag findet nicht statt; der aktuelle Laufzeitpfad erwartet ausschliesslich das aktive SCM-Format.
 
 ## Szenario 4: Deterministische Entfaltung im Frontend
+
+Die Frontend-Laufzeit übersetzt einen gespeicherten Run in eine geführte Darstellung. Der Analysefluss und die spätere Review-Sicht werden dabei bewusst unterschiedlich behandelt.
 
 1. Die Benutzerin gibt einen Problemtext im `AnalysisComposer` ein und startet die Analyse.
 2. `App.tsx` sendet den Text an `POST /api/v1/analyses` und setzt den UI-Zustand währenddessen auf `loading`.

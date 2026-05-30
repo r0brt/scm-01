@@ -18,12 +18,14 @@
 - Solo-Projekt-Workflow mit kurzlebigen Branches.
 - Kleine, klar abgegrenzte Changes statt grosser Pakete.
 - arc42 bleibt das Primärdokument der Architektur; ergänzende Governance-Dokumente präzisieren Annahmen, ersetzen aber keine Architekturbegründung.
-- Der aktuelle Stand ist ein bewusster MVP für Abgabe und Bewertung, nicht ein ausformuliertes Betriebsmodell für produktiven Dauereinsatz.
+- Der aktuelle Stand ist ein bewusst begrenzter MVP-Nachweis, kein ausformuliertes Betriebsmodell für produktiven Dauereinsatz.
 
 ## Fachliche und Governance-Randbedingungen
 
-- SCM verarbeitet frei eingegebenen Problemtext. Dieser Text kann personenbezogene, sensible oder anderweitig heikle Informationen enthalten und ist deshalb als datenschutzrelevante Eingabe zu behandeln, nicht als technisch neutraler Testinhalt.
-- Die Analysefunktion kann über einen externen KI-Anbieter laufen. Diese Abhängigkeit ist architektonisch offenzulegen, weil dabei Eingabetext, Prompt-Kontext und Schema-Vorgaben die lokale Systemgrenze verlassen können.
-- Transparenz ist eine Systemerwartung des Projekts: Nutzende sollen erkennen können, dass Resultate aus einer nachvollziehbaren Pipeline mit Modell-, Prompt- und Validierungskontext entstehen und nicht aus einer intransparenten Blackbox ohne Herkunftshinweise.
-- SCM ist im MVP auf unterstützende Analyse und Strukturierung ausgelegt. Weder Rollenmodell, ausgereifte Löschprozesse noch ein vollständiger Audit- und Compliance-Betrieb sind Teil des aktuellen Lieferumfangs.
-- Der Abgabekontext verlangt eine ehrliche Dokumentation von Grenzen, Annahmen und externen Abhängigkeiten. Die Architektur beschreibt deshalb bewusst den realen Systemstand und vermeidet Behauptungen über rechtliche Vollständigkeit oder abschliessend nachgewiesene Konformität.
+SCM verarbeitet frei eingegebenen Problemtext. Dieser Text kann personenbezogene, sensible oder anderweitig heikle Informationen enthalten und ist deshalb als datenschutzrelevante Eingabe zu behandeln, nicht als technisch neutraler Testinhalt.
+
+Die Analysefunktion kann über einen externen KI-Anbieter laufen. Diese Abhängigkeit muss architektonisch sichtbar bleiben, weil dabei Eingabetext, Prompt-Kontext und Schema-Vorgaben die lokale Systemgrenze verlassen können.
+
+Transparenz ist eine zentrale Systemerwartung. Nutzende sollen erkennen können, dass Resultate aus einer nachvollziehbaren Pipeline mit Modell-, Prompt- und Validierungskontext entstehen und nicht aus einer intransparenten Blackbox ohne Herkunftshinweise.
+
+SCM ist im MVP auf unterstützende Analyse und Strukturierung ausgelegt. Weder Rollenmodell, ausgereifte Löschprozesse noch ein vollständiger Audit- und Compliance-Betrieb sind Teil des aktuellen Lieferumfangs. Die Architektur beschreibt deshalb den realen Systemstand und vermeidet Behauptungen über rechtliche Vollständigkeit oder abschliessend nachgewiesene Konformität.
