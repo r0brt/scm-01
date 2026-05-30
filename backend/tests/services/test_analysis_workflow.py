@@ -185,6 +185,38 @@ def test_create_analysis_run_fails_when_output_language_does_not_match_input_lan
     assert run.analysis_json is None
 
 
+def test_create_analysis_run_uses_provider_neutral_validation_error_reason() -> None:
+    adapter = FakeAdapter()
+    detector = FakeLanguageDetector()
+
+    adapter.generate_analysis = lambda text, language=None: {  # type: ignore[method-assign]
+        "payload": {
+            "symptome": {"beschreibung": "A", "eintraege": []},
+            "ursachen": {"beschreibung": "B", "eintraege": [{"text": "B"}]},
+            "emotionen": {"beschreibung": "C", "eintraege": [{"text": "C"}]},
+            "narrative": {"beschreibung": "D", "eintraege": [{"text": "D"}]},
+            "mythen": {"beschreibung": "E", "eintraege": [{"text": "E"}]},
+            "essenz": {"beschreibung": "F", "eintraege": [{"text": "F"}]},
+        },
+        "model_id": "provider-model",
+        "prompt_version": "v-provider-test",
+    }
+
+    with make_session() as session:
+        run = create_analysis_run(
+            session,
+            "Validierungsfehler ohne Providerbindung",
+            correlation_id="corr-provider-neutral-validation-error",
+            adapter=adapter,
+            language_detector=detector,
+        )
+
+    assert run.run_status == "failed"
+    assert run.validation_status == "invalid"
+    assert run.error_code == "SCHEMA_VALIDATION_FAILED"
+    assert run.error_reason == "Analysis validation failed"
+
+
 def test_rerun_analysis_persists_new_correlation_id() -> None:
     adapter = FakeAdapter()
     detector = FakeLanguageDetector()
