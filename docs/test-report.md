@@ -3,7 +3,7 @@
 Stand: 2026-05-31
 Baseline-Commit: `107761a`
 
-Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
+Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen frontendseitigen UJ1-E2E-Pfad.
 
 ## Ausgeführte Commands
 
@@ -214,6 +214,8 @@ Beobachtung:
 - benutzerdefinierte lokale Konflikte auf den gewählten E2E-Ports bleiben weiterhin möglich
 - bei vorhandenen Playwright-Browser-Binaries starteten Frontend- und Backend-Webserver im Playwright-Setup korrekt
 - der UJ1-Browserpfad wurde erfolgreich ausgeführt
+- der Test fängt die Analyse-API `**/api/v1/analyses` ab und erfüllt die Run-Responses kontrolliert im Test; er belegt damit die Frontend-Nutzerreise, nicht den realen Analyse-, Validierungs- und Persistenzpfad
+- der reale Backend-/API-/Persistenzpfad wird separat durch Backend-, API-, Service-, Contract- und Persistenztests nachgewiesen
 
 ## NFR-Evidenzstatus
 
@@ -243,7 +245,7 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - projektbezogene Python-3.13-Ausführung über `uv`
 - aktueller Nachweis auf `main`-Commit `107761a`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
-- E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
+- Frontend-E2E-Setup und UJ1-Browserpfad mit kontrolliert gemockter Analyse-API laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
@@ -251,10 +253,10 @@ GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quali
 
 ## Bekannte Limitationen
 
-- E2E deckt weiterhin nur einen kritischen Happy Path für UJ1 ab
+- E2E deckt weiterhin nur einen kritischen frontendseitigen Happy Path für UJ1 ab
 - der E2E-Lauf benötigt lokal installierte Playwright-Browser-Binaries
 - der lokale E2E-Lauf nutzt eigene dedizierte Ports statt `4173` und `8000`, kann aber weiterhin durch benutzerdefinierte Konflikte auf den gewählten E2E-Ports blockiert werden
-- Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
+- Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose und mockt die Analyse-API im Test
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
 - der NFR1-Messlauf nutzt deterministische Fixture-Doubles und ersetzt keinen Qualitätsnachweis für einen externen LLM-Provider
 - der NFR3-Messlauf nutzt deterministische Fixture-Doubles, FastAPI-TestClient und lokale SQLite-Persistenz; er ersetzt keinen produktionsnahen Lasttest und keine Messung mit externem LLM-Provider
