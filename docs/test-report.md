@@ -1,7 +1,7 @@
 # Test Report
 
 Stand: 2026-05-30
-Baseline-Commit: `9cfa2b9`
+Baseline-Commit: `33aa027`
 
 Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
 
@@ -27,7 +27,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `49 passed in 1.07s`
+- `49 passed in 2.19s`
 
 ### Frontend Unit/UI
 
@@ -40,7 +40,7 @@ Resultat:
 
 - `1 file passed`
 - `10 tests passed`
-- `Duration 1.08s`
+- `Duration 2.33s`
 
 Hinweis:
 
@@ -55,7 +55,7 @@ npm run build
 
 Resultat:
 
-- `built in 432ms`
+- `built in 719ms`
 
 ### Docker Compose Laufzeitnachweis
 
@@ -70,11 +70,13 @@ Resultat:
 - `docker compose up -d --build` baute `scm-01-api` und `scm-01-frontend`, zog `postgres:17-alpine` und startete `db`, `api` und `frontend`
 - `docker compose ps` zeigte `scm-01-db-1` als `Up ... (healthy)` sowie `scm-01-api-1` und `scm-01-frontend-1` als `Up`
 - veröffentlichte Ports laut Compose-Status: API `8000`, DB `5432`, Frontend `4173`
+- `curl -fsS http://127.0.0.1:8000/health` lieferte `{"status":"ok"}`
+- `curl -fsS -I http://127.0.0.1:4173` lieferte `HTTP/1.1 200 OK`
 - `docker compose down` stoppte und entfernte die drei Container sowie das Compose-Netzwerk erfolgreich
 
 Hinweis:
 
-- ein direkter Host-`curl` auf `127.0.0.1:8000` und `127.0.0.1:4173` war in der aktuellen Codex-Sandbox nicht erreichbar; der hier dokumentierte Nachweis ist deshalb ein Compose-Start-/Status-/Stop-Nachweis, kein zusätzlicher HTTP-End-to-End-Test
+- Docker-Zugriff und Host-HTTP-Prüfung wurden ausserhalb der Codex-Sandbox ausgeführt, weil die Sandbox keinen direkten Zugriff auf den Docker-Socket beziehungsweise die veröffentlichten Host-Ports erlaubt
 
 ### Frontend E2E
 
@@ -85,7 +87,7 @@ npm run test:e2e
 
 Resultat:
 
-- `1 passed in 5.2s`
+- `1 passed in 3.6s`
 
 Beobachtung:
 
@@ -104,13 +106,13 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Nachweis auf `main`-Commit `9cfa2b9`
-- Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL
+- aktueller Nachweis auf `main`-Commit `33aa027`
+- Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `9cfa2b9` war erfolgreich (`CI`, Run `26666182368`, 2026-05-29T22:49:54Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `33aa027` war erfolgreich (`CI`, Run `26683234622`, 2026-05-30T11:58:50Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
@@ -119,4 +121,4 @@ GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quali
 - der lokale E2E-Lauf nutzt eigene dedizierte Ports statt `4173` und `8000`, kann aber weiterhin durch benutzerdefinierte Konflikte auf den gewählten E2E-Ports blockiert werden
 - Frontend-E2E nutzt lokale Dev-Server statt Docker/Compose
 - LLM-Erzeugung läuft in Tests weiterhin über Stub/Fake-Adapter ohne echten Provider-Call
-- Compose wurde als Start-/Status-/Stop-Nachweis verifiziert; ein zusätzlicher HTTP-End-to-End-Test über die veröffentlichten Host-Ports wurde in der Codex-Sandbox nicht erfolgreich durchgeführt
+- Compose wurde lokal als Start-/Status-/HTTP-/Stop-Nachweis verifiziert; dies ersetzt noch keinen produktionsnahen Betriebs- oder Lasttest
