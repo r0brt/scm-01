@@ -211,3 +211,48 @@ def test_rerun_analysis_persists_new_correlation_id() -> None:
     assert rerun.id != original_id
     assert rerun.input_text == original_input_text
     assert rerun.correlation_id == "corr-rerun"
+
+
+def test_rerun_analysis_accepts_failed_source_run() -> None:
+    failed_adapter = FakeAdapter()
+    failed_detector = FakeLanguageDetector(confidence=0.42)
+    rerun_adapter = FakeAdapter()
+    rerun_detector = FakeLanguageDetector()
+
+    with make_session() as session:
+        original = create_analysis_run(
+            session,
+            "Fehlerlauf erneut ausfuehren",
+            correlation_id="corr-failed-original",
+            adapter=failed_adapter,
+            language_detector=failed_detector,
+        )
+        original_id = original.id
+        original_input_text = original.input_text
+        original_run_status = original.run_status
+        original_validation_status = original.validation_status
+        original_error_code = original.error_code
+        original_analysis_json = original.analysis_json
+
+        rerun = rerun_analysis(
+            session,
+            original_id,
+            correlation_id="corr-failed-rerun",
+            adapter=rerun_adapter,
+            language_detector=rerun_detector,
+        )
+        rerun_id = rerun.id
+        rerun_input_text = rerun.input_text
+        rerun_correlation_id = rerun.correlation_id
+        rerun_run_status = rerun.run_status
+        rerun_validation_status = rerun.validation_status
+
+    assert original_run_status == "failed"
+    assert original_validation_status == "invalid"
+    assert original_error_code == "LANGUAGE_CONFIDENCE_TOO_LOW"
+    assert original_analysis_json is None
+    assert rerun_id != original_id
+    assert rerun_input_text == original_input_text
+    assert rerun_correlation_id == "corr-failed-rerun"
+    assert rerun_run_status == "completed"
+    assert rerun_validation_status == "valid"

@@ -1,7 +1,7 @@
 # Test Report
 
 Stand: 2026-05-30
-Baseline-Commit: `0a01025`
+Baseline-Commit: `0d7aff2`
 
 Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
 
@@ -27,7 +27,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `54 passed in 0.98s`
+- `56 passed in 1.07s`
 
 ### OpenAPI Snapshot
 
@@ -62,6 +62,23 @@ Hinweis:
 - die Messung läuft offline mit deterministischen Fixture-Doubles für Spracherkennung und Analyseerzeugung
 - sie prüft den lokalen Analyse-, Validierungs- und Persistenzpfad gegen das definierte Eingabeset
 - sie ist kein Qualitätsnachweis für Antworten eines externen LLM-Providers
+
+### Rerun Fehlerfälle
+
+```bash
+cd backend
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/services/test_analysis_workflow.py tests/api/test_analyses_api.py
+```
+
+Resultat:
+
+- `17 passed in 0.66s`
+
+Hinweis:
+
+- der Testlauf deckt ab, dass Rerun auch von einem `failed` Quell-Run einen neuen Run mit gleicher Eingabe erzeugt
+- der ursprüngliche Fehlerlauf bleibt unverändert und auditierbar
+- Rerun wird dabei nicht als Repair des alten Laufs behandelt
 
 ### Frontend Unit/UI
 
@@ -153,15 +170,16 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - versionierter OpenAPI-Snapshot für den API-v1-Vertrag inklusive Drift-Test gegen die FastAPI-Laufzeit
 - Offline-NFR1-Messlauf über 20 Eingabe-Fixtures mit `20/20` schema-validen Läufen ohne Repair
+- Rerun aus fehlgeschlagenen Quell-Runs als neuer unveränderlicher Analyseversuch
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- aktueller Nachweis auf `main`-Commit `0a01025`
+- aktueller Nachweis auf `main`-Commit `0d7aff2`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - E2E-Setup und UJ1-Browserpfad laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `0a01025` war erfolgreich (`CI`, Run `26693638006`, 2026-05-30T20:05:04Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle `main`-Push zu `0d7aff2` war erfolgreich (`CI`, Run `26693986690`, 2026-05-30T20:21:34Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 

@@ -139,6 +139,29 @@ def test_post_rerun_creates_new_run_with_same_input(tmp_path: Path) -> None:
     assert payload["run_status"] == "completed"
 
 
+def test_post_rerun_creates_new_run_from_failed_source_run(tmp_path: Path) -> None:
+    failed_client = make_client(tmp_path, confidence=0.32)
+    failed = failed_client.post(
+        "/api/v1/analyses", json={"text": "Fehlerlauf bitte erneut pruefen"}
+    ).json()
+
+    rerun_client = make_client(tmp_path)
+    response = rerun_client.post(f"/api/v1/analyses/{failed['id']}/rerun")
+
+    assert response.status_code == 201
+    rerun = response.json()
+    assert failed["run_status"] == "failed"
+    assert failed["analysis_json"] is None
+    assert rerun["id"] != failed["id"]
+    assert rerun["input_text"] == failed["input_text"]
+    assert rerun["run_status"] == "completed"
+    assert rerun["validation_status"] == "valid"
+
+    original_after_rerun = rerun_client.get(f"/api/v1/analyses/{failed['id']}").json()
+    assert original_after_rerun["run_status"] == "failed"
+    assert original_after_rerun["analysis_json"] is None
+
+
 def test_run_api_exposes_persisted_correlation_ids_consistently(
     tmp_path: Path, monkeypatch
 ) -> None:
