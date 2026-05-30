@@ -222,7 +222,7 @@ Run:
 
 ```bash
 git add README.md docs/privacy-and-ai-governance.md docs/arc42/08_querschnittliche_konzepte.md docs/acceptance-checklist.md docs/test-report.md docs/superpowers/specs/2026-05-30-governance-evidence-polish-design.md docs/superpowers/plans/2026-05-30-governance-evidence-polish.md
-git commit -m "docs: plan governance evidence polish"
+git commit -m "docs: polish governance evidence links"
 ```
 
 Expected: commit succeeds.
