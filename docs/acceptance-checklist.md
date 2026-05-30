@@ -48,6 +48,13 @@ Stand: 2026-05-30
 - [x] `docker compose down`
   Compose wurde am 2026-05-30 als Start-/Status-/Stop-Nachweis für den lokalen Zielbetrieb mit API, Frontend und PostgreSQL verifiziert. Ein zusätzlicher HTTP-End-to-End-Test über die veröffentlichten Host-Ports wurde in der aktuellen Codex-Sandbox nicht erfolgreich durchgeführt.
 
+## Verweis auf Nachweisdokumente
+
+- Architekturstand und Querschnittskonzepte: `docs/arc42/`
+- Datenschutz, KI-Governance, AI-Act-Einordnung und MVP-Grenzen: `docs/privacy-and-ai-governance.md`
+- Ausgeführte technische Verifikation: `docs/test-report.md`
+- Diagrammquellen und gerenderte SVGs: `docs/diagrams/README.md`
+
 ## Offene Restpunkte
 
 - [ ] Echte Provider-Integration mit Netz und produktionsnaher Betriebsumgebung ist bewusst nicht Teil des MVP

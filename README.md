@@ -11,6 +11,18 @@ Dieses Repository enthält den aktuellen MVP-Stand des Projekts inklusive Backen
 - Architekturentscheidungen (ADRs): [`docs/adr/`](docs/adr/)
 - Diagramme: [`docs/diagrams/README.md`](docs/diagrams/README.md)
 
+## Abgabe- und Nachweisnavigation
+
+Für eine schnelle Prüfung des aktuellen MVP-Standes sind besonders diese Dokumente relevant:
+
+- Architektur und Laufzeitsichten: [`docs/arc42/README.md`](docs/arc42/README.md)
+- Datenschutz, KI-Governance und AI-Act-Einordnung: [`docs/privacy-and-ai-governance.md`](docs/privacy-and-ai-governance.md)
+- Abnahme gegen PRD-Kriterien: [`docs/acceptance-checklist.md`](docs/acceptance-checklist.md)
+- Ausgeführte Tests, CI und bekannte Limitationen: [`docs/test-report.md`](docs/test-report.md)
+- Diagrammquellen und gerenderte SVGs: [`docs/diagrams/README.md`](docs/diagrams/README.md)
+
+Die Dokumentation beschreibt bewusst den MVP-Stand. Vollständige Privacy Operations, produktionsreife Observability, formale Rechtsprüfung und finale PDF-Layoutoptimierung bleiben ausserhalb dieses Nachweisstandes.
+
 ## Aktueller Scope
 
 Dieses Repository enthält inzwischen Backend-, Persistenz-, API- und Frontend-Bausteine des Projekts.

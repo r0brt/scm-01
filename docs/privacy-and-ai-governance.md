@@ -4,7 +4,18 @@
 
 Dieses Dokument ergänzt die arc42-Architekturdokumentation um eine kompakte Sicht auf Datenschutz, Nachvollziehbarkeit und KI-Governance im aktuellen SCM-MVP. Es beschreibt den tatsächlich implementierten Stand des Repositories, die dabei verarbeiteten Daten, die relevanten externen Abhängigkeiten und die bewusst offengelegten Grenzen.
 
+Dieses Dokument ist eine Architektur- und MVP-Governance-Sicht. Es macht Datenflüsse, Verantwortlichkeiten, externe Abhängigkeiten und Grenzen nachvollziehbar, behauptet aber keine vollständige rechtliche Konformität für einen konkreten Produktivbetrieb.
+
 Es ersetzt keine formale Rechtsberatung, kein vollständiges Datenschutzkonzept für einen Produktivbetrieb und keine behördliche oder gerichtliche Einordnung. Massgeblich bleibt deshalb: arc42 ist das Primärdokument der Architektur, dieses Dokument dient als unterstützendes Governance-Artefakt für die Einordnung des MVP.
+
+## Nachweisbezug
+
+Dieses Dokument verweist inhaltlich auf folgende Nachweise:
+
+- `docs/arc42/08_querschnittliche_konzepte.md` für Cross-Cutting Concepts, Datenschutz, LLM-Adapter und Traceability
+- `docs/acceptance-checklist.md` für den aktuellen Abnahmestand
+- `docs/test-report.md` für lokal und in CI dokumentierte Verifikation
+- `docs/diagrams/rendered/` für gerenderte Architektur- und Datenflussdiagramme
 
 ## Verarbeitete Daten
 
@@ -68,10 +79,12 @@ Plausibel ist deshalb eine Einordnung als KI-gestütztes Analyse- und Strukturie
 
 - Eingaben können personenbezogene oder sensible Inhalte enthalten und dürfen deshalb nicht als rein harmlose Testdaten behandelt werden.
 - Der optionale OpenAI-Pfad ist als externer Verarbeitungs- und Abhängigkeitsfaktor offen zu benennen.
-- Resultate benötigen menschliche Prüfung und dürfen nicht als selbstgenügende Tatsachenfeststellung gelesen werden.
+- Resultate benötigen menschliche Prüfung und dürfen nicht als selbstgenügende Tatsachenfeststellung oder autonome Entscheidung gelesen werden.
 - Traceability und klare Grenzen sind Teil der Systemverantwortung, auch wenn das MVP noch kein vollständiges Compliance-Betriebsmodell besitzt.
 
-Für die Rollenbetrachtung ist wichtig: Das Repository entwickelt kein eigenes General-Purpose-AI-Modell, sondern integriert im optionalen Produktivpfad ein externes Modell über einen Adapter. Die primäre Projektsicht liegt damit auf der verantwortungsvollen Bereitstellung und Nutzung einer KI-gestützten Analysefunktion: transparente Kennzeichnung, menschliche Letztverantwortung, dokumentierte Datenflüsse, nachvollziehbare Runs und klare Grenzen des MVP. Nach der offiziellen EU-Einordnung werden Pflichten zeitlich gestaffelt wirksam; insbesondere gelten Pflichten für Anbieter von General-Purpose-AI-Modellen früher als viele Transparenzpflichten für bestimmte KI-Systeme. Referenzpunkte sind die [EU-Übersicht zum AI Act](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) und die [EU-Seite zu GPAI-Pflichten](https://digital-strategy.ec.europa.eu/en/factpages/general-purpose-ai-obligations-under-ai-act). Dieses Dokument hält deshalb bewusst Architektur- und Governance-Massnahmen fest, ersetzt aber keine formale AI-Act-Konformitätsprüfung für einen konkreten Produktivbetrieb.
+Für die Rollenbetrachtung ist wichtig: Das Repository entwickelt kein eigenes General-Purpose-AI-Modell, trainiert kein Basismodell und verändert keine Modellgewichte. Es integriert im optionalen Produktivpfad ein externes Modell über einen Adapter und nutzt dessen Ausgabe für eine strukturierte Analysefunktion. Die primäre Projektsicht liegt damit auf der verantwortungsvollen Bereitstellung und Nutzung dieser KI-gestützten Funktion: transparente Kennzeichnung, menschliche Letztverantwortung, dokumentierte Datenflüsse, nachvollziehbare Runs und klare Grenzen des MVP.
+
+Nach der offiziellen EU-Einordnung werden Pflichten zeitlich gestaffelt wirksam; insbesondere gelten Pflichten für Anbieter von General-Purpose-AI-Modellen früher als viele Transparenzpflichten für bestimmte KI-Systeme. Referenzpunkte sind die [EU-Übersicht zum AI Act](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) und die [EU-Seite zu GPAI-Pflichten](https://digital-strategy.ec.europa.eu/en/factpages/general-purpose-ai-obligations-under-ai-act). Dieses Dokument hält deshalb bewusst Architektur- und Governance-Massnahmen fest, ersetzt aber keine formale AI-Act-Konformitätsprüfung für einen konkreten Produktivbetrieb.
 
 ## Grenzen des MVP
 

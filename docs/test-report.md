@@ -3,6 +3,8 @@
 Stand: 2026-05-30
 Baseline-Commit: `9cfa2b9`
 
+Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen UJ1-E2E-Pfad.
+
 ## Ausgeführte Commands
 
 ### Backend Linting
@@ -96,6 +98,8 @@ Beobachtung:
 - der UJ1-Browserpfad wurde erfolgreich ausgeführt
 
 ## Abgedeckte Nachweise
+
+Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance-checklist.md`.
 
 - kompletter Backend-Testlauf für Contract-, Validation-, Persistenz-, API-, Service- und Integrationstests
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
