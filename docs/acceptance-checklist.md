@@ -9,7 +9,7 @@ Stand: 2026-05-30
 - [x] Bounded Repair-Logik ist im Repository vorbereitet, aber im aktuellen Standardpfad nicht verdrahtet
 - [x] Analyse-Runs werden mit Traceability-Metadaten inklusive `correlation_id` persistiert
 - [x] API-v1 für Analyse, Liste, Detail und Rerun ist vorhanden
-- [x] API-v1 ist als OpenAPI-Snapshot unter `docs/api/openapi.json` versioniert
+- [x] API-v1 ist als OpenAPI-Snapshot unter `docs/api/openapi.json` inklusive Error-Contract und `X-Correlation-ID` Header versioniert
 - [x] Rerun erzeugt auch aus fehlgeschlagenen Quell-Runs einen neuen unveränderlichen Analyseversuch
 - [x] Frontend zeigt Eingabe, Pipeline, Run-Liste, Archiv-Nachweise und JSON-Export
 - [x] Lokaler Zielbetrieb via Docker Compose ist dokumentiert
@@ -19,6 +19,7 @@ Stand: 2026-05-30
 - [x] Datenschutz- und KI-Governance-Annahmen sind dokumentiert
 - [x] Externe Datenpfade und Grenzen des MVP sind explizit beschrieben
 - [x] Requestgebundene `correlation_id` wird bei neuen Runs mitpersistiert und in Fehlerantworten wiederverwendet
+- [x] Requestgebundene `correlation_id` ist zusätzlich im `X-Correlation-ID` Header und im Request-Log-Kontext sichtbar
 - [x] Traceability-Felder pro Run sind dokumentiert und im Datenmodell sichtbar
 - [x] Die Grenze zwischen Run-Nachvollziehbarkeit und vollständigem Ende-zu-Ende-Audit-Trail ist offengelegt
 
@@ -45,10 +46,11 @@ Stand: 2026-05-30
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 coverage run -m pytest -q tests/contracts/test_analysis_models.py tests/contracts/test_analysis_schema.py tests/language tests/llm tests/services tests/validation tests/persistence`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 coverage report`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/services/test_analysis_workflow.py tests/api/test_analyses_api.py`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/api/test_traceability_observability.py`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `491450a`, Run `26695035311`
+- [x] GitHub Actions `CI` auf `main` für Commit `eb0bb66`, Run `26695462999`
 
 ## NFR-Nachweisstatus
 
@@ -56,7 +58,7 @@ Stand: 2026-05-30
 - [x] NFR1 Zielmetrik: Offline-Fixture-Harness misst `20/20` schema-valide Läufe ohne Repair (`100.0%`) gegen das definierte Eingabeset; dies ist keine Aussage zur Live-Providerqualität
 - [x] NFR2 Teilnachweis: aktiver Fehlerpfad persistiert ungültige Payloads explizit als `failed`; bounded Repair ist separat getestet, aber nicht im Standardpfad aktiv
 - [x] NFR3 Zielmetrik: Offline-API-Benchmark misst `21/21` erfolgreiche Analyseantworten inklusive 1'000-Zeichen-Grenzfall mit `p95 0.003s` gegen den Zielwert `< 5s`; dies ist kein produktionsnaher Lasttest und keine Aussage zur Live-Providerlatenz
-- [x] NFR4 Nachvollziehbarkeit: zentrale Traceability-Metadaten werden persistiert und über API/Archiv sichtbar
+- [x] NFR4 Nachvollziehbarkeit: zentrale Traceability-Metadaten werden persistiert und über API/Archiv sichtbar; requestgebundene `correlation_id` wird über Response-Header und Request-Log-Kontext nachgewiesen
 - [x] NFR5 Teilnachweis: Backend-/Frontend-Tests und ein UJ1-E2E-Test laufen reproduzierbar
 - [x] NFR5 Coverage-Ziel: Backend-Domain-/Application-Scope erreicht `95%` Statement Coverage gegen den Zielwert `>=80%`; UI, API-Bootstrapping und produktionsnahe Systemabdeckung sind nicht Teil dieser Kennzahl
 - [x] NFR6 Sprachdetektion: unterstützte Sprachen, Confidence-Schwelle und Fehlerfälle sind implementiert und getestet

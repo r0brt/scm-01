@@ -6,6 +6,7 @@ from app.main import create_app
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SNAPSHOT_PATH = REPO_ROOT / "docs" / "api" / "openapi.json"
 ERROR_RESPONSE_REF = "#/components/schemas/ErrorResponse"
+CORRELATION_ID_HEADER = "X-Correlation-ID"
 
 
 def test_openapi_snapshot_matches_runtime_schema() -> None:
@@ -19,6 +20,10 @@ def _response_schema_ref(openapi: dict, path: str, method: str, status_code: int
     return openapi["paths"][path][method]["responses"][str(status_code)]["content"][
         "application/json"
     ]["schema"]["$ref"]
+
+
+def _response_headers(openapi: dict, path: str, method: str, status_code: int) -> dict:
+    return openapi["paths"][path][method]["responses"][str(status_code)]["headers"]
 
 
 def test_openapi_documents_public_error_contract() -> None:
@@ -53,3 +58,27 @@ def test_openapi_documents_public_error_contract() -> None:
         _response_schema_ref(openapi, "/api/v1/analyses/{analysis_id}/rerun", "post", 422)
         == ERROR_RESPONSE_REF
     )
+
+
+def test_openapi_documents_correlation_id_response_header() -> None:
+    app = create_app(database_url="sqlite+pysqlite:///:memory:", initialize_schema=False)
+    openapi = app.openapi()
+
+    documented_responses = [
+        ("/health", "get", 200),
+        ("/api/v1/analyses", "post", 201),
+        ("/api/v1/analyses", "post", 422),
+        ("/api/v1/analyses", "get", 200),
+        ("/api/v1/analyses/{analysis_id}", "get", 200),
+        ("/api/v1/analyses/{analysis_id}", "get", 404),
+        ("/api/v1/analyses/{analysis_id}", "get", 422),
+        ("/api/v1/analyses/{analysis_id}/rerun", "post", 201),
+        ("/api/v1/analyses/{analysis_id}/rerun", "post", 404),
+        ("/api/v1/analyses/{analysis_id}/rerun", "post", 422),
+    ]
+
+    for path, method, status_code in documented_responses:
+        header = _response_headers(openapi, path, method, status_code)[
+            CORRELATION_ID_HEADER
+        ]
+        assert header["schema"] == {"type": "string"}

@@ -1,3 +1,4 @@
+import logging
 import os
 from collections.abc import Iterator
 
@@ -26,13 +27,33 @@ from app.services.analysis_workflow import (
     rerun_analysis,
 )
 
+CORRELATION_ID_RESPONSE_HEADER = "X-Correlation-ID"
+CORRELATION_ID_RESPONSE_HEADERS = {
+    CORRELATION_ID_RESPONSE_HEADER: {
+        "description": "Request correlation identifier for tracing this response.",
+        "schema": {"type": "string"},
+    }
+}
 REQUEST_VALIDATION_ERROR_RESPONSE = {
-    422: {"model": ErrorResponse, "description": "Invalid request"}
+    422: {
+        "model": ErrorResponse,
+        "description": "Invalid request",
+        "headers": CORRELATION_ID_RESPONSE_HEADERS,
+    }
 }
 ANALYSIS_LOOKUP_ERROR_RESPONSES = {
-    404: {"model": ErrorResponse, "description": "Analysis run not found"},
-    422: {"model": ErrorResponse, "description": "Invalid request"},
+    404: {
+        "model": ErrorResponse,
+        "description": "Analysis run not found",
+        "headers": CORRELATION_ID_RESPONSE_HEADERS,
+    },
+    422: {
+        "model": ErrorResponse,
+        "description": "Invalid request",
+        "headers": CORRELATION_ID_RESPONSE_HEADERS,
+    },
 }
+LOGGER = logging.getLogger("scm.api")
 
 
 def _build_analysis_adapter(analysis_adapter: AnalysisGenerator | None) -> AnalysisGenerator:
@@ -75,11 +96,21 @@ def create_app(
 
     @app.middleware("http")
     async def attach_correlation_id(request: Request, call_next):
-        ensure_request_correlation_id(request)
+        correlation_id = ensure_request_correlation_id(request)
         response = await call_next(request)
+        response.headers[CORRELATION_ID_RESPONSE_HEADER] = correlation_id
+        LOGGER.info(
+            "request_completed",
+            extra={
+                "correlation_id": correlation_id,
+                "method": request.method,
+                "path": request.url.path,
+                "status_code": response.status_code,
+            },
+        )
         return response
 
-    @app.get("/health")
+    @app.get("/health", responses={200: {"headers": CORRELATION_ID_RESPONSE_HEADERS}})
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
@@ -87,7 +118,10 @@ def create_app(
         "/api/v1/analyses",
         response_model=AnalysisRunResponse,
         status_code=status.HTTP_201_CREATED,
-        responses=REQUEST_VALIDATION_ERROR_RESPONSE,
+        responses={
+            status.HTTP_201_CREATED: {"headers": CORRELATION_ID_RESPONSE_HEADERS},
+            **REQUEST_VALIDATION_ERROR_RESPONSE,
+        },
     )
     def create_analysis(
         request: AnalysisCreateRequest,
@@ -104,14 +138,21 @@ def create_app(
             )
         )
 
-    @app.get("/api/v1/analyses", response_model=list[AnalysisRunResponse])
+    @app.get(
+        "/api/v1/analyses",
+        response_model=list[AnalysisRunResponse],
+        responses={200: {"headers": CORRELATION_ID_RESPONSE_HEADERS}},
+    )
     def get_analyses(session: Session = Depends(get_db)) -> list[AnalysisRunResponse]:
         return [AnalysisRunResponse.model_validate(run) for run in list_analysis_runs(session)]
 
     @app.get(
         "/api/v1/analyses/{analysis_id}",
         response_model=AnalysisRunResponse,
-        responses=ANALYSIS_LOOKUP_ERROR_RESPONSES,
+        responses={
+            200: {"headers": CORRELATION_ID_RESPONSE_HEADERS},
+            **ANALYSIS_LOOKUP_ERROR_RESPONSES,
+        },
     )
     def get_analysis(
         analysis_id: int, session: Session = Depends(get_db)
@@ -122,7 +163,10 @@ def create_app(
         "/api/v1/analyses/{analysis_id}/rerun",
         response_model=AnalysisRunResponse,
         status_code=status.HTTP_201_CREATED,
-        responses=ANALYSIS_LOOKUP_ERROR_RESPONSES,
+        responses={
+            status.HTTP_201_CREATED: {"headers": CORRELATION_ID_RESPONSE_HEADERS},
+            **ANALYSIS_LOOKUP_ERROR_RESPONSES,
+        },
     )
     def rerun_existing_analysis(
         analysis_id: int,
