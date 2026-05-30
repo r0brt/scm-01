@@ -54,6 +54,8 @@ Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fe
 
 Ungültige Requests und unbekannte Analyse-IDs werden explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
 
+Der maschinenlesbare API-Vertrag wird von FastAPI als OpenAPI-Schema erzeugt und als Snapshot unter `docs/api/openapi.json` versioniert. Der Snapshot ist kein zweiter Vertrag, sondern ein Nachweisartefakt: Ein Backend-Test vergleicht ihn mit dem aktuell von `create_app().openapi()` erzeugten Schema.
+
 ## LLM-Adapter und Prompt-Versionierung
 
 Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sondern über einen expliziten Adapter-Port. Dadurch bleiben Stub-, Test- und Provider-Implementierungen austauschbar.

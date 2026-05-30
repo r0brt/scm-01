@@ -11,7 +11,7 @@ from app.api.errors import (
     ensure_request_correlation_id,
     request_validation_error_handler,
 )
-from app.api.schemas import AnalysisCreateRequest, AnalysisRunResponse
+from app.api.schemas import AnalysisCreateRequest, AnalysisRunResponse, ErrorResponse
 from app.db.base import Base
 from app.db.session import create_engine, create_session_factory, get_database_url
 from app.language.base import LanguageDetector
@@ -25,6 +25,14 @@ from app.services.analysis_workflow import (
     list_analysis_runs,
     rerun_analysis,
 )
+
+REQUEST_VALIDATION_ERROR_RESPONSE = {
+    422: {"model": ErrorResponse, "description": "Invalid request"}
+}
+ANALYSIS_LOOKUP_ERROR_RESPONSES = {
+    404: {"model": ErrorResponse, "description": "Analysis run not found"},
+    422: {"model": ErrorResponse, "description": "Invalid request"},
+}
 
 
 def _build_analysis_adapter(analysis_adapter: AnalysisGenerator | None) -> AnalysisGenerator:
@@ -48,7 +56,7 @@ def create_app(
     language_detector: LanguageDetector | None = None,
 ) -> FastAPI:
     """Create and configure the FastAPI application."""
-    app = FastAPI()
+    app = FastAPI(title="Social Cleanup Machine API", version="0.1.0")
     adapter = _build_analysis_adapter(analysis_adapter)
     detector = language_detector or LocalLanguageDetector()
     should_initialize_schema = initialize_schema or os.getenv("SCM_INITIALIZE_SCHEMA") == "1"
@@ -79,6 +87,7 @@ def create_app(
         "/api/v1/analyses",
         response_model=AnalysisRunResponse,
         status_code=status.HTTP_201_CREATED,
+        responses=REQUEST_VALIDATION_ERROR_RESPONSE,
     )
     def create_analysis(
         request: AnalysisCreateRequest,
@@ -99,7 +108,11 @@ def create_app(
     def get_analyses(session: Session = Depends(get_db)) -> list[AnalysisRunResponse]:
         return [AnalysisRunResponse.model_validate(run) for run in list_analysis_runs(session)]
 
-    @app.get("/api/v1/analyses/{analysis_id}", response_model=AnalysisRunResponse)
+    @app.get(
+        "/api/v1/analyses/{analysis_id}",
+        response_model=AnalysisRunResponse,
+        responses=ANALYSIS_LOOKUP_ERROR_RESPONSES,
+    )
     def get_analysis(
         analysis_id: int, session: Session = Depends(get_db)
     ) -> AnalysisRunResponse:
@@ -109,6 +122,7 @@ def create_app(
         "/api/v1/analyses/{analysis_id}/rerun",
         response_model=AnalysisRunResponse,
         status_code=status.HTTP_201_CREATED,
+        responses=ANALYSIS_LOOKUP_ERROR_RESPONSES,
     )
     def rerun_existing_analysis(
         analysis_id: int,

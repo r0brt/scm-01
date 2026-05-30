@@ -9,6 +9,7 @@ Stand: 2026-05-30
 - [x] Bounded Repair-Logik ist im Repository vorbereitet, aber im aktuellen Standardpfad nicht verdrahtet
 - [x] Analyse-Runs werden mit Traceability-Metadaten inklusive `correlation_id` persistiert
 - [x] API-v1 für Analyse, Liste, Detail und Rerun ist vorhanden
+- [x] API-v1 ist als OpenAPI-Snapshot unter `docs/api/openapi.json` versioniert
 - [x] Frontend zeigt Eingabe, Pipeline, Run-Liste, Archiv-Nachweise und JSON-Export
 - [x] Lokaler Zielbetrieb via Docker Compose ist dokumentiert
 
@@ -35,10 +36,11 @@ Stand: 2026-05-30
 
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
+- [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q tests/contracts/test_openapi_snapshot.py`
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Commit `6ca86e3`, Run `26692751002`
+- [x] GitHub Actions `CI` auf `main` für Commit `758ba0d`, Run `26693076964`
 
 ## NFR-Nachweisstatus
 

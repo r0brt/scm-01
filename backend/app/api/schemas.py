@@ -10,6 +10,21 @@ class AnalysisCreateRequest(BaseModel):
     text: str = Field(min_length=1)
 
 
+class ErrorPayload(BaseModel):
+    """Public API error payload."""
+
+    code: str
+    message: str
+    details: dict[str, Any]
+    correlation_id: str
+
+
+class ErrorResponse(BaseModel):
+    """Public API error response envelope."""
+
+    error: ErrorPayload
+
+
 class AnalysisRunResponse(BaseModel):
     """API response schema for a persisted analysis run."""
 
