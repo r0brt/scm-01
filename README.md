@@ -9,6 +9,7 @@ Dieses Repository enthält den aktuellen MVP-Stand des Projekts inklusive Backen
 - Arbeitsvereinbarung: [`AGENTS.md`](AGENTS.md)
 - Architekturdokumentation (arc42): [`docs/arc42/README.md`](docs/arc42/README.md)
 - Architekturentscheidungen (ADRs): [`docs/adr/`](docs/adr/)
+- API-Vertrag (OpenAPI): [`docs/api/openapi.json`](docs/api/openapi.json)
 - Diagramme: [`docs/diagrams/README.md`](docs/diagrams/README.md)
 
 ## Abgabe- und Nachweisnavigation
@@ -19,6 +20,7 @@ Für eine schnelle Prüfung des aktuellen MVP-Standes sind besonders diese Dokum
 - Datenschutz, KI-Governance und AI-Act-Einordnung: [`docs/privacy-and-ai-governance.md`](docs/privacy-and-ai-governance.md)
 - Abnahme gegen PRD-Kriterien: [`docs/acceptance-checklist.md`](docs/acceptance-checklist.md)
 - Ausgeführte Tests, CI und bekannte Limitationen: [`docs/test-report.md`](docs/test-report.md)
+- Versionierter API-Contract: [`docs/api/openapi.json`](docs/api/openapi.json)
 - Diagrammquellen und gerenderte SVGs: [`docs/diagrams/README.md`](docs/diagrams/README.md)
 
 Die Dokumentation beschreibt bewusst den MVP-Stand. Vollständige Privacy Operations, produktionsreife Observability, formale Rechtsprüfung und finale PDF-Layoutoptimierung bleiben ausserhalb dieses Nachweisstandes.
@@ -42,6 +44,13 @@ cd backend
 uv run --python 3.13 uvicorn app.main:app --reload
 uv run --python 3.13 pytest -q
 uv run --python 3.13 ruff check .
+```
+
+OpenAPI-Snapshot aktualisieren:
+
+```bash
+cd backend
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/export_openapi.py
 ```
 
 Produktiver Analysepfad lokal:

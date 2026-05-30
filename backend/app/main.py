@@ -48,7 +48,7 @@ def create_app(
     language_detector: LanguageDetector | None = None,
 ) -> FastAPI:
     """Create and configure the FastAPI application."""
-    app = FastAPI()
+    app = FastAPI(title="Social Cleanup Machine API", version="0.1.0")
     adapter = _build_analysis_adapter(analysis_adapter)
     detector = language_detector or LocalLanguageDetector()
     should_initialize_schema = initialize_schema or os.getenv("SCM_INITIALIZE_SCHEMA") == "1"

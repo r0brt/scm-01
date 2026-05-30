@@ -11,6 +11,8 @@ Die Verfügbarkeitsprüfung ist der kleinste Laufzeitpfad des Systems. Sie dient
 
 ## Szenario 2: Analyse eines Problemtexts via API v1
 
+Der API-Vertrag wird zur Laufzeit von FastAPI als OpenAPI-Schema bereitgestellt. Zusätzlich ist der aktuelle Snapshot unter `docs/api/openapi.json` versioniert; `backend/scripts/export_openapi.py` erzeugt dieses Artefakt reproduzierbar aus `create_app().openapi()`.
+
 Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert.
 
 ![UJ1 Sequenzdiagramm](../diagrams/rendered/uj1-sequence.svg)
