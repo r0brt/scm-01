@@ -11,6 +11,15 @@ Architekturentscheidungen werden als ADRs in [`docs/adr/`](../adr/) dokumentiert
 | ADR-0005 | Lokaler Zielbetrieb über Docker Compose mit `frontend`, `api` und `db`. | Nur lokale Dev-Server oder frühe Service-Orchestrierung. | Der verteilte Mindestbetrieb soll reproduzierbar sichtbar sein, ohne Produktionskomplexität einzuführen. | Compose deckt TLS, Secret-Management, Hochverfügbarkeit und zentrale Observability noch nicht ab. | [docs/adr/0005-containerized-local-runtime.md](../adr/0005-containerized-local-runtime.md) |
 | ADR-0006 | Clientseitige React/Vite-SPA mit deterministischer Pipeline-Inszenierung. | SSR, Streaming-UI oder serverseitige Template-Anwendung. | Die didaktische Analysepipeline lässt sich aus dem synchron gelieferten Run im Browser stabil ableiten. | Kein SSR-/SEO-Vorteil; Flow- und Review-Modus müssen bewusst im Frontend gepflegt werden. | [docs/adr/0006-frontend-spa-and-client-side-pipeline.md](../adr/0006-frontend-spa-and-client-side-pipeline.md) |
 
+Die vollständigen Repo-Pfade der ADRs sind:
+
+- `docs/adr/0001-architecture-style.md`
+- `docs/adr/0002-analysis-contract-and-validation.md`
+- `docs/adr/0003-persistence-and-migrations.md`
+- `docs/adr/0004-llm-adapter-and-prompt-versioning.md`
+- `docs/adr/0005-containerized-local-runtime.md`
+- `docs/adr/0006-frontend-spa-and-client-side-pipeline.md`
+
 Für den state-driven Flow-/Review-Modus, den Archiv-Tab und die reduzierte Export-/Metadateninszenierung ist keine zusätzliche ADR nötig. Diese Punkte sind Ausprägungen der bestehenden Frontend-Architektur und keine neue systemweite Struktur- oder Integrationsentscheidung. Dokumentiert werden sie deshalb in Baustein-, Laufzeit- und Querschnittssicht.
 
 Die Diagrammquellen präzisieren bestehende Architekturentscheidungen; sie führen keine zusätzliche Architekturentscheidung ein.
