@@ -1,8 +1,18 @@
-# 10 Qualitätsszenarien
+# Qualitätsszenarien
 
 Die folgenden Qualitätsszenarien konkretisieren die Qualitätsziele aus Kapitel 1. Sie prüfen vor allem Vertragstreue, Nachvollziehbarkeit, Reproduzierbarkeit, Sprachbehandlung und die Grenzen der KI-gestützten Analyse.
 
 Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getrennt ausgewiesen: Vertrag, Fehlerpfad, Traceability, Sprachdetektion, UI und E2E sind technisch nachgewiesen. Die NFR1-Quote ist im Offline-Fixture-Harness über das definierte Eingabeset gemessen; die NFR3-p95-Laufzeitmessung ist als Offline-API-Benchmark dokumentiert. Das NFR5-Coverage-Ziel ist für den Backend-Domain-/Application-Scope gemessen. Der aktuelle Stand ist in `docs/test-report.md` und `docs/acceptance-checklist.md` dokumentiert.
+
+| Qualitätsziel | Relevante Szenarien | Nachweis | Status / Grenze |
+| --- | --- | --- | --- |
+| Vertragstreue | QS1 | Contract-, Validation-, API- und Integrationstests; NFR1-Fixture-Harness | Offline nachgewiesen; keine Aussage zur Live-Providerqualität. |
+| Nachvollziehbarkeit | QS2, QS9 | Persistenztests, API-Detailabruf, Observability-Test und Run-Metadaten | Pro Run gut nachvollziehbar; kein vollständiger Ende-zu-Ende-Audit-Trail. |
+| Reproduzierbarkeit | QS3, QS4 | README-Kommandos, CI, Frontend-Build, Playwright-UJ1-Pfad und Compose-Nachweis | Lokal und in CI belegt; Umgebungsvoraussetzungen bleiben relevant. |
+| Sprachbehandlung | QS5 | Backend-Tests für Sprachdetektion, Workflow und API | Unterstützt `de`, `fr`, `en`; weitere Sprachen sind nicht Teil des MVP. |
+| Providerrobustheit | QS6 | Adapter-, App-Factory- und API-Fehlervertragstests | Tests laufen ohne Netz; produktionsnahe Provider-Verfügbarkeit ist nicht gemessen. |
+| Datenschutz und Governance | QS7, QS8 | Datenmodell, API, Archiv-Metadaten, `docs/privacy-and-ai-governance.md` | Datenpfade und Grenzen sind dokumentiert; keine produktionsreife Compliance-Sicht. |
+| Messbare NFRs | QS10, QS11, QS12 | `docs/test-report.md`, `docs/acceptance-checklist.md`, NFR-Skripte und Coverage-Report | Messungen sind bewusst als lokale/offline Nachweise eingeordnet. |
 
 ## QS1: Vertragskonforme Analyseausgabe
 

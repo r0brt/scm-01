@@ -1,4 +1,4 @@
-# 12 Glossar
+# Glossar
 
 Dieses Glossar bündelt zentrale Projektbegriffe, damit PRD, arc42, ADRs und Implementierung konsistent über dieselben Konzepte sprechen.
 

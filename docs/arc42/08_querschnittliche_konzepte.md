@@ -1,4 +1,4 @@
-# 08 Querschnittliche Konzepte
+# Querschnittliche Konzepte
 
 ## Analyse-Contract
 
@@ -43,6 +43,16 @@ Die Aufbewahrung ist im aktuellen Stand technisch nachvollziehbar, aber operativ
 Transparenz entsteht im MVP über offen dokumentierte Datenpfade, die sichtbare Pipeline im Frontend und die persistierten technischen Metadaten pro Run. Die Anwendung ist als unterstützendes Analysewerkzeug konzipiert; sie trifft keine autonomen Sachentscheide und ersetzt keine menschliche Beurteilung. Menschliche Aufsicht bleibt insbesondere bei der Auswahl des Eingangstexts, bei der Interpretation der Analyse und bei jeder Weiterverwendung der Resultate erforderlich.
 
 Die aktuellen Kontrollen bleiben bewusst begrenzt. Das System beschreibt keinen vollständigen rechtlichen Compliance-Nachweis, keine produktionsreife Anbietersteuerung und keine Ende-zu-Ende-Governance für alle möglichen Einsatzkontexte. Diese Grenzen werden explizit benannt, statt regulatorische Vollständigkeit zu behaupten.
+
+| Kontrolle | Status im MVP | Grenze |
+| --- | --- | --- |
+| Lokale Persistenz von `input_text` | Eingabetexte werden mit Run, Analyse- oder Fehlerzustand und Metadaten nachvollziehbar gespeichert. | Keine fachliche Löschfunktion, keine Retention-Fristen pro Datenkategorie und keine Privacy-Operations-Prozesse. |
+| Optionaler Provider-Pfad | Externe Analyseerzeugung läuft nur bei entsprechender OpenAI-Konfiguration über den Adapter. | Keine produktionsreife Anbietersteuerung, keine formale Auftrags- oder Vertragsprüfung im Repository. |
+| Traceability pro Run | `correlation_id`, `prompt_version`, `model_id`, Status, Fehlerangaben und Validierungsreport sind persistiert und über API/Archiv sichtbar. | Kein vollständiger Ende-zu-Ende-Audit-Trail über Browser, API, DB, Logs und Provider. |
+| Secrets und Konfiguration | Secrets werden über Umgebungsvariablen injiziert und nicht im Repository versioniert. | Keine Secret-Rotation, kein Secret-Manager und keine produktionsnahe Rollen- oder Mandantentrennung. |
+| Logging | Request-Logs enthalten Methode, Pfad, Statuscode und `correlation_id`, aber keinen `input_text` oder Analyseinhalt. | Keine zentrale Logplattform, keine formale Redaction-Policy und kein vollständiges Audit-Logging. |
+| Input-Validierung und API-Schutz | Der API-Vertrag verlangt nicht leere Texte und liefert strukturierte Fehlerantworten mit `correlation_id`. | Kein hartes Maximallimit im API-Schema, keine Authentisierung, keine Rate Limits und kein explizites CORS-/Perimeter-Hardening im MVP. |
+| Aufbewahrung | Runs bleiben lokal erhalten, bis die Datenbank oder Umgebung bewusst bereinigt wird. | Keine fachliche Retention-Policy und kein dokumentierter produktiver Löschprozess. |
 
 Die Nachweise sind auf mehrere Dokumente verteilt: arc42 beschreibt die Architekturentscheidung, `docs/privacy-and-ai-governance.md` vertieft Datenflüsse und Grenzen, `docs/acceptance-checklist.md` hält den Abnahmestand fest und `docs/test-report.md` dokumentiert die technische Verifikation.
 

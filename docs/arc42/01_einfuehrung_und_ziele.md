@@ -1,4 +1,4 @@
-# 01 Einführung und Ziele
+# Einführung und Ziele
 
 ## Zweck
 
@@ -8,9 +8,15 @@ Der Schwerpunkt des aktuellen MVP liegt auf reproduzierbarer Verarbeitung, expli
 
 ## Stakeholder
 
-- Endnutzer: geben Text ein und prüfen Analyseergebnisse.
-- Maintainer: entwickelt Architektur und Betrieb mit geringem Risiko weiter.
-- Reviewer: prüfen Reproduzierbarkeit, Nachvollziehbarkeit und die Konsistenz zwischen Architektur, Implementierung und Nachweisen.
+Die Stakeholder betrachten SCM aus unterschiedlichen Blickwinkeln. Für die Architektur sind vor allem Verständlichkeit, Nachvollziehbarkeit, sichere Grenzen und reproduzierbare Weiterentwicklung relevant.
+
+| Stakeholder | Zentrale Anliegen |
+| --- | --- |
+| Endnutzer | Verständliche Analyse, sichtbare Trennung der sechs Ebenen, transparente Fehlzustände und keine falsche Objektivitätswirkung. |
+| Maintainer | Änderbarkeit, nachvollziehbare Verträge, stabile Tests, reproduzierbarer Betrieb und begrenzte Komplexität. |
+| Reviewer | Konsistenz zwischen Architektur, Code, Tests, ADRs und Nachweisen. |
+| Datenschutz/Governance | Klare Datenflüsse, erkennbare externe Provider-Grenzen, nachvollziehbare Retention- und Löschgrenzen. |
+| Betreiber/Maintainer im Betrieb | Verständliche Konfiguration, Secret-Handhabung über Umgebungsvariablen, bekannte Logging-, Backup- und Restore-Grenzen. |
 
 ## Qualitätsziele
 

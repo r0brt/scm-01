@@ -1,4 +1,4 @@
-# 07 Verteilungssicht
+# Verteilungssicht
 
 Die initiale Deployment-Sicht bleibt bei einem containerisierten Setup aus UI, API und PostgreSQL via Docker Compose.
 

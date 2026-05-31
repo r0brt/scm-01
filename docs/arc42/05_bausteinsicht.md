@@ -1,4 +1,4 @@
-# 05 Bausteinsicht
+# Bausteinsicht
 
 ## Level-1-Zerlegung
 
