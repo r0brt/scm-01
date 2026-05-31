@@ -1,5 +1,7 @@
 # Projektidee: Social Clean-Up Machine
 
+> Hinweis: Dieses Dokument hält die ursprüngliche Projektidee fest. Für den aktuellen verbindlichen Projektstand gelten `docs/prd.md`, `schemas/analysis.schema.json`, `backend/app/models/analysis.py`, `prompts/v2/analysis.md` sowie die arc42-Dokumentation. `docs/scm.md` dient als fachlicher Hintergrund und nicht als alleinige Quelle des Laufzeitvertrags.
+
 **CAS AI-Assisted Software Engineering**  
 **Autor:** Robert Haemmerli  
 **Aufgabe:** Projektidee  

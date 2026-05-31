@@ -25,7 +25,7 @@ Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreich
 2. Das Backend erkennt zuerst lokal die dominante Sprache und bewertet die Sicherheit der Erkennung.
 3. Bei zu geringer Sicherheit oder nicht unterstützter Sprache endet der Lauf sofort als `failed`; ein Run mit Fehlercode und Sprachmetadaten wird trotzdem persistiert.
 4. Bei erfolgreicher Spracherkennung übergibt das Backend die erkannte Sprache explizit an den konfigurierten Analyse-Adapter. Im Produktivpfad ist dies der OpenAI-Adapter, alternativ bleibt ein Stub-Pfad für Offline-Tests verfügbar.
-5. Der Adapter fordert die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` im versionierten SCM-Vertrag aus `docs/scm.md`, `prompts/v2/analysis.md` und `schemas/analysis.schema.json` an. Zusätzlich übergibt das Backend die erkannte Eingabesprache als explizite Prompt-Vorgabe.
+5. Der Adapter fordert die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` gemäss aktivem Vertrag aus `schemas/analysis.schema.json`, `backend/app/models/analysis.py` und `prompts/v2/analysis.md` an; `docs/prd.md` beschreibt den fachlichen Anforderungskontext. Zusätzlich übergibt das Backend die erkannte Eingabesprache als explizite Prompt-Vorgabe.
 6. Wenn der Adapter kein verwertbares Payload liefert, endet der Request mit `ANALYSIS_PROVIDER_ERROR` und HTTP 502; es wird kein Analyse-Run persistiert.
 7. Wenn der Adapter ein verwertbares Payload liefert, validiert das Backend die Analyse gegen Schema und Pydantic-Modelle.
 8. Bei gültiger Struktur prüft das Backend zusätzlich die dominante Sprache der gesamten Analyseausgabe. Bei Abweichung oder zu geringer Sicherheit endet der Lauf mit `OUTPUT_LANGUAGE_MISMATCH`.

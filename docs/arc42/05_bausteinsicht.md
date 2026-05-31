@@ -21,7 +21,7 @@ Die Bausteine bilden eine einfache Verarbeitungskette: Die Web UI nimmt Problemt
 
 Die UI übernimmt Präsentation und Nutzerinteraktion. Die API stellt Verträge, Orchestrierung, Fehlermapping und Persistenzzugriff bereit. Die Persistenz sorgt für eine dauerhafte, abfragbare Run-Historie. Der LLM-Provider liefert generierte Analyseinhalte, die erst nach strikten Contract-Checks in den weiteren Verarbeitungspfad gelangen.
 
-Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs müssen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rückwärtskompatibel unterstützt.
+Der aktuelle Analysevertrag ergibt sich aus `docs/prd.md`, `schemas/analysis.schema.json`, `backend/app/models/analysis.py` und `prompts/v2/analysis.md`. `docs/scm.md` bleibt als Projektidee und fachlicher Hintergrund erhalten, ist aber nicht die alleinige Quelle des Laufzeitvertrags. Neue Analyse-Runs müssen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rückwärtskompatibel unterstützt.
 
 ## C3-Komponentensichten
 
