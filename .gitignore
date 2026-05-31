@@ -5,3 +5,4 @@ backend/scm.db
 backend/.coverage
 .env
 .env (from backup)
+docs/arc42/dist/

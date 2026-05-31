@@ -1,0 +1,93 @@
+@page {
+  size: A4;
+  margin: 16mm 14mm;
+}
+
+body {
+  color: #172033;
+  font-family: "Aptos", "Helvetica Neue", Arial, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.42;
+}
+
+h1 {
+  break-before: page;
+  color: #12355b;
+  font-size: 20pt;
+  margin-top: 0;
+}
+
+h1:first-of-type {
+  break-before: auto;
+}
+
+h2 {
+  color: #164e7a;
+  font-size: 14pt;
+  margin-top: 1.1rem;
+}
+
+h3 {
+  color: #1f5f8b;
+  font-size: 11.5pt;
+  margin-top: 0.9rem;
+}
+
+p,
+li {
+  orphans: 2;
+  widows: 2;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 8pt;
+  margin: 0.7rem 0;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #d3dce8;
+  padding: 3px 5px;
+  vertical-align: top;
+}
+
+th {
+  background: #edf5ff;
+}
+
+figure {
+  break-inside: avoid;
+  margin: 0.8rem 0 1rem;
+  text-align: center;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+figcaption {
+  color: #31465f;
+  font-size: 8.5pt;
+  margin-top: 0.4rem;
+}
+
+code {
+  font-size: 0.9em;
+}
+
+pre {
+  font-size: 7.5pt;
+  white-space: pre-wrap;
+}
+
+a {
+  color: #0f4c81;
+  text-decoration: none;
+}
+
+#TOC {
+  break-after: page;
+}
