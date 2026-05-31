@@ -37,20 +37,27 @@ class FakeAdapter:
         }
 
 
+class FailingAdapter:
+    def generate_analysis(self, text: str, *, language: str | None = None):
+        raise RuntimeError("provider unavailable")
+
+
 def make_client(
     tmp_path: Path,
     *,
     language: str = "de",
     confidence: float = 0.95,
+    analysis_adapter=None,
+    raise_server_exceptions: bool = True,
 ) -> TestClient:
     database_url = f"sqlite+pysqlite:///{tmp_path / 'api.db'}"
     app = create_app(
         database_url=database_url,
         initialize_schema=True,
-        analysis_adapter=FakeAdapter(),
+        analysis_adapter=analysis_adapter or FakeAdapter(),
         language_detector=FakeLanguageDetector(language=language, confidence=confidence),
     )
-    return TestClient(app)
+    return TestClient(app, raise_server_exceptions=raise_server_exceptions)
 
 
 def test_post_analyses_creates_and_persists_run(tmp_path: Path) -> None:
@@ -187,6 +194,38 @@ def test_run_api_exposes_persisted_correlation_ids_consistently(
     assert listed[0]["correlation_id"] == "corr-create"
     assert detail["correlation_id"] == "corr-create"
     assert rerun["correlation_id"] == "corr-rerun"
+
+
+def test_post_analyses_maps_provider_failure_to_error_contract_without_run(
+    tmp_path: Path, monkeypatch
+) -> None:
+    expected_correlation_id = "corr-provider-failure"
+
+    def force_request_correlation_id(request: Request) -> str:
+        setattr(request.state, REQUEST_CORRELATION_ID_KEY, expected_correlation_id)
+        return expected_correlation_id
+
+    monkeypatch.setattr("app.main.ensure_request_correlation_id", force_request_correlation_id)
+    client = make_client(
+        tmp_path,
+        analysis_adapter=FailingAdapter(),
+        raise_server_exceptions=False,
+    )
+
+    response = client.post("/api/v1/analyses", json={"text": "Provider faellt aus"})
+
+    assert response.status_code == 502
+    assert response.headers["X-Correlation-ID"] == expected_correlation_id
+    payload = response.json()
+    assert payload["error"]["code"] == "ANALYSIS_PROVIDER_ERROR"
+    assert payload["error"]["message"] == "Analysis provider failed"
+    assert payload["error"]["details"] == {"stage": "analysis_provider"}
+    assert payload["error"]["correlation_id"] == expected_correlation_id
+
+    with sqlite3.connect(tmp_path / "api.db") as connection:
+        run_count = connection.execute("SELECT COUNT(*) FROM runs").fetchone()
+
+    assert run_count == (0,)
 
 
 def test_get_unknown_analysis_returns_error_contract(tmp_path: Path) -> None:

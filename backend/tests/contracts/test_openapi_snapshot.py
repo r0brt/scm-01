@@ -42,6 +42,7 @@ def test_openapi_documents_public_error_contract() -> None:
     )
 
     assert _response_schema_ref(openapi, "/api/v1/analyses", "post", 422) == ERROR_RESPONSE_REF
+    assert _response_schema_ref(openapi, "/api/v1/analyses", "post", 502) == ERROR_RESPONSE_REF
     assert (
         _response_schema_ref(openapi, "/api/v1/analyses/{analysis_id}", "get", 404)
         == ERROR_RESPONSE_REF
@@ -58,6 +59,10 @@ def test_openapi_documents_public_error_contract() -> None:
         _response_schema_ref(openapi, "/api/v1/analyses/{analysis_id}/rerun", "post", 422)
         == ERROR_RESPONSE_REF
     )
+    assert (
+        _response_schema_ref(openapi, "/api/v1/analyses/{analysis_id}/rerun", "post", 502)
+        == ERROR_RESPONSE_REF
+    )
 
 
 def test_openapi_documents_correlation_id_response_header() -> None:
@@ -68,6 +73,7 @@ def test_openapi_documents_correlation_id_response_header() -> None:
         ("/health", "get", 200),
         ("/api/v1/analyses", "post", 201),
         ("/api/v1/analyses", "post", 422),
+        ("/api/v1/analyses", "post", 502),
         ("/api/v1/analyses", "get", 200),
         ("/api/v1/analyses/{analysis_id}", "get", 200),
         ("/api/v1/analyses/{analysis_id}", "get", 404),
@@ -75,6 +81,7 @@ def test_openapi_documents_correlation_id_response_header() -> None:
         ("/api/v1/analyses/{analysis_id}/rerun", "post", 201),
         ("/api/v1/analyses/{analysis_id}/rerun", "post", 404),
         ("/api/v1/analyses/{analysis_id}/rerun", "post", 422),
+        ("/api/v1/analyses/{analysis_id}/rerun", "post", 502),
     ]
 
     for path, method, status_code in documented_responses:

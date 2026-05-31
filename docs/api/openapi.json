@@ -247,6 +247,24 @@
                 }
               }
             }
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Analysis provider failed before returning an analysis payload",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summary": "Create Analysis"
@@ -385,6 +403,24 @@
               }
             },
             "description": "Invalid request",
+            "headers": {
+              "X-Correlation-ID": {
+                "description": "Request correlation identifier for tracing this response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Analysis provider failed before returning an analysis payload",
             "headers": {
               "X-Correlation-ID": {
                 "description": "Request correlation identifier for tracing this response.",

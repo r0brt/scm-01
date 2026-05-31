@@ -43,8 +43,8 @@ Quantitative PRD-Zielgrössen werden in der aktuellen Dokumentation bewusst getr
 
 - Szenario: Die produktive Analyse soll OpenAI verwenden, während Testläufe offline und reproduzierbar bleiben.
 - Stimulus: Konfiguration von `SCM_ANALYSIS_PROVIDER=openai` im Laufzeitsystem bzw. Fake-Adapter in Tests.
-- Erwartung: Der Produktionspfad verwendet den OpenAI-Adapter und fordert den aktiven SCM-Vertrag aus Prompt und Schema an; Tests bleiben ohne externe Netzaufrufe stabil.
-- Nachweis: Adapter- und App-Factory-Tests mit injizierten Fakes sowie dokumentierte Laufzeitkonfiguration.
+- Erwartung: Der Produktionspfad verwendet den OpenAI-Adapter und fordert den aktiven SCM-Vertrag aus Prompt und Schema an; technische Providerfehler vor einem verwertbaren Payload werden als `ANALYSIS_PROVIDER_ERROR` mit HTTP 502 über den API-Fehlervertrag beantwortet und nicht als Analyse-Run persistiert. Tests bleiben ohne externe Netzaufrufe stabil.
+- Nachweis: Adapter-, App-Factory- und API-Fehlervertragstests mit injizierten Fakes sowie dokumentierte Laufzeitkonfiguration.
 
 ## QS7: Begrenzte Weitergabe sensibler Freitexte
 
