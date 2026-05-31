@@ -5,8 +5,8 @@ Die technischen Risiken beschreiben die wichtigsten Grenzen des aktuellen MVP. S
 ## R1: Reale Provider-Integration bringt externe Laufzeitrisiken mit
 
 - Risiko: Der OpenAI-Pfad hängt von externer Verfügbarkeit, Latenz, Rate Limits und gültiger API-Konfiguration ab.
-- Auswirkung: Analysen können trotz stabilem lokalem Backend fehlschlagen oder langsamer werden. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload werden im aktuellen MVP nicht als validierter `failed` Run persistiert.
-- Gegenmassnahme: Adapter-Port, explizite Provider-Konfiguration, persistierte Traceability-Felder für fachliche Fehlerläufe und weiterhin vollständig offline ausführbare Tests. Der technische Provider-Ausfallpfad bleibt als bekannte MVP-Grenze dokumentiert.
+- Auswirkung: Analysen können trotz stabilem lokalem Backend fehlschlagen oder langsamer werden. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload werden nicht als validierter `failed` Run persistiert.
+- Gegenmassnahme: Adapter-Port, explizite Provider-Konfiguration, API-Fehlervertrag `ANALYSIS_PROVIDER_ERROR` mit HTTP 502 und `correlation_id`, persistierte Traceability-Felder für fachliche Fehlerläufe und weiterhin vollständig offline ausführbare Tests.
 
 ## R2: Sprachdetektion ist heuristisch und nicht fachlich unfehlbar
 

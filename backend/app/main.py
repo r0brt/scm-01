@@ -41,6 +41,13 @@ REQUEST_VALIDATION_ERROR_RESPONSE = {
         "headers": CORRELATION_ID_RESPONSE_HEADERS,
     }
 }
+ANALYSIS_PROVIDER_ERROR_RESPONSE = {
+    502: {
+        "model": ErrorResponse,
+        "description": "Analysis provider failed before returning an analysis payload",
+        "headers": CORRELATION_ID_RESPONSE_HEADERS,
+    }
+}
 ANALYSIS_LOOKUP_ERROR_RESPONSES = {
     404: {
         "model": ErrorResponse,
@@ -121,6 +128,7 @@ def create_app(
         responses={
             status.HTTP_201_CREATED: {"headers": CORRELATION_ID_RESPONSE_HEADERS},
             **REQUEST_VALIDATION_ERROR_RESPONSE,
+            **ANALYSIS_PROVIDER_ERROR_RESPONSE,
         },
     )
     def create_analysis(
@@ -166,6 +174,7 @@ def create_app(
         responses={
             status.HTTP_201_CREATED: {"headers": CORRELATION_ID_RESPONSE_HEADERS},
             **ANALYSIS_LOOKUP_ERROR_RESPONSES,
+            **ANALYSIS_PROVIDER_ERROR_RESPONSE,
         },
     )
     def rerun_existing_analysis(

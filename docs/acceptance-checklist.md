@@ -21,6 +21,7 @@ Stand: 2026-05-31
 - [x] Requestgebundene `correlation_id` wird bei neuen Runs mitpersistiert und in Fehlerantworten wiederverwendet
 - [x] Requestgebundene `correlation_id` ist zusätzlich im `X-Correlation-ID` Header und im Request-Log-Kontext sichtbar
 - [x] Traceability-Felder pro Run sind dokumentiert und im Datenmodell sichtbar
+- [x] Technische Providerfehler werden als `ANALYSIS_PROVIDER_ERROR` mit HTTP 502 über den API-Fehlervertrag beantwortet und nicht als Analyse-Run persistiert
 - [x] Die Grenze zwischen Run-Nachvollziehbarkeit und vollständigem Ende-zu-Ende-Audit-Trail ist offengelegt
 
 ## PRD-Abnahmekriterien

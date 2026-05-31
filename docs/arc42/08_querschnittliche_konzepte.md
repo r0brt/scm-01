@@ -52,7 +52,7 @@ Als ergänzende Governance-Sicht dient [docs/privacy-and-ai-governance.md](../pr
 
 Die API mappt fachliche und technische Fehler zentral auf einen einheitlichen Fehlervertrag. Fehlerantworten enthalten immer `code`, `message`, `details` und eine requestgebundene `correlation_id`, die bereits früh im HTTP-Lebenszyklus erzeugt und danach im Request-Kontext weitergereicht wird.
 
-Ungültige Requests und unbekannte Analyse-IDs werden explizit über diesen Vertrag beantwortet. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
+Ungültige Requests, unbekannte Analyse-IDs und technische Providerfehler werden explizit über diesen Vertrag beantwortet. Providerfehler vor einem verwertbaren Analyse-Payload verwenden `ANALYSIS_PROVIDER_ERROR` mit HTTP 502. Dadurch bleibt das Verhalten für Frontend und spätere Integrationen stabil, auch wenn sich interne Implementierungen ändern.
 
 Der maschinenlesbare API-Vertrag wird von FastAPI als OpenAPI-Schema erzeugt und als Snapshot unter `docs/api/openapi.json` versioniert. Der Snapshot ist kein zweiter Vertrag, sondern ein Nachweisartefakt: Ein Backend-Test vergleicht ihn mit dem aktuell von `create_app().openapi()` erzeugten Schema.
 
@@ -66,7 +66,7 @@ Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivp
 
 Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen für jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
 
-Für die Fehlerbetrachtung ist die Abgrenzung wichtig: Persistierte `failed` Runs entstehen bei lokaler Sprachvorprüfung, Strukturvalidierung oder Ausgabesprachprüfung. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload, zum Beispiel fehlende Konfiguration, Provider-Ausfall oder nicht parsbare Providerantworten, sind im aktuellen MVP nicht als validierter Analyse-Run modelliert. Sie bleiben eine bewusst dokumentierte Grenze des Produktivpfads.
+Für die Fehlerbetrachtung ist die Abgrenzung wichtig: Persistierte `failed` Runs entstehen bei lokaler Sprachvorprüfung, Strukturvalidierung oder Ausgabesprachprüfung. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload, zum Beispiel fehlende Konfiguration, Provider-Ausfall oder nicht parsbare Providerantworten, sind nicht als validierter Analyse-Run modelliert. Sie werden über den API-Fehlervertrag als `ANALYSIS_PROVIDER_ERROR` mit HTTP 502 und requestgebundener `correlation_id` beantwortet.
 
 ## Traceability und Laufnachvollziehbarkeit
 

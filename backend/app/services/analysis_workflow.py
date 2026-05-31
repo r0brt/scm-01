@@ -15,6 +15,7 @@ from app.services.validation import validate_analysis_payload
 DEFAULT_ANALYSIS_GENERATOR = StubAnalysisGenerator()
 DEFAULT_LANGUAGE_DETECTOR = LocalLanguageDetector()
 OUTPUT_LANGUAGE_MISMATCH = "OUTPUT_LANGUAGE_MISMATCH"
+ANALYSIS_PROVIDER_ERROR = "ANALYSIS_PROVIDER_ERROR"
 
 
 def _normalize_generation_result(
@@ -84,9 +85,17 @@ def create_analysis_run(
             error_reason="Language detection failed",
         )
 
-    generation = _normalize_generation_result(
-        adapter.generate_analysis(text, language=detection.language)
-    )
+    try:
+        generation = _normalize_generation_result(
+            adapter.generate_analysis(text, language=detection.language)
+        )
+    except Exception as exc:
+        raise ApiError(
+            status_code=502,
+            code=ANALYSIS_PROVIDER_ERROR,
+            message="Analysis provider failed",
+            details={"stage": "analysis_provider"},
+        ) from exc
     validation = validate_analysis_payload(generation.payload)
     analysis_json = validation.analysis.model_dump() if validation.analysis is not None else None
     validation_report = validation.report
