@@ -37,7 +37,7 @@ Stand: 2026-05-31
 
 ## Erfolgreich verifizierte Commands und Nachweise
 
-Aktueller Refresh auf `main` nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Unit-/UI-Testlauf, Frontend-Build und GitHub Actions CI wurden auf Commit `4eaeccf` neu verifiziert. Die übrigen Spezialnachweise bleiben als zuletzt dokumentierte lokale MVP-Nachweise geführt und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert.
+Referenzstand nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Unit-/UI-Testlauf, Frontend-Build und GitHub Actions CI wurden auf Commit `4eaeccf` verifiziert. Die übrigen Spezialnachweise bleiben als dokumentierte lokale MVP-Nachweise geführt und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert. Für den jeweils aktuellen Commit-Status ist GitHub Actions massgeblich; diese Checkliste hält bewusste Referenznachweise fest.
 
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
