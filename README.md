@@ -1,50 +1,106 @@
 # Social Cleanup Machine
 
-Dieses Repository enthält den aktuellen MVP-Stand des Projekts inklusive Backend, Frontend, Persistenz, Docker-Compose-Betrieb und Projektdokumentation.
+Social Cleanup Machine (SCM) ist ein MVP zur strukturellen Klärung frei formulierter Problemtexte. Die Anwendung zerlegt Texte in sechs feste Ebenen (`symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`) und macht diese Verarbeitung als Pipeline sichtbar.
 
-## Dokumentations-Navigation
+SCM beurteilt Inhalte nicht moralisch, politisch oder faktisch. Das System dient als nachvollziehbarer Analyse- und Diskussionsrahmen: Eingabetext, Analyseergebnis, Validierung, Metadaten und technische Fehlerpfade werden explizit dokumentiert.
 
-- Product Requirements: [`docs/prd.md`](docs/prd.md)
-- Umsetzungsplan: [`PLAN.md`](PLAN.md)
-- Arbeitsvereinbarung: [`AGENTS.md`](AGENTS.md)
-- Architekturdokumentation (arc42): [`docs/arc42/README.md`](docs/arc42/README.md)
-- Architekturentscheidungen (ADRs): [`docs/adr/`](docs/adr/)
-- API-Vertrag (OpenAPI): [`docs/api/openapi.json`](docs/api/openapi.json)
-- Diagramme: [`docs/diagrams/README.md`](docs/diagrams/README.md)
+## Aktueller Stand
 
-## Abgabe- und Nachweisnavigation
+Der aktuelle Stand enthält:
 
-Für eine schnelle Prüfung des aktuellen MVP-Standes sind besonders diese Dokumente relevant:
+- FastAPI-Backend mit API-v1 für Analyse, Listenansicht, Detailansicht und Rerun
+- striktes JSON-Schema für Analyseausgaben unter `schemas/`
+- versionierte Prompts unter `prompts/`
+- lokale Sprachdetektion für `de`, `fr` und `en`
+- LLM-Adapter mit lokalem Stub-Default und optionalem OpenAI-Pfad
+- SQLAlchemy/Alembic-Persistenz für immutable Analyse-Runs
+- React/Vite-Frontend mit Analyseansicht, Archiv, Metadaten und JSON-Export
+- lokaler Zielbetrieb via Docker Compose mit `frontend`, `api` und PostgreSQL-`db`
+- arc42-Dokumentation, ADRs, OpenAPI-Snapshot, Testreport und Abnahmecheckliste
 
-- Architektur und Laufzeitsichten: [`docs/arc42/README.md`](docs/arc42/README.md)
-- Datenschutz, KI-Governance und AI-Act-Einordnung: [`docs/privacy-and-ai-governance.md`](docs/privacy-and-ai-governance.md)
-- Abnahme gegen PRD-Kriterien: [`docs/acceptance-checklist.md`](docs/acceptance-checklist.md)
-- Ausgeführte Tests, CI und bekannte Limitationen: [`docs/test-report.md`](docs/test-report.md)
-- Versionierter API-Contract: [`docs/api/openapi.json`](docs/api/openapi.json)
-- Diagrammquellen und gerenderte SVGs: [`docs/diagrams/README.md`](docs/diagrams/README.md)
+Referenz-Release: `v0.9.0-review-baseline`. Die Restplanung Richtung `v1.0.0` steht in [`docs/v1.0-roadmap.md`](docs/v1.0-roadmap.md).
 
-Die Dokumentation beschreibt bewusst den MVP-Stand. Vollständige Privacy Operations, produktionsreife Observability, formale Rechtsprüfung und finale PDF-Layoutoptimierung bleiben ausserhalb dieses Nachweisstandes.
+## Schnellstart mit Docker Compose
 
-## Aktueller Scope
+Der einfachste lokale Start nutzt Docker Compose. Standardmässig läuft die Analyse über den Stub-Adapter und benötigt keinen externen LLM-Zugriff.
 
-Dieses Repository enthält inzwischen Backend-, Persistenz-, API- und Frontend-Bausteine des Projekts.
-Der aktuelle Stand umfasst:
+```bash
+cp .env.example .env
+docker compose up --build -d
+docker compose ps
+```
 
-- FastAPI-Backend mit Analyse-, Run- und Rerun-API
-- SQLAlchemy/Alembic-basierte Persistenz
-- versionierte Prompts, lokale Sprachdetektion und konfigurierbare LLM-Adapter-Schnittstelle
-- React/Vite-Frontend unter `frontend/`
+Erreichbarkeit:
 
-### Backend Bootstrap
+- Frontend: <http://127.0.0.1:4173>
+- Backend Health: <http://127.0.0.1:8000/health>
 
-Das Backend zielt auf Python `3.13` gemäß Repository-Baseline; die Quick-Start-Befehle setzen deshalb Python `3.13` explizit voraus.
+Stoppen:
+
+```bash
+docker compose down
+```
+
+Lokale Compose-Daten inklusive PostgreSQL-Volume löschen:
+
+```bash
+docker compose down -v
+```
+
+## Lokaler Entwicklungsstart
+
+Voraussetzungen:
+
+- Python `3.13.12` gemäss [`.python-version`](.python-version)
+- Node.js `22` gemäss [`.nvmrc`](.nvmrc)
+- `uv`, `npm`, Docker und Docker Compose
+
+Backend:
 
 ```bash
 cd backend
 uv run --python 3.13 uvicorn app.main:app --reload
-uv run --python 3.13 pytest -q
-uv run --python 3.13 ruff check .
 ```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Das Frontend erwartet die API im lokalen Entwicklungsmodus über die konfigurierte Vite-/Proxy-Umgebung. Für einen vollständigen lokalen Zielbetrieb ist Docker Compose der bevorzugte Einstieg.
+
+## LLM-Konfiguration
+
+Ohne weitere Konfiguration nutzt das Backend den deterministischen Stub-Adapter. Für einen lokalen Lauf mit OpenAI-Provider:
+
+```bash
+export SCM_ANALYSIS_PROVIDER=openai
+export SCM_OPENAI_MODEL=gpt-5.2
+export OPENAI_API_KEY=...
+cd backend
+uv run --python 3.13 uvicorn app.main:app --reload
+```
+
+Bei Compose werden dieselben Variablen über `.env` gesetzt. Tests dürfen keine Netzwerkaufrufe an externe Provider ausführen; Providerzugriffe laufen dort über kontrollierte Doubles oder Mocks.
+
+## API
+
+Der versionierte API-Vertrag ist als OpenAPI-Snapshot dokumentiert:
+
+- [`docs/api/openapi.json`](docs/api/openapi.json)
+
+Aktuelle API-v1-Endpunkte:
+
+- `POST /api/v1/analyses`
+- `GET /api/v1/analyses`
+- `GET /api/v1/analyses/{analysis_id}`
+- `POST /api/v1/analyses/{analysis_id}/rerun`
+- `GET /health`
+
+Fehlerantworten folgen dem dokumentierten Error-Contract mit `error.code`, `message`, optionalen `details` und `correlation_id`. Zusätzlich wird die requestgebundene `correlation_id` über den `X-Correlation-ID` Header sichtbar.
 
 OpenAPI-Snapshot aktualisieren:
 
@@ -53,127 +109,79 @@ cd backend
 UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 python scripts/export_openapi.py
 ```
 
-Produktiver Analysepfad lokal:
+## Tests und Verifikation
+
+Backend:
 
 ```bash
 cd backend
-export SCM_ANALYSIS_PROVIDER=openai
-export SCM_OPENAI_MODEL=gpt-5.2
-export OPENAI_API_KEY=...
-uv run --python 3.13 uvicorn app.main:app --reload
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .
+UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q
 ```
 
-Ohne diese Konfiguration bleibt der Stub-Adapter der Default. Die lokale Sprachdetektion läuft in beiden Fällen vor jeder Analyse und akzeptiert aktuell `de`, `fr` und `en`.
-
-## Environment Baseline (M0)
-
-Unterstützte Baseline für M0:
-
-- Python: `3.13.x` (aktuell gepinnt: `3.13.12`)
-- Node.js: `22 LTS` (siehe `.nvmrc`)
-- `uv`: installiert und verfügbar im PATH
-
-### Verify (vor dem Scaffolding)
-
-```bash
-brew list --versions python@3.13 uv
-python3.13 --version
-uv --version
-node --version
-npm --version
-```
-
-Hinweis: Wenn `python3` auf macOS-System-Python zeigt (z. B. `/usr/bin/python3`), verwende für Projekt-Setup explizit `python3.13` oder passe den PATH an.
-
-### Backend Bootstrap (Python 3.13 explizit)
-
-Für den Backend-Start in M0 muss die Umgebung explizit mit Python 3.13 erstellt/selektiert werden (nicht implizit via `/usr/bin/python3`), z. B.:
-
-```bash
-cd backend
-uv venv --python 3.13
-uv run --python 3.13 pytest -q
-```
-
-### Node-Version für M0
-
-Für M0 auf Node `22 LTS` wechseln (gemäss `.nvmrc`), bevor Frontend-Scaffolding/Build ausgeführt wird.
-
-## Frontend Quick Start
+Frontend:
 
 ```bash
 cd frontend
-npm install
 npm run test -- --run
 npm run build
 ```
 
-### Lokaler Playwright-Journey-Test
-
-Für den lokalen Playwright-Journey-Test gilt:
-
-- Playwright-Browser einmalig lokal installieren: `npx playwright install`
-- `npm run test:e2e` startet eigene lokale Dev-Server für Backend und Frontend
-- die Standardports für E2E sind bewusst getrennt von den normalen Dev-/Compose-Ports:
-  - Frontend E2E: `14173` statt `4173`
-  - Backend E2E: `18000` statt `8000`
-- die E2E-Ports lassen sich bei Bedarf überschreiben mit `SCM_E2E_FRONTEND_PORT` und `SCM_E2E_BACKEND_PORT`
-
-Erst nach dieser Voraussetzung den E2E-Lauf starten:
+Lokaler Playwright-Journey-Test:
 
 ```bash
 cd frontend
 npm run test:e2e
 ```
 
-Beispiel mit expliziten Overrides:
+Hinweise:
 
-```bash
-cd frontend
-SCM_E2E_FRONTEND_PORT=15173 SCM_E2E_BACKEND_PORT=19000 npm run test:e2e
+- Playwright-Browser müssen lokal installiert sein, falls sie noch fehlen: `npx playwright install`
+- der E2E-Test nutzt eigene lokale Ports und mockt die Analyse-API kontrolliert
+- der reale Backend-/API-/Persistenzpfad wird separat durch Backend-, API-, Contract-, Validierungs- und Persistenztests nachgewiesen
+
+Der aktuelle Test- und Nachweisstand ist in [`docs/test-report.md`](docs/test-report.md) dokumentiert.
+
+GitHub Actions führt für Pull Requests und Pushes auf `main` den Basic Quality Gate aus:
+
+- Backend: Ruff und Pytest
+- Frontend: Vitest und Produktions-Build
+
+Der Playwright-E2E-Pfad bleibt ein lokaler Nachweis und ist im Testreport beschrieben.
+
+## Dokumentation
+
+Zentrale Dokumente:
+
+- Produktanforderungen: [`docs/prd.md`](docs/prd.md)
+- Roadmap: [`PLAN.md`](PLAN.md) und [`docs/v1.0-roadmap.md`](docs/v1.0-roadmap.md)
+- Arbeitsregeln für Codex und Maintainer: [`AGENTS.md`](AGENTS.md)
+- arc42-Architekturdokumentation: [`docs/arc42/README.md`](docs/arc42/README.md)
+- Architekturentscheidungen: [`docs/adr/`](docs/adr/)
+- Datenschutz und KI-Governance: [`docs/privacy-and-ai-governance.md`](docs/privacy-and-ai-governance.md)
+- Abnahmecheckliste: [`docs/acceptance-checklist.md`](docs/acceptance-checklist.md)
+- Testreport: [`docs/test-report.md`](docs/test-report.md)
+- Diagrammquellen und gerenderte SVGs: [`docs/diagrams/README.md`](docs/diagrams/README.md)
+
+Die arc42-Dokumentation ist das primäre Architekturdokument. Bei Änderungen an API, Datenmodell, Deployment, LLM-Integration, Validierung, Repair, Logging oder Traceability müssen die betroffenen arc42-Kapitel und gegebenenfalls ADRs, OpenAPI-Snapshot, Testreport oder Abnahmecheckliste nachgeführt werden.
+
+## Repository-Struktur
+
+```text
+backend/   FastAPI-Backend, Services, LLM-Adapter, Persistenz, Tests
+frontend/  React/Vite-Frontend und Playwright-Konfiguration
+schemas/   versionierter JSON-Vertrag der Analyseausgabe
+prompts/   versionierte Analyse-Prompts
+docs/      PRD, arc42, ADRs, Testreport, Diagramme und Governance-Doku
 ```
 
-## Docker Compose (M8)
+## Bewusste Grenzen des MVP
 
-Der lokale Zielbetrieb besteht aus drei Containern: `frontend`, `api` und `db`.
-Das Frontend wird statisch via Nginx ausgeliefert und leitet `/api` an das Backend weiter. Die API führt beim Start automatisch `alembic upgrade head` gegen PostgreSQL aus.
+- keine autonome fachliche, moralische oder politische Beurteilung
+- kein Fact-Checking und keine Quellenprüfung
+- keine Benutzerverwaltung, Rollen oder Mehrmandantenfähigkeit
+- keine produktionsreife Datenschutz-Organisation oder vollständige Privacy Operations
+- keine produktionsnahe Observability mit zentraler Logaggregation, Metriken und Alerting
+- keine produktionsnahe Lastmessung mit externem Provider
 
-```bash
-cp .env.example .env
-docker compose up --build -d
-docker compose ps
-docker compose down
-```
-
-Erreichbarkeit nach `up`:
-
-- Frontend: `http://127.0.0.1:4173`
-- Backend-Health: `http://127.0.0.1:8000/health`
-
-### Lokale Daten bereinigen
-
-Analyse-Runs werden im MVP lokal persistiert. Es gibt aktuell keine fachliche Löschfunktion in der Anwendung; für lokale Entwicklungs- und Abgabenachweise erfolgt Bereinigung über die jeweilige Laufzeitumgebung.
-
-- Compose-Datenbank entfernen: `docker compose down -v`
-- Lokale E2E-SQLite-Datenbank entfernen: `rm -f backend/e2e.db`
-- Lokale Backend-Default-SQLite-Datenbank entfernen, falls verwendet: `rm -f backend/scm.db`
-
-## Finale Verifikation (M9)
-
-```bash
-cd backend && uv run pytest -q
-cd frontend && npm run test -- --run
-cd frontend && npm run build
-docker compose up --build -d
-docker compose ps
-docker compose down
-```
-
-## GitHub Actions CI
-
-Pull Requests und Pushes auf `main` werden durch einen Basic Quality Gate geprüft:
-
-- Backend: `ruff check` und `pytest`
-- Frontend: Vitest-Run und Produktions-Build
-
-E2E mit Playwright bleibt vorerst ein lokaler Nachweis und ist in `docs/test-report.md` dokumentiert.
+Diese Grenzen sind bewusst dokumentiert, damit der aktuelle MVP-Stand nachvollziehbar bleibt und spätere Erweiterungen kontrolliert geplant werden können.
