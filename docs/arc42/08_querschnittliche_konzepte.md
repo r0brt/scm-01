@@ -2,7 +2,7 @@
 
 ## Analyse-Contract
 
-Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Quelle dafür ist `docs/scm.md`. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusätzliche Felder sind nicht erlaubt. Die aktive Validierung prüft Struktur und Modellvertrag; vertiefte semantische Prüfungen bleiben im MVP bewusst begrenzt.
+Die Analyseausgabe folgt einem strikten JSON-Contract. Die fachliche Produktanforderung steht in `docs/prd.md`; technisch verbindlich sind `schemas/analysis.schema.json`, `backend/app/models/analysis.py` und die aktive Prompt-Version. `docs/scm.md` bleibt als fachlicher Hintergrund erhalten. Die sechs Ebenen sind fest vorgegeben: `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen`, `essenz`. Zusätzliche Felder sind nicht erlaubt. Die aktive Validierung prüft Struktur und Modellvertrag; vertiefte semantische Prüfungen bleiben im MVP bewusst begrenzt.
 
 Jede Ebene folgt derselben Struktur mit `beschreibung` und `eintraege[].text`. Der Vertrag wird in Prompt, JSON Schema, Pydantic-Modellen, Persistenz-Payload und Frontend-Typen konsistent nachgezogen.
 
@@ -62,7 +62,7 @@ Die Analyseerzeugung erfolgt nicht direkt in der API oder im Workflow-Code, sond
 
 Der aktuelle Produktivpfad verwendet den OpenAI-Responses-API-Adapter mit strikt angefordertem JSON-Schema-Output. Offline-Tests injizieren weiterhin Fake- oder Stub-Adapter und führen keine Netzaufrufe aus.
 
-Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivpfad verwendet `prompts/v2/analysis.md`. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die in `docs/scm.md` definierten sechs Ebenen exakt anfordern.
+Prompts werden versioniert unter `prompts/v*/` abgelegt. Der aktuelle Produktivpfad verwendet `prompts/v2/analysis.md`. Der vom Adapter verwendete `prompt_version`-Wert und die `model_id` werden in jedem Run persistiert, damit die Herkunft einer Analyse nachvollziehbar bleibt. Die jeweils aktive Prompt-Version muss die im aktiven Vertrag aus `docs/prd.md`, `schemas/analysis.schema.json` und `backend/app/models/analysis.py` definierten sechs Ebenen exakt anfordern.
 
 Der aktuelle Analyse-Prompt kombiniert dabei drei Ebenen von Leitplanken: fachliche Definitionen für jede Analyse-Ebene, strikte Strukturvorgaben des JSON-Contracts und explizite Sprachvorgaben auf Basis der zuvor erkannten Eingabesprache.
 

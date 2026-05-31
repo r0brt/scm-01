@@ -10,7 +10,7 @@ Die Persistenz im Backend ist relational modelliert. Die API schreibt Analyse-Ru
 
 Die API bleibt der einzige Einstiegspunkt für Analysen, delegiert die eigentliche Analyseerzeugung aber an einen austauschbaren LLM-Adapter. Für lokale und Test-Nutzung kann ein Stub-Adapter ohne Netz aktiv bleiben; für reale Analysen steht eine OpenAI-basierte Implementierung zur Verfügung.
 
-Die fachliche Quelle für die erzeugten Analyse-Payloads ist `docs/scm.md`. Deshalb müssen alle Laufzeitkomponenten im Compose-Betrieb denselben Vertrag für `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` verwenden; eine Rückwärtskompatibilität zu früheren Ebenennamen ist nicht vorgesehen.
+Der fachlich-technische Vertrag für erzeugte Analyse-Payloads wird in `docs/prd.md`, `schemas/analysis.schema.json`, `backend/app/models/analysis.py` und `prompts/v2/analysis.md` konkretisiert. `docs/scm.md` bleibt als ursprüngliche Projektidee und fachlicher Hintergrund erhalten. Alle Laufzeitkomponenten im Compose-Betrieb müssen denselben Vertrag für `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` verwenden; eine Rückwärtskompatibilität zu früheren Ebenennamen ist nicht vorgesehen.
 
 Das Frontend ist als eigenständiger Baustein Teil dieser Verteilung. Es spricht die Backend-API direkt an, startet Analysen synchron, zeigt Runs als Pipeline an und ermöglicht im Archiv den Export des aktuell gewählten Runs als JSON.
 
