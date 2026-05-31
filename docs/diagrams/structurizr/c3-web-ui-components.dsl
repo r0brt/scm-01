@@ -1,9 +1,9 @@
 workspace "SCM C3 Web UI Components" "C3 web UI view of the Social Cleanup Machine MVP" {
     model {
         user = person "User" "Nutzt SCM im Browser."
-        backend = softwareSystem "Backend/API" "FastAPI backend."
 
         scm = softwareSystem "SCM" "Social Cleanup Machine" {
+            backend = container "Backend/API" "Analyse- und Run-API." "Python, FastAPI"
             web = container "Web UI" "React/Vite SPA" "React, TypeScript, Vite" {
                 appShell = component "App Shell" "Orchestrierung." "frontend/src/App.tsx"
                 composer = component "Analysis Composer" "Texteingabe." "frontend/src/components/AnalysisComposer.tsx"
@@ -19,7 +19,7 @@ workspace "SCM C3 Web UI Components" "C3 web UI view of the Social Cleanup Machi
         appShell -> composer "Rendert"
         appShell -> pipeline "Rendert"
         appShell -> history "Rendert"
-        appShell -> apiClient "Lädt Runs"
+        appShell -> apiClient "Erstellt/lädt Runs"
         appShell -> viewModel "Berechnet Zustand"
         pipeline -> viewModel "Nutzt"
         apiClient -> backend "Ruft API auf" "HTTP/JSON"
@@ -43,6 +43,10 @@ workspace "SCM C3 Web UI Components" "C3 web UI view of the Social Cleanup Machi
             element "Component" {
                 background "#2563eb"
                 color "#ffffff"
+            }
+            element "Container" {
+                background "#60a5fa"
+                color "#000000"
             }
         }
     }

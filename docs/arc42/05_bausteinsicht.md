@@ -25,6 +25,8 @@ Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue A
 
 ## Backend-Zerlegung (Level 2)
 
+Die folgenden C3-Sichten sind Zoom-ins in einzelne Container. Die SCM-Grenze dient darin nur als Kontext; fachlich massgeblich ist jeweils die Containergrenze von `Backend/API` beziehungsweise `Web UI`.
+
 ![C3 Backend Components](../diagrams/rendered/c3-backend-components.svg)
 
 Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-backend-components.dsl](../diagrams/structurizr/c3-backend-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-backend-components.svg](../diagrams/rendered/c3-backend-components.svg) gerendert.

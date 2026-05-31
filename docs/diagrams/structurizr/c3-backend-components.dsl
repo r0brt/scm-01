@@ -1,36 +1,36 @@
 workspace "SCM C3 Backend Components" "C3 backend view of the Social Cleanup Machine MVP" {
     model {
-        web = softwareSystem "Web UI" "React frontend."
         llmProvider = softwareSystem "LLM Provider" "Externer KI-Anbieter." {
             tags "External"
         }
-        database = softwareSystem "Persistenz" "Run-Speicher." {
-            tags "Database"
-        }
 
         scm = softwareSystem "SCM" "Social Cleanup Machine" {
-            backend = container "Backend/API" "FastAPI backend" "Python, FastAPI" {
-                apiLayer = component "API Layer" "HTTP-Endpunkte." "app/main.py, app/api"
-                workflow = component "Analysis Workflow" "Orchestrierung." "app/services/analysis_workflow.py"
+            web = container "Web UI" "React frontend." "React, Vite, Nginx"
+            backend = container "Backend/API" "FastAPI backend." "Python, FastAPI" {
+                apiLayer = component "API Layer" "HTTP-Endpunkte, Fehlervertrag und correlation_id." "app/main.py, app/api"
+                workflow = component "Analysis Workflow" "Orchestriert Sprache, Analyse, Validierung und Persistenz." "app/services/analysis_workflow.py"
                 language = component "Language Detection" "Sprachprüfung." "app/language"
                 validation = component "Validation Service" "Contract-Prüfung." "app/services/validation.py"
-                llm = component "LLM Adapter" "Analyseerzeugung." "app/llm"
+                llm = component "LLM Adapter" "Stub/OpenAI hinter gemeinsamem Port." "app/llm"
                 repo = component "Run Repository" "Run-Zugriff." "app/repositories"
                 dbModel = component "DB Model + Session" "DB-Abstraktion." "app/db"
-                repair = component "Repair Guardrail" "Vorbereitete Guardrail." "app/services/repair.py"
+                repair = component "Repair Guardrail" "Vorbereitete bounded Repair-Logik; im Standardpfad nicht aktiv." "app/services/repair.py"
+            }
+            db = container "Persistenz" "Run-Speicher." "PostgreSQL 17" {
+                tags "Database"
             }
         }
 
         web -> apiLayer "Ruft auf" "HTTP/JSON"
-        apiLayer -> workflow "Delegiert"
-        workflow -> language "Prüft Sprache"
-        workflow -> llm "Generiert Payload"
-        workflow -> validation "Validiert"
-        workflow -> repo "Persistiert"
-        repair -> validation "Nutzt"
+        apiLayer -> workflow "Startet Analyse/Rerun"
+        workflow -> language "Prüft Eingabe/Ausgabe"
+        workflow -> llm "Fordert Payload an"
+        workflow -> validation "Validiert Payload"
+        workflow -> repo "Persistiert Runs"
+        repair -> validation "Nutzt bei aktivierter Repair-Logik"
         repo -> dbModel "Nutzt"
-        dbModel -> database "Liest/schreibt"
-        llm -> llmProvider "Optional" "HTTPS"
+        dbModel -> db "Liest/schreibt"
+        llm -> llmProvider "Optionaler Providerpfad" "HTTPS"
     }
 
     views {
@@ -43,6 +43,10 @@ workspace "SCM C3 Backend Components" "C3 backend view of the Social Cleanup Mac
             element "Component" {
                 background "#2563eb"
                 color "#ffffff"
+            }
+            element "Container" {
+                background "#60a5fa"
+                color "#000000"
             }
             element "External" {
                 background "#64748b"
