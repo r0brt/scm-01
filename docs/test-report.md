@@ -1,11 +1,12 @@
 # Test Report
 
 Stand: 2026-05-31
-Review-Baseline: `4eaeccf`
+Aktueller main-Referenzstand: `7efde65`
+Lokale Spezialnachweis-Baseline: `4eaeccf`
 
 Dieser Testreport dokumentiert bewusst festgehaltene lokale und CI-bezogene Referenznachweise. Er ist kein Live-Dashboard für jeden Commit auf `main` und kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen frontendseitigen UJ1-E2E-Pfad.
 
-Referenzstand nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Unit-/UI-Testlauf, Frontend-Build und GitHub Actions CI wurden auf Commit `4eaeccf` verifiziert. Die spezialisierten NFR-, Coverage-, Compose- und E2E-Nachweise bleiben als dokumentierte lokale Referenznachweise erhalten und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert.
+Aktueller automatisierter CI-Referenzstand nach PR #72: GitHub Actions `CI` lief auf `main` für Commit `7efde65` erfolgreich durch (Run `26717533317`, 2026-05-31T16:05:03Z). Die lokal ausgeführten Spezialnachweise stammen weiterhin aus der dokumentierten MVP-Referenzbaseline `4eaeccf`. Sie bleiben als reproduzierbare lokale Nachweise erhalten und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert.
 
 ## Ausgeführte Commands
 
@@ -245,13 +246,14 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - Request-to-Response-Nachvollziehbarkeit über `correlation_id`, `X-Correlation-ID` Header und Request-Log-Kontext
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- dokumentierter Referenznachweis auf Commit `4eaeccf`
+- dokumentierter aktueller CI-Referenznachweis auf Commit `7efde65`
+- dokumentierte lokale Spezialnachweise auf Commit `4eaeccf`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - Frontend-E2E-Setup und UJ1-Browserpfad mit kontrolliert gemockter Analyse-API laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der dokumentierte Referenzpush zu Commit `4eaeccf` war erfolgreich (`CI`, Run `26715457857`, 2026-05-31T14:35:35Z). Für den jeweils aktuellen Live-Status ist GitHub Actions massgeblich; dieser Testreport hält ausgewählte Referenznachweise fest. Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der aktuelle dokumentierte Referenzpush zu Commit `7efde65` war erfolgreich (`CI`, Run `26717533317`, 2026-05-31T16:05:03Z). Für den jeweils aktuellen Live-Status ist GitHub Actions massgeblich; dieser Testreport hält ausgewählte Referenznachweise fest. Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
