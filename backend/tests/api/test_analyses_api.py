@@ -228,6 +228,42 @@ def test_post_analyses_maps_provider_failure_to_error_contract_without_run(
     assert run_count == (0,)
 
 
+def test_post_rerun_maps_provider_failure_to_error_contract_without_new_run(
+    tmp_path: Path, monkeypatch
+) -> None:
+    create_client = make_client(tmp_path)
+    created = create_client.post(
+        "/api/v1/analyses", json={"text": "Rerun Providerfehler"}
+    ).json()
+    expected_correlation_id = "corr-rerun-provider-failure"
+
+    def force_request_correlation_id(request: Request) -> str:
+        setattr(request.state, REQUEST_CORRELATION_ID_KEY, expected_correlation_id)
+        return expected_correlation_id
+
+    monkeypatch.setattr("app.main.ensure_request_correlation_id", force_request_correlation_id)
+    rerun_client = make_client(
+        tmp_path,
+        analysis_adapter=FailingAdapter(),
+        raise_server_exceptions=False,
+    )
+
+    response = rerun_client.post(f"/api/v1/analyses/{created['id']}/rerun")
+
+    assert response.status_code == 502
+    assert response.headers["X-Correlation-ID"] == expected_correlation_id
+    payload = response.json()
+    assert payload["error"]["code"] == "ANALYSIS_PROVIDER_ERROR"
+    assert payload["error"]["message"] == "Analysis provider failed"
+    assert payload["error"]["details"] == {"stage": "analysis_provider"}
+    assert payload["error"]["correlation_id"] == expected_correlation_id
+
+    with sqlite3.connect(tmp_path / "api.db") as connection:
+        run_count = connection.execute("SELECT COUNT(*) FROM runs").fetchone()
+
+    assert run_count == (1,)
+
+
 def test_get_unknown_analysis_returns_error_contract(tmp_path: Path) -> None:
     client = make_client(tmp_path)
 
