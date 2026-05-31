@@ -14,7 +14,9 @@ workspace "SCM C3 Backend Components" "C3 backend view of the Social Cleanup Mac
                 llm = component "LLM Adapter" "Stub/OpenAI hinter gemeinsamem Port." "app/llm"
                 repo = component "Run Repository" "Run-Erzeugung, Listen- und Detailzugriff." "app/repositories"
                 dbModel = component "DB Model + Session" "DB-Abstraktion." "app/db"
-                repair = component "Repair Guardrail" "Vorbereitete bounded Repair-Logik; im Standardpfad nicht aktiv." "app/services/repair.py"
+                repair = component "Repair Guardrail" "Vorbereiteter, im Standardpfad inaktiver Erweiterungspunkt." "app/services/repair.py" {
+                    tags "Inactive"
+                }
             }
             db = container "Persistenz" "Run-Speicher." "PostgreSQL 17" {
                 tags "Database"
@@ -28,7 +30,7 @@ workspace "SCM C3 Backend Components" "C3 backend view of the Social Cleanup Mac
         workflow -> llm "Fordert Payload an"
         workflow -> validation "Validiert Payload"
         workflow -> repo "Persistiert Runs"
-        repair -> validation "Nutzt bei aktivierter Repair-Logik"
+        repair -> validation "Würde bei aktivierter Repair-Logik nutzen"
         repo -> dbModel "Nutzt"
         dbModel -> db "Liest/schreibt"
         llm -> llmProvider "Optionaler Providerpfad" "HTTPS"
@@ -55,6 +57,10 @@ workspace "SCM C3 Backend Components" "C3 backend view of the Social Cleanup Mac
             element "External" {
                 background "#64748b"
                 color "#ffffff"
+            }
+            element "Inactive" {
+                background "#e2e8f0"
+                color "#334155"
             }
             element "Database" {
                 shape cylinder

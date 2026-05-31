@@ -13,13 +13,17 @@ Die Verfügbarkeitsprüfung ist der kleinste Laufzeitpfad des Systems. Sie dient
 
 Der API-Vertrag wird zur Laufzeit von FastAPI als OpenAPI-Schema bereitgestellt. Zusätzlich ist der aktuelle Snapshot unter `docs/api/openapi.json` versioniert; `backend/scripts/export_openapi.py` erzeugt dieses Artefakt reproduzierbar aus `create_app().openapi()`.
 
-Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert. Das Diagramm zeigt den Kernablauf mit persistierten Erfolgs- und Fehlerläufen sowie den getrennten technischen Providerfehlerpfad mit HTTP 502.
+Die folgende textuelle Abfolge wird zusätzlich durch zwei UJ1-Sequenzdiagramme visualisiert. Das erste Diagramm zeigt den erfolgreichen Analysepfad, das zweite die relevanten Fehlerpfade mit persistierten `failed` Runs sowie den getrennten technischen Providerfehlerpfad mit HTTP 502.
 
-![UJ1 Sequenzdiagramm](../diagrams/rendered/uj1-sequence.svg)
+![UJ1 Happy Path](../diagrams/rendered/uj1-happy-path.svg)
 
-Die Quelle liegt in [docs/diagrams/uj1-sequence.puml](../diagrams/uj1-sequence.puml), das gerenderte SVG in [docs/diagrams/rendered/uj1-sequence.svg](../diagrams/rendered/uj1-sequence.svg).
+Die Happy-Path-Quelle liegt in [docs/diagrams/uj1-happy-path.puml](../diagrams/uj1-happy-path.puml), das gerenderte SVG in [docs/diagrams/rendered/uj1-happy-path.svg](../diagrams/rendered/uj1-happy-path.svg).
 
-Das Sequenzdiagramm unterscheidet bewusst zwischen Fehlerläufen und erfolgreichen Läufen. Auch Fehlerläufe werden persistiert, damit Sprachfehler, strukturelle Validierungsfehler und Ausgabesprachfehler später nachvollziehbar bleiben. Ein Repair-Schritt ist als Guardrail vorbereitet, aber nicht Teil dieses Standardablaufs. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload sind davon getrennt: Sie gehören zum technischen API- und Betriebsfehlerpfad, werden als `ANALYSIS_PROVIDER_ERROR` mit HTTP 502 über den API-Fehlervertrag beantwortet und nicht als validierter Analyse-Run modelliert.
+![UJ1 Fehlerpfade](../diagrams/rendered/uj1-error-paths.svg)
+
+Die Fehlerpfad-Quelle liegt in [docs/diagrams/uj1-error-paths.puml](../diagrams/uj1-error-paths.puml), das gerenderte SVG in [docs/diagrams/rendered/uj1-error-paths.svg](../diagrams/rendered/uj1-error-paths.svg).
+
+Die Sequenzdiagramme unterscheiden bewusst zwischen Fehlerläufen und erfolgreichen Läufen. Auch Fehlerläufe werden persistiert, damit Sprachfehler, strukturelle Validierungsfehler und Ausgabesprachfehler später nachvollziehbar bleiben. Ein Repair-Schritt ist als Guardrail vorbereitet, aber nicht Teil dieses Standardablaufs. Technische Adapter- oder Providerfehler vor einem verwertbaren Analyse-Payload sind davon getrennt: Sie gehören zum technischen API- und Betriebsfehlerpfad, werden als `ANALYSIS_PROVIDER_ERROR` mit HTTP 502 über den API-Fehlervertrag beantwortet und nicht als validierter Analyse-Run modelliert.
 
 1. Ein Client sendet `POST /api/v1/analyses` mit einem Problemtext.
 2. Das Backend erkennt zuerst lokal die dominante Sprache und bewertet die Sicherheit der Erkennung.

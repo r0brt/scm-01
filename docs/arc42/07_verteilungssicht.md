@@ -2,9 +2,9 @@
 
 Die initiale Deployment-Sicht bleibt bei einem containerisierten Setup aus UI, API und PostgreSQL via Docker Compose.
 
-![C2 SCM Container](../diagrams/rendered/c2-scm-container.svg)
+![Deployment View Docker Compose](../diagrams/rendered/deployment-compose.svg)
 
-Die C2-Containersicht in [docs/diagrams/structurizr/c2-scm-container.dsl](../diagrams/structurizr/c2-scm-container.dsl) beschreibt die Laufzeittopologie aus `frontend`, `api` und `db`. Das gerenderte SVG liegt in [docs/diagrams/rendered/c2-scm-container.svg](../diagrams/rendered/c2-scm-container.svg).
+Die Deployment-Sicht in [docs/diagrams/deployment-compose.puml](../diagrams/deployment-compose.puml) zeigt den lokalen Docker-Compose-Zielbetrieb mit Browser, `frontend`-, `api`- und `db`-Container, persistentem PostgreSQL-Volume sowie optionalem externem LLM Provider. Das gerenderte SVG liegt in [docs/diagrams/rendered/deployment-compose.svg](../diagrams/rendered/deployment-compose.svg).
 
 Die Persistenz im Backend ist relational modelliert. Die API schreibt Analyse-Runs in eine `runs`-Tabelle; für den lokalen Zielbetrieb und für Compose wird PostgreSQL verwendet. Die lokalen Persistenztests laufen weiterhin mit SQLite, um den Entwicklungs- und Testloop ohne externe Datenbank schnell zu halten.
 

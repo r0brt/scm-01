@@ -1,0 +1,42 @@
+@startuml
+title UJ1 Happy Path: Analyse-Run erfolgreich
+
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+actor "User" as user
+participant "Web UI" as frontend
+participant "Backend/API" as api
+participant "Language Detection" as detector
+participant "LLM Adapter" as adapter
+participant "LLM Provider API\n(optional)" as provider
+participant "Validation Service" as validation
+database "Run Repository / Persistence" as persistence
+
+user -> frontend : Problemtext erfassen\nund Analyse starten
+frontend -> api : POST /api/v1/analyses { text }
+api -> api : correlation_id erzeugen
+api -> detector : Eingabesprache lokal erkennen
+detector --> api : supported language\nmit ausreichender confidence
+
+api -> adapter : generate_analysis(text,\nlanguage=detected_language)
+alt Provider=stub
+  adapter --> api : deterministisches Analyse-Payload\nmodel_id=stub-analysis-generator
+else Provider=openai
+  adapter -> provider : Responses API Request\nPrompt v2 + JSON Schema strict
+  provider --> adapter : JSON-Payload + Modellmetadaten
+  adapter --> api : Analyse-Payload,\nmodel_id, prompt_version
+end
+
+api -> validation : JSON Schema + Pydantic prüfen
+validation --> api : validiertes Payload\nmit validation_report
+api -> detector : Ausgabesprache lokal prüfen
+detector --> api : output language matches input
+
+api -> persistence : completed Run mit analysis_json,\nvalidation_report und Traceability speichern
+persistence --> api : gespeicherter Run
+api --> frontend : 201 Created mit completed Run
+frontend --> user : Pipeline entfalten\nund Review-Sicht anzeigen
+
+@enduml
