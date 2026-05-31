@@ -57,6 +57,8 @@ Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/
 | `App Shell` | Top-Level-Tabs, Run-Auswahl, Analysezustand, Fehlerzustand und Orchestrierung | `frontend/src/App.tsx` |
 | `Analysis Composer` | Eingabeformular und Start einer neuen Analyse | `frontend/src/components/AnalysisComposer.tsx` |
 | `Pipeline View` | Darstellung von Flow- und Review-Modus der sechs Ebenen | `frontend/src/components/PipelineView.tsx` |
+| `Result View` | Review- und Fehleransicht für abgeschlossene oder fehlgeschlagene Runs | `frontend/src/components/ResultView.tsx` |
+| `Stage` | Darstellung einer einzelnen Analyse-Ebene im Flow- oder Review-Modus | `frontend/src/components/Stage.tsx` |
 | `Run History Panel` | Archiv, Metadaten, JSON-Export und bewusstes Öffnen in Analyse | `frontend/src/components/RunHistoryPanel.tsx` |
 | `API Client` | HTTP-Zugriff auf Analyse-, Listen- und Detail-Endpunkte | `frontend/src/api.ts` |
 | `Pipeline View Model` | Deterministische Ableitung von UI-Zuständen aus Run, Loading und Reveal Token | `frontend/src/pipeline.ts` |
@@ -64,4 +66,4 @@ Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/
 
 Die Frontend-Logik trennt bewusst zwischen App-Orchestrierung, API-Zugriff, Zustandsableitung und visueller Darstellung. `App.tsx` koordiniert Texteingabe, API-Aufrufe, Run-Selektion, Workspace-Tabs (`Analyse`/`Archiv`), Export und globale Fehlerzustände. `AnalysisComposer`, `PipelineView` und `RunHistoryPanel` kapseln die sichtbaren UI-Bereiche für Eingabe, Analyseanzeige sowie Archiv und Export.
 
-`usePipelineViewModel` in `frontend/src/pipeline.ts` übersetzt Run, Loading-Status und Reveal Token deterministisch in die UI-Zustände `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`. Dadurch bleiben Flow-Modus und spätere Review-Sicht getrennt: Während der Entfaltung steht jeweils eine Stage im Fokus; nach Abschluss ist der gesamte Run als reviewbare Übersicht sichtbar. Die Web-UI-C3-Sicht dokumentiert diese Trennung, obwohl alle Komponenten gemeinsam als eine React-SPA ausgeliefert werden.
+`usePipelineViewModel` in `frontend/src/pipeline.ts` übersetzt Run, Loading-Status und Reveal Token deterministisch in die UI-Zustände `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`. Dadurch bleiben Flow-Modus und spätere Review-Sicht getrennt: Während der Entfaltung steht jeweils eine Stage im Fokus; nach Abschluss ist der gesamte Run als reviewbare Übersicht sichtbar. `PipelineView` steuert diese Umschaltung, während `ResultView` und `Stage` die wiederverwendeten Darstellungen für Review, Fehler und einzelne Analyse-Ebenen rendern. Die Web-UI-C3-Sicht dokumentiert diese Trennung, obwohl alle Komponenten gemeinsam als eine React-SPA ausgeliefert werden.
