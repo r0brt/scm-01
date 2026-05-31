@@ -1,0 +1,4 @@
+' C4PlantUML rendering aid for C3 views.
+' Keep the outer SCM system boundary subdued and the focused container boundary clear.
+UpdateSystemBoundaryStyle($borderColor="#94a3b8", $fontColor="#64748b", $borderStyle=DashedLine(), $borderThickness=1)
+UpdateContainerBoundaryStyle($borderColor="#1d4ed8", $fontColor="#1d4ed8", $borderStyle=SolidLine(), $borderThickness=2)

@@ -38,6 +38,9 @@ workspace "SCM C3 Web UI Components" "C3 web UI view of the Social Cleanup Machi
 
     views {
         component web "C3-Web-UI-Components" {
+            properties {
+                "plantuml.includes" "docs/diagrams/plantuml/c4-boundary-style.puml"
+            }
             include *
             autoLayout tb
         }

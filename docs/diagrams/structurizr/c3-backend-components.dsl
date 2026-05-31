@@ -36,6 +36,9 @@ workspace "SCM C3 Backend Components" "C3 backend view of the Social Cleanup Mac
 
     views {
         component backend "C3-Backend-Components" {
+            properties {
+                "plantuml.includes" "docs/diagrams/plantuml/c4-boundary-style.puml"
+            }
             include *
             autoLayout tb
         }
