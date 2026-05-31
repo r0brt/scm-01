@@ -13,7 +13,7 @@ Die Verfügbarkeitsprüfung ist der kleinste Laufzeitpfad des Systems. Sie dient
 
 Der API-Vertrag wird zur Laufzeit von FastAPI als OpenAPI-Schema bereitgestellt. Zusätzlich ist der aktuelle Snapshot unter `docs/api/openapi.json` versioniert; `backend/scripts/export_openapi.py` erzeugt dieses Artefakt reproduzierbar aus `create_app().openapi()`.
 
-Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert.
+Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert. Das Diagramm zeigt den Kernablauf mit persistierten Erfolgs- und Fehlerläufen; der technische Providerfehlerpfad mit HTTP 502 ist im Text explizit ergänzt und wird im separaten Diagramm-Review nachgeführt.
 
 ![UJ1 Sequenzdiagramm](../diagrams/rendered/uj1-sequence.svg)
 
@@ -58,4 +58,4 @@ Die Frontend-Laufzeit übersetzt einen gespeicherten Run in eine geführte Darst
 6. `PipelineView` rendert während dieser Entfaltung einen Flow-Modus mit Fortschrittsleiste und genau einer sichtbaren aktiven Stage; abgeschlossene und zukünftige Stages erscheinen dort nur als reduzierte Timeline-Knoten.
 7. Nach Abschluss wechselt die UI in einen Review-Modus: alle sechs Stages werden gleichzeitig sichtbar, Details bleiben je Stage optional aufklappbar, und die `Essenz` bleibt standardmässig geöffnet.
 8. Wird stattdessen ein historischer Run aus dem Archiv-Tab geladen, zeigt das Frontend den gespeicherten Endzustand direkt im Review-Modus ohne erneute Entfaltungsanimation.
-9. Schlägt die Analyse fehl oder liegt kein gültiges `analysis_json` vor, wechselt die Ansicht in einen terminalen Fehlerzustand und zeigt Fehlercode sowie Fehlertext explizit an.
+9. Persistierte `failed` Runs erscheinen in der Pipeline als terminaler Fehlerzustand mit Fehlercode und Fehlertext. Technische API-Fehler ohne persistierten Run, zum Beispiel ein Providerfehler mit HTTP 502, erscheinen dagegen als globaler Fehlerhinweis der Anwendung.
