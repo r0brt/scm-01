@@ -10,7 +10,7 @@ Accepted
 
 ## Entscheidung
 
-Die Analyseausgabe wird über einen strikten JSON-Contract mit sechs festen Ebenen modelliert. Validierung erfolgt in zwei Stufen: zuerst gegen JSON Schema, danach gegen Pydantic-Modelle. Bei Verstössen wird ein strukturierter Validierungsreport erzeugt. Eine bounded Repair-Funktion ist auf maximal zwei Versuche begrenzt und getestet, aber im aktuellen Standardworkflow nicht automatisch verdrahtet.
+Die Analyseausgabe wird über einen strikten JSON-Contract mit sechs festen Ebenen modelliert. Der aktive Vertrag wird in `schemas/analysis.schema.json`, `backend/app/models/analysis.py` und der aktiven Prompt-Version konkretisiert. Validierung erfolgt in zwei Stufen: zuerst gegen JSON Schema, danach gegen Pydantic-Modelle. Bei Verstössen wird ein strukturierter Validierungsreport erzeugt. Eine bounded Repair-Funktion ist auf maximal zwei Versuche begrenzt und getestet, aber im aktuellen Standardworkflow nicht automatisch verdrahtet.
 
 ## Kontext
 
@@ -37,4 +37,4 @@ Negativ:
 
 ## Begründung
 
-Die Kombination aus JSON Schema, Pydantic und vorbereiteter bounded Repair verbindet Vertragstreue mit reproduzierbarer Fehlerbehandlung. Sie passt direkt zu den Guardrails aus PRD und AGENTS und trennt fachliche Analysequalität von technischer Gültigkeit. Der aktuelle Standardworkflow bevorzugt explizite Fehlerläufe gegenüber stiller automatischer Reparatur.
+Die Kombination aus JSON Schema, Pydantic und vorbereiteter bounded Repair verbindet Vertragstreue mit reproduzierbarer Fehlerbehandlung. Sie passt direkt zu den Guardrails aus PRD und AGENTS und trennt fachliche Analysequalität von technischer Gültigkeit. Der aktuelle Standardworkflow bevorzugt explizite Fehlerläufe gegenüber stiller automatischer Reparatur; technische Provider- oder Adapterfehler vor einem verwertbaren Analyse-Payload gehören dagegen zum API-Fehlervertrag und nicht zu einem validierten Analyse-Run.

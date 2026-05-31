@@ -23,7 +23,7 @@ Siehe: [ADR-0001](../adr/0001-architecture-style.md)
 
 ### Strikter Analysevertrag mit expliziter Validierung
 
-Die zentrale Produktfunktion wird nicht allein über Prompting abgesichert, sondern über einen formalen JSON-Vertrag mit strukturierter Validierung. Dadurch bleiben API, Persistenz und Frontend gegen Formatdrift geschützt, und Fehlschläge werden als fachlich sichtbare Zustände statt als stille Heuristik behandelt.
+Die zentrale Produktfunktion wird nicht allein über Prompting abgesichert, sondern über einen formalen JSON-Vertrag mit strukturierter Validierung. Dadurch bleiben API, Persistenz und Frontend gegen Formatdrift geschützt. Validierungs- und Sprachprüfungsfehler werden als sichtbare Fehlerläufe behandelt; technische Providerfehler bleiben davon getrennte API-Fehler.
 
 Siehe: [ADR-0002](../adr/0002-analysis-contract-and-validation.md)
 
@@ -35,7 +35,7 @@ Siehe: [ADR-0003](../adr/0003-persistence-and-migrations.md)
 
 ### Adapter-basierte LLM-Integration mit Prompt-Versionierung
 
-Die Analyseerzeugung ist architektonisch von API, Validierung und Persistenz entkoppelt. Gleichzeitig werden `model_id` und `prompt_version` pro Run persistiert, damit Analyseergebnisse nicht als modelllose Blackbox erscheinen.
+Die Analyseerzeugung ist architektonisch von API, Validierung und Persistenz entkoppelt. Gleichzeitig werden `model_id` und `prompt_version` pro Run persistiert, damit Analyseergebnisse nicht als modelllose Blackbox erscheinen. Providerfehler vor einem verwertbaren Payload werden explizit über den API-Fehlervertrag abgebildet und nicht als Analyse-Run persistiert.
 
 Siehe: [ADR-0004](../adr/0004-llm-adapter-and-prompt-versioning.md)
 
