@@ -155,7 +155,7 @@ Zu speichern:
 
 ## 15. Risiken & Mitigations
 
-* **R1:** LLM Format drift → strict schema, expliziter Fehlerlauf und bounded Repair als vorbereitete Guardrail.
-* **R2:** Halluzination bei Ursachen → neutraler Prompt, „Hypothesen“-Wording, keine Faktbehauptungs-Sprache.
-* **R3:** Scope creep → NGs strikt, Backlog separat.
-* **R4:** UI Aufwand → pipeline-first, Fancy später.
+* **R1:** LLM-Formatdrift → striktes Schema, expliziter Fehlerlauf und bounded Repair als vorbereitete Guardrail.
+* **R2:** Halluzination bei Ursachen → neutraler Prompt, „Hypothesen“-Wording, keine Sprache, die unbelegte Fakten behauptet.
+* **R3:** Scope Creep → Nicht-Ziele strikt einhalten, Backlog separat führen.
+* **R4:** UI-Aufwand → Pipeline-first-Ansatz, visuelle Verfeinerungen separat planen.

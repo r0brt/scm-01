@@ -137,7 +137,7 @@ Traceability: Jeder Meilenstein referenziert PRD-Elemente (FR/NFR/AC).
 
 ## M7 — Integrationshärtung + Testreport
 
-**Ziel:** Bewertungsfähige Nachweise.
+**Ziel:** Reproduzierbare Integrations- und Testnachweise.
 **Deliverables:** Integrationssuite, 1 E2E für UJ1, Testreport.
 **PRD-Bezug:** NFR5, AC5, NFR1/NFR3 Nachweise
 
