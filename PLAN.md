@@ -2,6 +2,9 @@
 
 Dieses Dokument beschreibt die Umsetzung **ausgehend von `docs/prd.md`** bis zum lieferfähigen Produkt.
 
+Aktueller Restplan zur Schlussphase und zum geplanten `v1.0.0`-Freeze:
+[`docs/v1.0-roadmap.md`](docs/v1.0-roadmap.md).
+
 Leitplanken:
 
 * modularer Monolith zuerst, spätere Service-/Container-Extraktion optional
@@ -108,14 +111,14 @@ Traceability: Jeder Meilenstein referenziert PRD-Elemente (FR/NFR/AC).
 ## M5 — LLM Adapter (real) + Prompt Versioning
 
 **Ziel:** Echte LLM Integration als Adapter, Tests bleiben mocked.
-**Deliverables:** LLM adapter interface + OpenAI implementation, prompts/v1, traceability fields.
+**Deliverables:** LLM adapter interface + OpenAI implementation, versionierter Prompt unter `prompts/v*/`, traceability fields.
 **PRD-Bezug:** NFR4, Operational Definitions, UC2/UC3
 
 **DoD (Commands):**
 
 * `cd backend && uv run pytest -q`
 * Keine Network calls in tests; adapter via mocks
-* Prompt liegt unter `prompts/v1/...`, `prompt_version=v1` wird persistiert
+* Prompt liegt versioniert unter `prompts/v*/...`, die aktive `prompt_version` wird persistiert
 
 ---
 
