@@ -4,7 +4,7 @@
 
 1. Zuerst ein modularer Monolith für schnelle, konsistente und betrieblich einfache Umsetzung.
 2. Contract-First-JSON-Schema für Analyseausgaben.
-3. Schema-Validierung strikt vor Persistenz.
+3. Analyse-Payloads strikt validieren und nur gültige Payloads als `completed` persistieren; Validierungsfehler bleiben als explizite `failed` Runs nachvollziehbar.
 4. Begrenzte Repair-Logik für ungültige Modellausgaben ist als Guardrail vorbereitet (max. 2 Retries), im aktuellen Standardpfad aber noch nicht aktiv verdrahtet.
 5. Unveränderliche Run-Datensätze mit vollständiger Traceability persistieren.
 
