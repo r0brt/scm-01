@@ -24,6 +24,34 @@ Dieser Ordner enthält die Architekturdokumentation im arc42-Format.
 - Konsistenz mit `docs/prd.md`, `PLAN.md` und Implementierung sicherstellen.
 - Datenschutz-, Nachvollziehbarkeits- und AI-Governance-Details bei Bedarf mit `docs/privacy-and-ai-governance.md` abgleichen; arc42 bleibt dabei das Primärdokument, das Zusatzdokument ist ein unterstützendes Artefakt.
 
+## PDF exportieren
+
+Der finale PDF-Export nutzt bewusst HTML und den Browser-Druckpfad. Dadurch werden die eingebetteten SVG-Diagramme ohne zusätzliche LaTeX-SVG-Konvertierung gerendert.
+
+Voraussetzungen:
+
+- `pandoc` ist lokal installiert und auf `PATH`
+- Frontend-Abhängigkeiten sind installiert: `cd frontend && npm install`
+- Playwright Chromium ist vorhanden; falls nicht: `cd frontend && npx playwright install chromium`
+
+Export:
+
+```bash
+node scripts/export-arc42-pdf.mjs
+```
+
+Standardausgabe:
+
+```text
+docs/arc42/dist/scm-arc42.pdf
+```
+
+`docs/arc42/dist/` ist nicht versioniert. Für einen alternativen Zielpfad:
+
+```bash
+node scripts/export-arc42-pdf.mjs --output /tmp/scm-arc42.pdf
+```
+
 ## arc42 Update Trigger
 
 Aktualisiere relevante Kapitel, wenn sich einer der folgenden Punkte ändert:
