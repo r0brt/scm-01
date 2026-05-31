@@ -94,7 +94,7 @@ function escapeHtml(value) {
 
 export function buildTitlePageHtml({ documentVersion, gitRevision, submissionDate }) {
   return `<section class="title-page" aria-label="Titelblatt">
-  <div class="title-page-kicker">CAS AI-Assisted Software Engineering</div>
+  <div class="title-page-kicker">CAS AI-Assisted Software Engineering - FFHS</div>
   <h1>Social Cleanup Machine (SCM)</h1>
   <p class="title-page-subtitle">arc42 Architekturdokumentation</p>
 

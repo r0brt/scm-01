@@ -34,12 +34,13 @@ Für Datenschutz-, Transparenz- und Governance-Annahmen ergänzt [docs/privacy-a
 
 ## Schnittstellen und Integrationspunkte (MVP-Stand)
 
-Aus Sicht der SCM-Systemgrenze ist nur der optionale LLM-Provider eine externe Schnittstelle. UI, API und Persistenz liegen innerhalb des Systems; ihre Verbindungen sind trotzdem architekturrelevant, weil sie die wichtigsten Verträge und Datenflüsse des MVP tragen.
+Aus Sicht der SCM-Systemgrenze sind die Nutzung über den Browser und der optionale LLM-Provider externe Schnittstellen. UI, API und Persistenz liegen innerhalb des Systems; ihre Verbindungen sind trotzdem architekturrelevant, weil sie die wichtigsten Verträge und Datenflüsse des MVP tragen.
 
-### Externe Schnittstelle
+### Externe Schnittstellen
 
 | Schnittstelle | Protokoll / Vertrag | Übertragene Daten | Zentrale Risiken |
 | --- | --- | --- | --- |
+| User zu SCM | Browserbasierte Nutzung der Weboberfläche; fachlicher Vertrag über sichtbare Eingabe-, Analyse-, Archiv- und Exportfunktionen | Problemtext, Nutzerinteraktion, sichtbare Analyse- und Fehlerresultate | Fehlinterpretation der Analyse als objektive Wahrheit, Eingabe sensibler Inhalte, unklare Verantwortung bei Weiterverwendung |
 | API zu LLM Provider | HTTPS über Adapter-Port; im OpenAI-Pfad Responses API mit Prompt v2 und angefordertem JSON Schema | Problemtext, erkannte Sprache, aktiver Prompt, JSON-Schema-Anforderung und Provider-Metadaten | Datenschutz, Verfügbarkeit, Latenz, Modell- und Formatdrift |
 
 ### Wichtige interne Integrationspunkte
