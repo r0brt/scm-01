@@ -24,32 +24,37 @@ alt Sprache zu unsicher oder nicht unterstützt
   api --> frontend : 201 Created mit failed Run
 else Sprache gültig
   api -> adapter : generate_analysis(text,\nlanguage=detected_language)
-  alt Provider=stub
-    adapter --> api : deterministisches Analyse-Payload\nmodel_id=stub-analysis-generator
-  else Provider=openai
-    adapter -> openai : Responses API Request\nPrompt v2 + JSON Schema strict
-    openai --> adapter : JSON-Payload + Modellmetadaten
-    adapter --> api : Analyse-Payload,\nmodel_id, prompt_version
-  end
+  alt Adapter-/Providerfehler vor Payload
+    adapter --> api : Fehler ohne verwertbares Payload
+    api --> frontend : 502 Bad Gateway\nANALYSIS_PROVIDER_ERROR + correlation_id
+  else Payload erhalten
+    alt Provider=stub
+      adapter --> api : deterministisches Analyse-Payload\nmodel_id=stub-analysis-generator
+    else Provider=openai
+      adapter -> openai : Responses API Request\nPrompt v2 + JSON Schema strict
+      openai --> adapter : JSON-Payload + Modellmetadaten
+      adapter --> api : Analyse-Payload,\nmodel_id, prompt_version
+    end
 
-  api -> validation : JSON Schema + Pydantic prüfen
-  validation --> api : validiertes Payload\noder Fehlerreport
+    api -> validation : JSON Schema + Pydantic prüfen
+    validation --> api : validiertes Payload\noder Fehlerreport
 
-  alt Struktur ungültig
-    api -> persistence : failed Run mit validation_report\nund error_code speichern
-    persistence --> api : gespeicherter Run
-    api --> frontend : 201 Created mit failed Run
-  else Struktur gültig
-    api -> detector : Ausgabesprache lokal prüfen
-    detector --> api : output_language_result
-    alt Ausgabesprache passt nicht
-      api -> persistence : failed Run mit OUTPUT_LANGUAGE_MISMATCH speichern
+    alt Struktur ungültig
+      api -> persistence : failed Run mit validation_report\nund error_code speichern
       persistence --> api : gespeicherter Run
       api --> frontend : 201 Created mit failed Run
-    else Ausgabe gültig
-      api -> persistence : completed Run mit analysis_json,\nvalidation_report und Traceability speichern
-      persistence --> api : gespeicherter Run
-      api --> frontend : 201 Created mit completed Run
+    else Struktur gültig
+      api -> detector : Ausgabesprache lokal prüfen
+      detector --> api : output_language_result
+      alt Ausgabesprache passt nicht
+        api -> persistence : failed Run mit OUTPUT_LANGUAGE_MISMATCH speichern
+        persistence --> api : gespeicherter Run
+        api --> frontend : 201 Created mit failed Run
+      else Ausgabe gültig
+        api -> persistence : completed Run mit analysis_json,\nvalidation_report und Traceability speichern
+        persistence --> api : gespeicherter Run
+        api --> frontend : 201 Created mit completed Run
+      end
     end
   end
 end

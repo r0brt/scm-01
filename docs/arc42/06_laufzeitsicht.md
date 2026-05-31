@@ -13,7 +13,7 @@ Die Verfügbarkeitsprüfung ist der kleinste Laufzeitpfad des Systems. Sie dient
 
 Der API-Vertrag wird zur Laufzeit von FastAPI als OpenAPI-Schema bereitgestellt. Zusätzlich ist der aktuelle Snapshot unter `docs/api/openapi.json` versioniert; `backend/scripts/export_openapi.py` erzeugt dieses Artefakt reproduzierbar aus `create_app().openapi()`.
 
-Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert. Das Diagramm zeigt den Kernablauf mit persistierten Erfolgs- und Fehlerläufen; der technische Providerfehlerpfad mit HTTP 502 ist im Text explizit ergänzt und wird im separaten Diagramm-Review nachgeführt.
+Die folgende textuelle Abfolge wird zusätzlich durch das UJ1-Sequenzdiagramm visualisiert. Das Diagramm zeigt den Kernablauf mit persistierten Erfolgs- und Fehlerläufen sowie den getrennten technischen Providerfehlerpfad mit HTTP 502.
 
 ![UJ1 Sequenzdiagramm](../diagrams/rendered/uj1-sequence.svg)
 

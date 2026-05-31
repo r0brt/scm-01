@@ -8,7 +8,7 @@ Die C2-Containersicht ist als Structurizr-Quelle in [docs/diagrams/structurizr/c
 
 Die C2-Sicht trennt die interne SCM-Laufzeit in `Web UI`, `Backend/API` und `Persistenz`. Der externe `LLM Provider` bleibt ausserhalb der SCM-Systemgrenze und wird nur vom Backend/API-Container über den Adapterpfad angesprochen.
 
-| Container / Umsystem | Verantwortung | Technologie / Fundstelle |
+| Container / Umsystem | Verantwortung | Technologie / Codebereich |
 | --- | --- | --- |
 | `Web UI` | Texteingabe, Analyseansicht, Archiv, Metadaten und JSON-Export | React/Vite/Nginx, `frontend/` |
 | `Backend/API` | Analyse-API, Orchestrierung, Validierung, Sprachprüfung, Persistenzzugriff | FastAPI/SQLAlchemy, `backend/app/` |
@@ -23,13 +23,17 @@ Die UI übernimmt Präsentation und Nutzerinteraktion. Die API stellt Verträge,
 
 Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs müssen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rückwärtskompatibel unterstützt.
 
-## Backend-Zerlegung (Level 2)
+## C3-Komponentensichten
+
+Die folgenden C3-Sichten sind Zoom-ins in einzelne Container. Die SCM-Grenze dient darin nur als Kontext; fachlich massgeblich ist jeweils die Containergrenze von `Backend/API` beziehungsweise `Web UI`.
+
+### Backend-Komponenten
 
 ![C3 Backend Components](../diagrams/rendered/c3-backend-components.svg)
 
 Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-backend-components.dsl](../diagrams/structurizr/c3-backend-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-backend-components.svg](../diagrams/rendered/c3-backend-components.svg) gerendert.
 
-| Komponente | Verantwortung | Fundstelle |
+| Komponente | Verantwortung | Codebereich |
 | --- | --- | --- |
 | `API Layer` | HTTP-Endpunkte, Requestvalidierung, Fehlervertrag und `correlation_id` | `backend/app/main.py`, `backend/app/api/` |
 | `Analysis Workflow` | Orchestriert Sprache, Analyseerzeugung, Validierung, Ausgabesprachprüfung und Persistenz | `backend/app/services/analysis_workflow.py` |
@@ -42,13 +46,13 @@ Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagram
 
 Die Backend-Komponenten trennen HTTP-Vertrag, fachlichen Workflow, Validierung, Providerzugriff und Persistenz bewusst voneinander. Dadurch bleibt der zentrale Analysepfad nachvollziehbar: Die API nimmt Requests entgegen und ordnet Fehler dem Fehlervertrag zu, der Workflow koordiniert Sprache, Analyse, Validierung und Speicherung, und Repository- sowie DB-Schicht kapseln den Zugriff auf persistierte Runs.
 
-## Frontend-Zerlegung (aktueller Stand)
+### Web-UI-Komponenten
 
 ![C3 Web UI Components](../diagrams/rendered/c3-web-ui-components.svg)
 
 Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-web-ui-components.dsl](../diagrams/structurizr/c3-web-ui-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-web-ui-components.svg](../diagrams/rendered/c3-web-ui-components.svg) gerendert.
 
-| Komponente | Verantwortung | Fundstelle |
+| Komponente | Verantwortung | Codebereich |
 | --- | --- | --- |
 | `App Shell` | Top-Level-Tabs, Run-Auswahl, Analysezustand, Fehlerzustand und Orchestrierung | `frontend/src/App.tsx` |
 | `Analysis Composer` | Eingabeformular und Start einer neuen Analyse | `frontend/src/components/AnalysisComposer.tsx` |
@@ -58,14 +62,6 @@ Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/
 | `Pipeline View Model` | Deterministische Ableitung von UI-Zuständen aus Run, Loading und Reveal Token | `frontend/src/pipeline.ts` |
 | `Frontend Types` | Typen für Run, Analyse-JSON und Pipeline-Viewmodelle | `frontend/src/types.ts` |
 
-- `App.tsx` orchestriert Texteingabe, API-Aufrufe, Run-Selektion, Workspace-Tabs (`Analyse`/`Archiv`), Export und den globalen Fehlerzustand.
-- `AnalysisComposer` kapselt die Eingabemaske für den Rohtext und den Start der Analyse.
-- `usePipelineViewModel` in `frontend/src/pipeline.ts` transformiert den gewählten Run in einen deterministischen UI-Zustand mit den Modi `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`.
-- `PipelineView` rendert die zwei Frontend-Betriebsarten der Filterstrecke:
-  - Flow-Modus während `submitting`/`result_received`/`revealing` mit genau einer sichtbaren aktiven Stage
-  - Review-Modus nach `completed` mit allen sechs Stages, optionalen Details und hervorgehobener `Essenz`
-- `RunHistoryPanel` entkoppelt die Auswahl bereits persistierter Runs von der Pipeline-Darstellung und bündelt im Archiv-Tab Run-Liste, technische Nachweise, JSON-Export und die explizite Aktion zum Öffnen eines Runs in der Analyseansicht.
+Die Frontend-Logik trennt bewusst zwischen App-Orchestrierung, API-Zugriff, Zustandsableitung und visueller Darstellung. `App.tsx` koordiniert Texteingabe, API-Aufrufe, Run-Selektion, Workspace-Tabs (`Analyse`/`Archiv`), Export und globale Fehlerzustände. `AnalysisComposer`, `PipelineView` und `RunHistoryPanel` kapseln die sichtbaren UI-Bereiche für Eingabe, Analyseanzeige sowie Archiv und Export.
 
-Die Frontend-Logik trennt damit bewusst zwischen Datenbeschaffung (`App.tsx`), Zustandsableitung (`usePipelineViewModel`) und visueller Darstellung (`AnalysisComposer`, `PipelineView`, `RunHistoryPanel`). Die Pipeline-Stages sind zentral in `frontend/src/pipeline.ts` definiert, damit Reihenfolge, Titel und Prompt-Texte nicht über mehrere Komponenten verstreut gepflegt werden müssen. Die UI behandelt den laufenden Analysepfad bewusst anders als die spätere Run-Prüfung: während des Reveal wird nur eine Stage fokussiert dargestellt, nach Abschluss bleibt der gesamte Run als reviewbare Übersicht sichtbar.
-
-Die Web-UI-C3-Sicht dokumentiert diese Trennung explizit: App-Orchestrierung, API Client, Pipeline-Zustandsableitung, Eingabe-Komponente und Archiv-/Export-Komponente sind eigene Verantwortungsbereiche, obwohl sie gemeinsam als eine React-SPA ausgeliefert werden.
+`usePipelineViewModel` in `frontend/src/pipeline.ts` übersetzt Run, Loading-Status und Reveal Token deterministisch in die UI-Zustände `idle`, `submitting`, `result_received`, `revealing`, `completed` und `failed`. Dadurch bleiben Flow-Modus und spätere Review-Sicht getrennt: Während der Entfaltung steht jeweils eine Stage im Fokus; nach Abschluss ist der gesamte Run als reviewbare Übersicht sichtbar. Die Web-UI-C3-Sicht dokumentiert diese Trennung, obwohl alle Komponenten gemeinsam als eine React-SPA ausgeliefert werden.
