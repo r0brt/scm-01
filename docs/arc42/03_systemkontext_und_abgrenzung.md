@@ -1,4 +1,4 @@
-# 03 Systemkontext und -abgrenzung
+# Systemkontext und -abgrenzung
 
 ## Systemabgrenzung
 
@@ -32,8 +32,20 @@ Die Systemgrenze von SCM endet bei der lokalen UI/API/DB-Kombination. Browser-Nu
 
 Für Datenschutz-, Transparenz- und Governance-Annahmen ergänzt [docs/privacy-and-ai-governance.md](../privacy-and-ai-governance.md) dieses Kapitel. Das Zusatzdokument vertieft insbesondere Datenarten, externe Empfänger und MVP-Grenzen, während arc42 die primäre Architekturerzählung bleibt.
 
-## Externe Schnittstellen (MVP-Stand)
+## Schnittstellen und Integrationspunkte (MVP-Stand)
 
-- UI zu API: REST-Endpunkte über JSON.
-- API zu DB: ORM + SQL-Migrationen.
-- API zu LLM-Provider: Provider-SDK/HTTP hinter Adapter-Port.
+Aus Sicht der SCM-Systemgrenze sind die Nutzung über den Browser und der optionale LLM-Provider externe Schnittstellen. UI, API und Persistenz liegen innerhalb des Systems; ihre Verbindungen sind trotzdem architekturrelevant, weil sie die wichtigsten Verträge und Datenflüsse des MVP tragen.
+
+### Externe Schnittstellen
+
+| Schnittstelle | Protokoll / Vertrag | Übertragene Daten | Zentrale Risiken |
+| --- | --- | --- | --- |
+| User zu SCM | Browserbasierte Nutzung der Weboberfläche; fachlicher Vertrag über sichtbare Eingabe-, Analyse-, Archiv- und Exportfunktionen | Problemtext, Nutzerinteraktion, sichtbare Analyse- und Fehlerresultate | Fehlinterpretation der Analyse als objektive Wahrheit, Eingabe sensibler Inhalte, unklare Verantwortung bei Weiterverwendung |
+| API zu LLM Provider | HTTPS über Adapter-Port; im OpenAI-Pfad Responses API mit Prompt v2 und angefordertem JSON Schema | Problemtext, erkannte Sprache, aktiver Prompt, JSON-Schema-Anforderung und Provider-Metadaten | Datenschutz, Verfügbarkeit, Latenz, Modell- und Formatdrift |
+
+### Wichtige interne Integrationspunkte
+
+| Integrationspunkt | Protokoll / Vertrag | Übertragene Daten | Zentrale Risiken |
+| --- | --- | --- | --- |
+| UI zu API | HTTP/JSON über API v1 und FastAPI-OpenAPI-Vertrag | `input_text`, Run-Responses, Fehlervertrag, Metadaten und JSON-Exportdaten | Validierung, stabile Fehlersemantik, sichtbare `correlation_id` |
+| API zu DB | SQLAlchemy ORM, Alembic-Migrationen und relationales Schema `runs` | Runs, Analyse-JSON, Validierungsreport, Sprach- und Traceability-Metadaten | Migrationsdrift, Persistenzfehler, Datenaufbewahrung ohne fachliche Löschfunktion |

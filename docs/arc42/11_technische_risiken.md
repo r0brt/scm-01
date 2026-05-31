@@ -1,4 +1,4 @@
-# 11 Technische Risiken
+# Technische Risiken
 
 Die technischen Risiken beschreiben die wichtigsten Grenzen des aktuellen MVP. Sie zeigen, wo Architekturentscheidungen bewusst absichern, aber noch keine produktionsreife Vollständigkeit herstellen.
 

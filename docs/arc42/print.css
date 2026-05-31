@@ -10,6 +10,75 @@ body {
   line-height: 1.42;
 }
 
+.title-page {
+  break-after: page;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 250mm;
+  padding-top: 42mm;
+}
+
+.title-page-kicker {
+  color: #2563eb;
+  font-size: 10pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 16mm;
+  text-transform: uppercase;
+}
+
+.title-page h1 {
+  border: 0;
+  break-before: auto;
+  color: #0f172a;
+  font-size: 26pt;
+  line-height: 1.1;
+  margin: 0 0 5mm;
+  padding: 0;
+}
+
+.title-page-subtitle {
+  color: #334155;
+  font-size: 15pt;
+  margin: 0 0 18mm;
+}
+
+.title-page-meta {
+  border-top: 1px solid #cbd5e1;
+  display: grid;
+  gap: 0;
+  margin: 0;
+  max-width: 150mm;
+}
+
+.title-page-meta div {
+  border-bottom: 1px solid #cbd5e1;
+  display: grid;
+  gap: 8mm;
+  grid-template-columns: 48mm 1fr;
+  padding: 3mm 0;
+}
+
+.title-page-meta dt {
+  color: #475569;
+  font-size: 8.5pt;
+  font-weight: 700;
+  margin: 0;
+}
+
+.title-page-meta dd {
+  margin: 0;
+}
+
+.title-page-note {
+  color: #475569;
+  font-size: 8.5pt;
+  margin-top: 12mm;
+  max-width: 145mm;
+}
+
 h1 {
   break-before: page;
   color: #12355b;

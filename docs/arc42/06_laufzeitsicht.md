@@ -1,4 +1,4 @@
-# 06 Laufzeitsicht
+# Laufzeitsicht
 
 ## Szenario 1: Verfügbarkeitsprüfung des Backends
 

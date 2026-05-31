@@ -20,6 +20,8 @@ Dieser Ordner enthält die Architekturdokumentation im arc42-Format.
 ## Pflegehinweise
 
 - Kapitel prägnant halten und nur betroffene Kapitel aktualisieren.
+- Kapiteldateien bleiben für Reihenfolge und Links nummeriert; sichtbare Kapitelüberschriften enthalten keine manuelle Zahl.
+- Die PDF-Kapitelnummerierung wird automatisch durch das Export-Tool erzeugt.
 - Entscheidungen als ADRs in `docs/adr/` referenzieren.
 - Konsistenz mit `docs/prd.md`, `PLAN.md` und Implementierung sicherstellen.
 - Datenschutz-, Nachvollziehbarkeits- und AI-Governance-Details bei Bedarf mit `docs/privacy-and-ai-governance.md` abgleichen; arc42 bleibt dabei das Primärdokument, das Zusatzdokument ist ein unterstützendes Artefakt.
@@ -51,6 +53,14 @@ docs/arc42/dist/scm-arc42.pdf
 ```bash
 node scripts/export-arc42-pdf.mjs --output /tmp/scm-arc42.pdf
 ```
+
+Für die finale Abgabe können Titelblatt-Metadaten explizit gesetzt werden:
+
+```bash
+node scripts/export-arc42-pdf.mjs --submission-date 2026-06-30 --version v1.0.0 --output /tmp/scm-arc42.pdf
+```
+
+Ohne diese Angaben verwendet der Export das aktuelle Exportdatum und eine aus Git abgeleitete Version (`git describe --tags --always --dirty`). Der fixe Git-Stand wird zusätzlich als Commit-Hash auf dem Titelblatt ausgewiesen.
 
 ## arc42 Update Trigger
 

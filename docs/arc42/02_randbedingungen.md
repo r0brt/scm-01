@@ -1,4 +1,4 @@
-# 02 Randbedingungen
+# Randbedingungen
 
 ## Technische Randbedingungen
 
