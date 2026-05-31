@@ -35,7 +35,9 @@ Stand: 2026-05-31
 - [x] AC7: API-v1-Endpunkte sind implementiert und dokumentiert
 - [x] AC8: Sprachdetektionsfehler für geringe Confidence und nicht unterstützte Sprache sind separat implementiert
 
-## Aktuell erfolgreich verifizierte Commands
+## Erfolgreich verifizierte Commands und Nachweise
+
+Aktueller Refresh auf `main` nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Unit-/UI-Testlauf, Frontend-Build und GitHub Actions CI wurden auf Commit `4eaeccf` neu verifiziert. Die übrigen Spezialnachweise bleiben als zuletzt dokumentierte lokale MVP-Nachweise geführt und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert.
 
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
@@ -51,7 +53,7 @@ Stand: 2026-05-31
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Referenz-Commit `b619921`, Run `26696762837`
+- [x] GitHub Actions `CI` auf `main` für Referenz-Commit `4eaeccf`, Run `26715457857`
 
 ## NFR-Nachweisstatus
 

@@ -1,9 +1,11 @@
 # Test Report
 
 Stand: 2026-05-31
-Baseline-Commit: `b619921`
+Baseline-Commit: `4eaeccf`
 
 Dieser Testreport dokumentiert die zuletzt ausgeführten lokalen und CI-bezogenen Nachweise. Er ist kein vollständiger Produktionsabnahmetest, sondern ein reproduzierbarer MVP-Nachweis für Backend, Frontend, Compose-Startfähigkeit und den lokalen frontendseitigen UJ1-E2E-Pfad.
+
+Aktueller Refresh auf `main` nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Unit-/UI-Testlauf, Frontend-Build und GitHub Actions CI wurden auf Commit `4eaeccf` neu verifiziert. Die spezialisierten NFR-, Coverage-, Compose- und E2E-Nachweise bleiben als zuletzt dokumentierte lokale Nachweise erhalten und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert.
 
 ## Ausgeführte Commands
 
@@ -27,7 +29,7 @@ UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pyt
 
 Resultat:
 
-- `63 passed in 1.22s`
+- `65 passed in 1.47s`
 
 ### OpenAPI Snapshot
 
@@ -156,7 +158,7 @@ Resultat:
 
 - `1 file passed`
 - `10 tests passed`
-- `Duration 2.13s`
+- `Duration 1.28s`
 
 Hinweis:
 
@@ -171,7 +173,7 @@ npm run build
 
 Resultat:
 
-- `built in 965ms`
+- `built in 456ms`
 
 ### Docker Compose Laufzeitnachweis
 
@@ -243,13 +245,13 @@ Die fachliche Einordnung dieser Nachweise erfolgt ergänzend in `docs/acceptance
 - Request-to-Response-Nachvollziehbarkeit über `correlation_id`, `X-Correlation-ID` Header und Request-Log-Kontext
 - Frontend-Unit-/UI-Testlauf und Produktions-Build
 - projektbezogene Python-3.13-Ausführung über `uv`
-- dokumentierter Referenznachweis auf `main`-Commit `b619921`
+- dokumentierter Referenznachweis auf `main`-Commit `4eaeccf`
 - Docker-Compose-Zielbetrieb startet lokal mit API, Frontend und PostgreSQL; API-Health und Frontend-HTTP-Status wurden über die veröffentlichten Host-Ports geprüft
 - Frontend-E2E-Setup und UJ1-Browserpfad mit kontrolliert gemockter Analyse-API laufen lokal erfolgreich
 
 ## Automatisierter Quality Gate
 
-GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der dokumentierte `main`-Referenzpush zu `b619921` war erfolgreich (`CI`, Run `26696762837`, 2026-05-30T22:36:28Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
+GitHub Actions führt für Pull Requests und Pushes auf `main` einen Basic Quality Gate aus. Dieser umfasst Backend-Linting, Backend-Tests, Frontend-Unit-/UI-Tests und Frontend-Build. Der dokumentierte `main`-Referenzpush zu `4eaeccf` war erfolgreich (`CI`, Run `26715457857`, 2026-05-31T14:35:35Z). Playwright-E2E bleibt bewusst ausserhalb dieses ersten CI-Ausbaus.
 
 ## Bekannte Limitationen
 
