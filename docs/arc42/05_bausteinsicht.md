@@ -8,7 +8,7 @@ Die C2-Containersicht ist als Structurizr-Quelle in [docs/diagrams/structurizr/c
 
 Die C2-Sicht trennt die interne SCM-Laufzeit in `Web UI`, `Backend/API` und `Persistenz`. Der externe `LLM Provider` bleibt ausserhalb der SCM-Systemgrenze und wird nur vom Backend/API-Container über den Adapterpfad angesprochen.
 
-| Container / Umsystem | Verantwortung | Technologie / Fundstelle |
+| Container / Umsystem | Verantwortung | Technologie / Codebereich |
 | --- | --- | --- |
 | `Web UI` | Texteingabe, Analyseansicht, Archiv, Metadaten und JSON-Export | React/Vite/Nginx, `frontend/` |
 | `Backend/API` | Analyse-API, Orchestrierung, Validierung, Sprachprüfung, Persistenzzugriff | FastAPI/SQLAlchemy, `backend/app/` |
@@ -23,15 +23,17 @@ Die UI übernimmt Präsentation und Nutzerinteraktion. Die API stellt Verträge,
 
 Der zentrale Analysevertrag folgt der fachlichen Quelle in `docs/scm.md`. Neue Analyse-Runs müssen deshalb die sechs Ebenen `symptome`, `ursachen`, `emotionen`, `narrative`, `mythen` und `essenz` liefern. Alte Payload-Formate werden von den Bausteinen nicht rückwärtskompatibel unterstützt.
 
-## Backend-Zerlegung (Level 2)
+## C3-Komponentensichten
 
 Die folgenden C3-Sichten sind Zoom-ins in einzelne Container. Die SCM-Grenze dient darin nur als Kontext; fachlich massgeblich ist jeweils die Containergrenze von `Backend/API` beziehungsweise `Web UI`.
+
+### Backend-Komponenten
 
 ![C3 Backend Components](../diagrams/rendered/c3-backend-components.svg)
 
 Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-backend-components.dsl](../diagrams/structurizr/c3-backend-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-backend-components.svg](../diagrams/rendered/c3-backend-components.svg) gerendert.
 
-| Komponente | Verantwortung | Fundstelle |
+| Komponente | Verantwortung | Codebereich |
 | --- | --- | --- |
 | `API Layer` | HTTP-Endpunkte, Requestvalidierung, Fehlervertrag und `correlation_id` | `backend/app/main.py`, `backend/app/api/` |
 | `Analysis Workflow` | Orchestriert Sprache, Analyseerzeugung, Validierung, Ausgabesprachprüfung und Persistenz | `backend/app/services/analysis_workflow.py` |
@@ -44,13 +46,13 @@ Die C3-Komponentensicht des Backends ist als Structurizr-Quelle in [docs/diagram
 
 Die Backend-Komponenten trennen HTTP-Vertrag, fachlichen Workflow, Validierung, Providerzugriff und Persistenz bewusst voneinander. Dadurch bleibt der zentrale Analysepfad nachvollziehbar: Die API nimmt Requests entgegen und ordnet Fehler dem Fehlervertrag zu, der Workflow koordiniert Sprache, Analyse, Validierung und Speicherung, und Repository- sowie DB-Schicht kapseln den Zugriff auf persistierte Runs.
 
-## Frontend-Zerlegung (aktueller Stand)
+### Web-UI-Komponenten
 
 ![C3 Web UI Components](../diagrams/rendered/c3-web-ui-components.svg)
 
 Die C3-Komponentensicht der Web UI ist als Structurizr-Quelle in [docs/diagrams/structurizr/c3-web-ui-components.dsl](../diagrams/structurizr/c3-web-ui-components.dsl) dokumentiert und als SVG in [docs/diagrams/rendered/c3-web-ui-components.svg](../diagrams/rendered/c3-web-ui-components.svg) gerendert.
 
-| Komponente | Verantwortung | Fundstelle |
+| Komponente | Verantwortung | Codebereich |
 | --- | --- | --- |
 | `App Shell` | Top-Level-Tabs, Run-Auswahl, Analysezustand, Fehlerzustand und Orchestrierung | `frontend/src/App.tsx` |
 | `Analysis Composer` | Eingabeformular und Start einer neuen Analyse | `frontend/src/components/AnalysisComposer.tsx` |
