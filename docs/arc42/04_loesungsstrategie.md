@@ -5,10 +5,11 @@
 1. Zuerst ein modularer Monolith für schnelle, konsistente und betrieblich einfache Umsetzung.
 2. Contract-First-JSON-Schema für Analyseausgaben.
 3. Analyse-Payloads strikt validieren und nur gültige Payloads als `completed` persistieren; Validierungsfehler bleiben als explizite `failed` Runs nachvollziehbar.
-4. Begrenzte Repair-Logik für ungültige Modellausgaben ist als Guardrail vorbereitet (max. 2 Retries), im aktuellen Standardpfad aber noch nicht aktiv verdrahtet.
-5. Unveränderliche Run-Datensätze mit vollständiger Traceability persistieren.
+4. Unveränderliche Run-Datensätze mit vollständiger Traceability persistieren.
 
 Diese Kernstrategie verfolgt einen pragmatischen Mittelweg. Das System soll robust genug sein, um Verträge, Persistenz und Provider-Grenzen nachvollziehbar abzubilden. Gleichzeitig bleibt es klein genug, damit Implementierung, Testen und Dokumentation in einem Solo-Projekt beherrschbar bleiben.
+
+Als Erweiterungspunkt ist eine begrenzte Repair-Logik für ungültige Modellausgaben vorbereitet. Sie ist jedoch nicht Teil des aktiven Standardpfads und wird deshalb nicht als tragender Pfeiler der aktuellen Kernstrategie behandelt.
 
 ## Strategische Leitgedanken
 

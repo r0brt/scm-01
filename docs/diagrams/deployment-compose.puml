@@ -22,13 +22,13 @@ node "Local Host / Docker Compose Environment" as compose {
     component "Reverse Proxy\n/api/* -> api:8000" as reverse_proxy
   }
 
-  node "api container\nFastAPI/Uvicorn\nHost/Container: 8000" as api {
+  node "api container\nFastAPI/Uvicorn\nContainer: 8000\nHost: 8000 (lokal)" as api {
     component "Container Start\nalembic upgrade head" as migration
     component "SCM API\n/api/v1/*, /health" as api_app
     component "Analysis Adapter\nstub oder openai" as adapter
   }
 
-  database "db container\nPostgreSQL 17\nHost/Container: 5432" as db
+  database "db container\nPostgreSQL 17\nContainer: 5432\nHost: 5432 (lokal)" as db
   storage "postgres_data volume\n/var/lib/postgresql/data" as volume
 }
 
