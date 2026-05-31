@@ -37,7 +37,7 @@ Stand: 2026-05-31
 
 ## Erfolgreich verifizierte Commands und Nachweise
 
-Referenzstand nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Unit-/UI-Testlauf, Frontend-Build und GitHub Actions CI wurden auf Commit `4eaeccf` verifiziert. Die übrigen Spezialnachweise bleiben als dokumentierte lokale MVP-Nachweise geführt und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert. Für den jeweils aktuellen Commit-Status ist GitHub Actions massgeblich; diese Checkliste hält bewusste Referenznachweise fest.
+Aktueller CI-Referenzstand nach PR #72: GitHub Actions `CI` lief auf `main` für Commit `7efde65` erfolgreich durch (Run `26717533317`). Die lokal ausgeführten Spezialnachweise bleiben als dokumentierte MVP-Referenznachweise geführt und werden vor dem finalen `v1.0.0`-Freeze nochmals vollständig aktualisiert. Für den jeweils aktuellen Commit-Status ist GitHub Actions massgeblich; diese Checkliste hält bewusste Referenznachweise fest.
 
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 ruff check .`
 - [x] `cd backend && UV_CACHE_DIR=.uv-cache UV_PYTHON_INSTALL_DIR=.uv-python uv run --python 3.13 pytest -q`
@@ -53,7 +53,7 @@ Referenzstand nach PR #64: Backend-Linting, Backend-Gesamttestlauf, Frontend-Uni
 - [x] `cd frontend && npm run test -- --run`
 - [x] `cd frontend && npm run build`
 - [x] `cd frontend && npm run test:e2e`
-- [x] GitHub Actions `CI` auf `main` für Referenz-Commit `4eaeccf`, Run `26715457857`
+- [x] GitHub Actions `CI` auf `main` für Referenz-Commit `7efde65`, Run `26717533317`
 
 ## NFR-Nachweisstatus
 
