@@ -11,10 +11,11 @@ import {
 } from "./export-arc42-pdf.mjs";
 
 test("defines the arc42 chapters in document order", () => {
-  assert.equal(ARC42_CHAPTERS.length, 14);
+  assert.equal(ARC42_CHAPTERS.length, 15);
   assert.equal(ARC42_CHAPTERS[0], "docs/arc42/01_einfuehrung_und_ziele.md");
-  assert.equal(ARC42_CHAPTERS.at(-3), "docs/arc42/12_glossar.md");
-  assert.equal(ARC42_CHAPTERS.at(-2), "docs/ki-reflexion.md");
+  assert.equal(ARC42_CHAPTERS.at(-4), "docs/arc42/12_glossar.md");
+  assert.equal(ARC42_CHAPTERS.at(-3), "docs/ki-reflexion.md");
+  assert.equal(ARC42_CHAPTERS.at(-2), "docs/hilfsmittelverzeichnis.md");
   assert.equal(ARC42_CHAPTERS.at(-1), "docs/selbstaendigkeitserklaerung.md");
 });
 
@@ -60,6 +61,9 @@ test("builds a title page with submission and git metadata", () => {
   assert.match(html, /Software Architecture Document \(SAD\) auf Basis von arc42/);
   assert.match(html, /CAS AI-Assisted Software Engineering - FFHS/);
   assert.match(html, /Robert Hämmerli/);
+  assert.match(html, /Dozierende/);
+  assert.match(html, /Werner Schäfer/);
+  assert.match(html, /Daniel Senften/);
   assert.match(html, /2026-06-30/);
   assert.match(html, /v1\.0\.0/);
   assert.match(html, /Abgabestand/);
