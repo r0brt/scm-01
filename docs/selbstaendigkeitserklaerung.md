@@ -1,4 +1,4 @@
-# Selbständigkeitserklärung
+# Anhang: Selbständigkeitserklärung
 
 Hiermit erkläre ich,
 
@@ -10,5 +10,9 @@ Hiermit erkläre ich,
 - dass ich mir bewusst bin, dass meine Arbeit elektronisch auf Plagiate und auf Drittautorschaft menschlichen oder technischen Ursprungs überprüft werden kann und ich hiermit der FFHS das Nutzungsrecht so weit einräume, wie es für diese Verwaltungshandlungen notwendig ist.
 
 Territet, 01. Juli 2026
+
+<br>
+<br>
+<br>
 
 Unterschrift: ______________________________
