@@ -2,7 +2,7 @@
 
 import { execFile as execFileCallback, spawn } from "node:child_process";
 import { createRequire } from "node:module";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -29,6 +29,7 @@ export const ARC42_CHAPTERS = [
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const SCRIPT_DIR = path.dirname(SCRIPT_PATH);
 const REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
+const REPOSITORY_URL = "https://github.com/r0brt/scm-01";
 const execFile = promisify(execFileCallback);
 
 export function getDefaultOutputPath(repoRoot = REPO_ROOT) {
@@ -101,6 +102,15 @@ export function buildTitlePageHtml({
   gitRevision,
   submissionDate,
 }) {
+  const commitRow =
+    gitReference === `Commit ${gitRevision}`
+      ? ""
+      : `    <div>
+      <dt>Commit</dt>
+      <dd>${escapeHtml(gitRevision)}</dd>
+    </div>
+`;
+
   return `<section class="title-page" aria-label="Titelblatt">
   <div class="title-page-kicker">CAS AI-Assisted Software Engineering - FFHS</div>
   <h1>Social Cleanup Machine (SCM)</h1>
@@ -127,11 +137,7 @@ export function buildTitlePageHtml({
       <dt>Abgabestand</dt>
       <dd>${escapeHtml(gitReference)}</dd>
     </div>
-    <div>
-      <dt>Commit</dt>
-      <dd>${escapeHtml(gitRevision)}</dd>
-    </div>
-    <div>
+${commitRow}    <div>
       <dt>GitHub-Repository</dt>
       <dd><a href="https://github.com/r0brt/scm-01">https://github.com/r0brt/scm-01</a></dd>
     </div>
@@ -164,6 +170,128 @@ export function buildPandocArgs({ cssPath, htmlPath, titlePagePath }) {
     "-o",
     htmlPath,
   ];
+}
+
+function splitHref(href) {
+  const splitIndex = [href.indexOf("#"), href.indexOf("?")]
+    .filter((index) => index >= 0)
+    .sort((a, b) => a - b)[0];
+
+  if (splitIndex === undefined) {
+    return { pathPart: href, suffix: "" };
+  }
+
+  return {
+    pathPart: href.slice(0, splitIndex),
+    suffix: href.slice(splitIndex),
+  };
+}
+
+function isExternalHref(href) {
+  return (
+    href === "" ||
+    href.startsWith("#") ||
+    /^[a-z][a-z0-9+.-]*:/i.test(href)
+  );
+}
+
+function safeDecodeUri(value) {
+  try {
+    return decodeURI(value);
+  } catch {
+    return value;
+  }
+}
+
+function normalizeRepoPath(href, repoRoot = REPO_ROOT) {
+  if (isExternalHref(href)) {
+    return null;
+  }
+
+  const { pathPart, suffix } = splitHref(safeDecodeUri(href));
+  let repoPath = pathPart;
+
+  if (repoPath.startsWith(repoRoot)) {
+    repoPath = path.relative(repoRoot, repoPath);
+  } else if (repoPath.startsWith("../")) {
+    repoPath = path.posix.normalize(path.posix.join("docs/arc42", repoPath));
+  } else if (repoPath.startsWith("./")) {
+    repoPath = repoPath.slice(2);
+  }
+
+  repoPath = repoPath.replaceAll(path.sep, "/");
+
+  if (repoPath.startsWith("/") || repoPath.startsWith("..")) {
+    return null;
+  }
+
+  const repoRootEntries = [
+    ".env.example",
+    ".nvmrc",
+    ".python-version",
+    "AGENTS.md",
+    "PLAN.md",
+    "README.md",
+    "backend/",
+    "docs/",
+    "frontend/",
+    "prompts/",
+    "schemas/",
+  ];
+
+  if (!repoRootEntries.some((entry) => repoPath === entry || repoPath.startsWith(entry))) {
+    return null;
+  }
+
+  return `${repoPath}${suffix}`;
+}
+
+function buildGitHubRepoUrl({ repoPath, repositoryUrl, gitRevision }) {
+  const { pathPart, suffix } = splitHref(repoPath);
+  const view = pathPart.endsWith("/") ? "tree" : "blob";
+  const normalizedPath = pathPart.endsWith("/") ? pathPart.slice(0, -1) : pathPart;
+
+  return `${repositoryUrl}/${view}/${encodeURIComponent(gitRevision)}/${encodeURI(normalizedPath)}${suffix}`;
+}
+
+function rewriteSameRepoGitHubUrl({ href, repositoryUrl, gitRevision }) {
+  const escapedRepositoryUrl = repositoryUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const sameRepoPattern = new RegExp(`^${escapedRepositoryUrl}/(blob|tree)/[^/]+/(.+)$`);
+  const match = href.match(sameRepoPattern);
+
+  if (!match) {
+    return href;
+  }
+
+  const [, view, repoPath] = match;
+  return `${repositoryUrl}/${view}/${encodeURIComponent(gitRevision)}/${repoPath}`;
+}
+
+export function rewriteRepoLinksToGitHub({
+  gitRevision,
+  html,
+  repoRoot = REPO_ROOT,
+  repositoryUrl = REPOSITORY_URL,
+}) {
+  return html.replaceAll(/\bhref="([^"]+)"/g, (fullMatch, href) => {
+    const sameRepoGitHubUrl = rewriteSameRepoGitHubUrl({
+      gitRevision,
+      href,
+      repositoryUrl,
+    });
+
+    if (sameRepoGitHubUrl !== href) {
+      return `href="${sameRepoGitHubUrl}"`;
+    }
+
+    const repoPath = normalizeRepoPath(href, repoRoot);
+
+    if (!repoPath) {
+      return fullMatch;
+    }
+
+    return `href="${buildGitHubRepoUrl({ gitRevision, repoPath, repositoryUrl })}"`;
+  });
 }
 
 function printHelp() {
@@ -223,6 +351,7 @@ async function resolveTitlePageMetadata({ repoRoot, submissionDate, version }) {
     documentVersion,
     gitReference,
     gitRevision,
+    linkRevision: revision,
     submissionDate: submissionDate ?? new Date().toISOString().slice(0, 10),
   };
 }
@@ -309,6 +438,16 @@ async function exportArc42Pdf({
     await runCommand("pandoc", buildPandocArgs({ cssPath, htmlPath, titlePagePath }), {
       cwd: repoRoot,
     });
+    const html = await readFile(htmlPath, "utf8");
+    await writeFile(
+      htmlPath,
+      rewriteRepoLinksToGitHub({
+        gitRevision: titlePageMetadata.linkRevision,
+        html,
+        repoRoot,
+      }),
+      "utf8",
+    );
     await renderPdfWithBrowser({ htmlPath, outputPath, repoRoot });
   } finally {
     await rm(tempDir, { force: true, recursive: true });

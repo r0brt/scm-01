@@ -8,6 +8,7 @@ import {
   formatGitRevision,
   getDefaultOutputPath,
   parseArgs,
+  rewriteRepoLinksToGitHub,
 } from "./export-arc42-pdf.mjs";
 
 test("defines the arc42 chapters in document order", () => {
@@ -71,6 +72,45 @@ test("builds a title page with submission and git metadata", () => {
   assert.match(html, /Commit/);
   assert.match(html, /abc1234/);
   assert.match(html, /https:\/\/github\.com\/r0brt\/scm-01/);
+});
+
+test("omits duplicate commit row when the submission state is already a commit", () => {
+  const html = buildTitlePageHtml({
+    documentVersion: "v1.0.0",
+    gitReference: "Commit abc1234",
+    gitRevision: "abc1234",
+    submissionDate: "2026-07-03",
+  });
+
+  assert.equal((html.match(/<dt>Commit<\/dt>/g) ?? []).length, 0);
+  assert.match(html, /<dt>Abgabestand<\/dt>\s*<dd>Commit abc1234<\/dd>/);
+});
+
+test("rewrites repository-relative PDF links to commit-specific GitHub links", () => {
+  const html = [
+    '<a href="../diagrams/db-erd.puml">ERD</a>',
+    '<a href="../adr/">ADRs</a>',
+    '<a href="https://github.com/r0brt/scm-01/blob/main/docs/adr/0001-architecture-style.md">ADR</a>',
+    '<a href="#toc">TOC</a>',
+    '<a href="https://example.com">External</a>',
+    '<img src="../diagrams/rendered/db-erd.svg">',
+  ].join("");
+
+  assert.equal(
+    rewriteRepoLinksToGitHub({
+      gitRevision: "abc1234",
+      html,
+      repoRoot: "/repo",
+    }),
+    [
+      '<a href="https://github.com/r0brt/scm-01/blob/abc1234/docs/diagrams/db-erd.puml">ERD</a>',
+      '<a href="https://github.com/r0brt/scm-01/tree/abc1234/docs/adr">ADRs</a>',
+      '<a href="https://github.com/r0brt/scm-01/blob/abc1234/docs/adr/0001-architecture-style.md">ADR</a>',
+      '<a href="#toc">TOC</a>',
+      '<a href="https://example.com">External</a>',
+      '<img src="../diagrams/rendered/db-erd.svg">',
+    ].join(""),
+  );
 });
 
 test("marks the title page git revision as dirty when the worktree is not clean", () => {
