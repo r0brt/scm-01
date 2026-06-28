@@ -1,0 +1,55 @@
+@startuml
+title Deployment View: lokaler Docker-Compose-Zielbetrieb
+
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam rectangle {
+  BorderColor #1d4ed8
+  FontColor #0f172a
+}
+skinparam database {
+  BorderColor #1d4ed8
+}
+
+actor "User" as user
+node "Browser\n(local machine)" as browser {
+  component "SCM Web UI\nReact SPA" as browser_ui
+}
+
+node "Local Host / Docker Compose Environment" as compose {
+  node "frontend container\nNginx 1.27 + React/Vite Build\nHost: 4173 -> Container: 80" as frontend {
+    component "Static Assets\n/index.html, JS, CSS" as static_assets
+    component "Reverse Proxy\n/api/* -> api:8000" as reverse_proxy
+  }
+
+  node "api container\nFastAPI/Uvicorn\nContainer: 8000\nHost: 8000 (lokal)" as api {
+    component "Container Start\nalembic upgrade head" as migration
+    component "SCM API\n/api/v1/*, /health" as api_app
+    component "Analysis Adapter\nstub oder openai" as adapter
+  }
+
+  database "db container\nPostgreSQL 17\nContainer: 5432\nHost: 5432 (lokal)" as db
+  storage "postgres_data volume\n/var/lib/postgresql/data" as volume
+}
+
+cloud "Optionaler externer\nLLM Provider\n(OpenAI Responses API)" as llm
+
+user --> browser : nutzt
+browser_ui --> frontend : HTTP :4173
+frontend --> static_assets : liefert SPA aus
+frontend --> reverse_proxy : leitet /api weiter
+reverse_proxy --> api_app : HTTP/JSON\napi:8000
+api --> migration : vor App-Start
+api_app --> db : SQLAlchemy/psycopg\nSCM_DATABASE_URL
+db --> volume : persistiert Runs
+api_app --> adapter : Analyse erzeugen
+adapter --> llm : optional HTTPS\nSCM_ANALYSIS_PROVIDER=openai
+adapter --> adapter : Stub/Testpfad bleibt lokal\nSCM_ANALYSIS_PROVIDER=stub
+
+note right of llm
+  Nur bei aktivierter OpenAI-Konfiguration.
+  Im Stub-/Testpfad verlässt kein Analyseinhalt
+  die lokale Compose-Umgebung.
+end note
+
+@enduml

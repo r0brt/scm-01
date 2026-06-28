@@ -49,6 +49,7 @@ test("parses title page metadata options", () => {
 test("builds a title page with submission and git metadata", () => {
   const html = buildTitlePageHtml({
     documentVersion: "v1.0.0",
+    gitReference: "Git Tag v1.0.0",
     gitRevision: "abc1234",
     submissionDate: "2026-06-30",
   });
@@ -59,6 +60,9 @@ test("builds a title page with submission and git metadata", () => {
   assert.match(html, /Robert Hämmerli/);
   assert.match(html, /2026-06-30/);
   assert.match(html, /v1\.0\.0/);
+  assert.match(html, /Abgabestand/);
+  assert.match(html, /Git Tag v1\.0\.0/);
+  assert.match(html, /Commit/);
   assert.match(html, /abc1234/);
   assert.match(html, /https:\/\/github\.com\/r0brt\/scm-01/);
 });

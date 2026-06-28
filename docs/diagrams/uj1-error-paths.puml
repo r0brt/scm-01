@@ -1,4 +1,6 @@
 @startuml
+title UJ1 Fehlerpfade: failed Runs und Providerfehler
+
 skinparam shadowing false
 skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
@@ -8,7 +10,6 @@ participant "Web UI" as frontend
 participant "Backend/API" as api
 participant "Language Detection" as detector
 participant "LLM Adapter" as adapter
-participant "LLM Provider API\n(OpenAI)" as provider
 participant "Validation Service" as validation
 database "Run Repository / Persistence" as persistence
 
@@ -16,26 +17,25 @@ user -> frontend : Problemtext erfassen\nund Analyse starten
 frontend -> api : POST /api/v1/analyses { text }
 api -> api : correlation_id erzeugen
 api -> detector : Eingabesprache lokal erkennen
-detector --> api : detected_language,\nlanguage_confidence,\nerror_code?
 
 alt Sprache zu unsicher oder nicht unterstützt
-  api -> persistence : failed Run mit correlation_id,\nSprachmetadaten und Fehlercode speichern
+  detector --> api : LANGUAGE_CONFIDENCE_TOO_LOW\noder UNSUPPORTED_LANGUAGE
+  api -> persistence : failed Run mit Sprachmetadaten,\nerror_code und correlation_id speichern
   persistence --> api : gespeicherter Run
   api --> frontend : 201 Created mit failed Run
 else Sprache gültig
+  detector --> api : detected_language,\nlanguage_confidence
   api -> adapter : generate_analysis(text,\nlanguage=detected_language)
-  alt Adapter-/Providerfehler vor Payload
-    adapter --> api : Fehler ohne verwertbares Payload
-    api --> frontend : 502 Bad Gateway\nANALYSIS_PROVIDER_ERROR + correlation_id
-  else Payload erhalten
-    alt Provider=stub
-      adapter --> api : deterministisches Analyse-Payload\nmodel_id=stub-analysis-generator
-    else Provider=openai
-      adapter -> provider : Responses API Request\nPrompt v2 + JSON Schema strict
-      provider --> adapter : JSON-Payload + Modellmetadaten
-      adapter --> api : Analyse-Payload,\nmodel_id, prompt_version
-    end
 
+  alt Adapter-/Providerfehler vor verwertbarem Payload
+    adapter --> api : kein verwertbares Payload
+    api --> frontend : 502 Bad Gateway\nANALYSIS_PROVIDER_ERROR + correlation_id
+    note right of api
+      Kein persistierter Analyse-Run,
+      weil kein validierbarer Payload vorliegt.
+    end note
+  else Payload erhalten
+    adapter --> api : Analyse-Payload,\nmodel_id, prompt_version
     api -> validation : JSON Schema + Pydantic prüfen
     validation --> api : validiertes Payload\noder Fehlerreport
 
@@ -43,22 +43,21 @@ else Sprache gültig
       api -> persistence : failed Run mit validation_report\nund error_code speichern
       persistence --> api : gespeicherter Run
       api --> frontend : 201 Created mit failed Run
-    else Struktur gültig
+    else Struktur gültig, Ausgabesprache falsch
       api -> detector : Ausgabesprache lokal prüfen
-      detector --> api : output_language_result
-      alt Ausgabesprache passt nicht
-        api -> persistence : failed Run mit OUTPUT_LANGUAGE_MISMATCH speichern
-        persistence --> api : gespeicherter Run
-        api --> frontend : 201 Created mit failed Run
-      else Ausgabe gültig
-        api -> persistence : completed Run mit analysis_json,\nvalidation_report und Traceability speichern
-        persistence --> api : gespeicherter Run
-        api --> frontend : 201 Created mit completed Run
-      end
+      detector --> api : OUTPUT_LANGUAGE_MISMATCH
+      api -> persistence : failed Run mit OUTPUT_LANGUAGE_MISMATCH speichern
+      persistence --> api : gespeicherter Run
+      api --> frontend : 201 Created mit failed Run
     end
   end
 end
 
-frontend --> user : Pipeline, Archivnachweis\noder Fehlzustand anzeigen
+note over validation
+  Bounded Repair ist als Guardrail vorbereitet,
+  aber nicht Teil des aktiven Standardpfads.
+end note
+
+frontend --> user : Fehlerzustand mit Run-Nachweis\noder globalem API-Fehler anzeigen
 
 @enduml

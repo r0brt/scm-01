@@ -92,7 +92,12 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
-export function buildTitlePageHtml({ documentVersion, gitRevision, submissionDate }) {
+export function buildTitlePageHtml({
+  documentVersion,
+  gitReference,
+  gitRevision,
+  submissionDate,
+}) {
   return `<section class="title-page" aria-label="Titelblatt">
   <div class="title-page-kicker">CAS AI-Assisted Software Engineering - FFHS</div>
   <h1>Social Cleanup Machine (SCM)</h1>
@@ -112,7 +117,11 @@ export function buildTitlePageHtml({ documentVersion, gitRevision, submissionDat
       <dd>${escapeHtml(documentVersion)}</dd>
     </div>
     <div>
-      <dt>Fixer Git-Stand</dt>
+      <dt>Abgabestand</dt>
+      <dd>${escapeHtml(gitReference)}</dd>
+    </div>
+    <div>
+      <dt>Commit</dt>
       <dd>${escapeHtml(gitRevision)}</dd>
     </div>
     <div>
@@ -188,11 +197,13 @@ async function getGitOutput(args, repoRoot, fallback) {
 
 async function resolveTitlePageMetadata({ repoRoot, submissionDate, version }) {
   const revision = await getGitOutput(["rev-parse", "--short=12", "HEAD"], repoRoot, "unknown");
+  const exactTag = await getGitOutput(["describe", "--tags", "--exact-match"], repoRoot, "");
   const worktreeStatus = await getGitOutput(["status", "--porcelain"], repoRoot, "");
   const gitRevision = formatGitRevision({
     isDirty: worktreeStatus.length > 0,
     revision,
   });
+  const gitReference = exactTag ? `Git Tag ${exactTag}` : `Commit ${gitRevision}`;
   const documentVersion =
     version ??
     (await getGitOutput(
@@ -203,6 +214,7 @@ async function resolveTitlePageMetadata({ repoRoot, submissionDate, version }) {
 
   return {
     documentVersion,
+    gitReference,
     gitRevision,
     submissionDate: submissionDate ?? new Date().toISOString().slice(0, 10),
   };
