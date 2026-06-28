@@ -9,10 +9,11 @@ Hiermit erkläre ich,
 - dass das Thema, die Arbeit oder Teile davon nicht bereits Gegenstand eines Leistungsnachweises eines anderen Moduls waren, sofern dies nicht ausdrücklich mit der Dozentin oder dem Dozenten im Voraus vereinbart wurde,
 - dass ich mir bewusst bin, dass meine Arbeit elektronisch auf Plagiate und auf Drittautorschaft menschlichen oder technischen Ursprungs überprüft werden kann und ich hiermit der FFHS das Nutzungsrecht so weit einräume, wie es für diese Verwaltungshandlungen notwendig ist.
 
-Territet, 01. Juli 2026
-
 <br>
 <br>
 <br>
 
-Unterschrift: ______________________________
+<div style="display: flex; align-items: baseline; gap: 96px; white-space: nowrap;">
+  <span>Territet, 01. Juli 2026</span>
+  <span>Unterschrift: ______________________________</span>
+</div>
