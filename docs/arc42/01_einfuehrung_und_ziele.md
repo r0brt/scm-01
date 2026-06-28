@@ -6,6 +6,8 @@ Social Cleanup Machine analysiert frei formulierte Social-Media- oder Problemtex
 
 Der Schwerpunkt des aktuellen MVP liegt auf reproduzierbarer Verarbeitung, expliziten Verträgen und dokumentierter Nachvollziehbarkeit. Dazu gehören eine klar definierte JSON-Struktur, eine überprüfbare Verarbeitungskette, persistierte Run-Metadaten sowie eine Architektur, die den Übergang von lokaler Entwicklung zu einem containerisierten Zielbetrieb transparent macht.
 
+Diese Dokumentation ist als integriertes Software Architecture Document (SAD) aufgebaut. Die Anforderungen und Anwendungsfälle sind in Ziele, Systemkontext, Schnittstellen, Qualitätsziele und Laufzeitszenarien eingebettet. Der Architektur- und Lösungsansatz wird über die arc42-Kapitel beschrieben. Die Projektbeschreibung zeigt sich in Bausteinsicht, Code-Struktur, Deployment, Tests und Nachweisen. Reflexion des KI-Einsatzes und Fazit sind als Anhang am Ende der Dokumentation enthalten.
+
 ## Stakeholder
 
 Die Stakeholder betrachten SCM aus unterschiedlichen Blickwinkeln. Für die Architektur sind vor allem Verständlichkeit, Nachvollziehbarkeit, sichere Grenzen und reproduzierbare Weiterentwicklung relevant.

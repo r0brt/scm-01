@@ -102,7 +102,7 @@ export function buildTitlePageHtml({
   return `<section class="title-page" aria-label="Titelblatt">
   <div class="title-page-kicker">CAS AI-Assisted Software Engineering - FFHS</div>
   <h1>Social Cleanup Machine (SCM)</h1>
-  <p class="title-page-subtitle">arc42 Architekturdokumentation</p>
+  <p class="title-page-subtitle">Software Architecture Document (SAD) auf Basis von arc42</p>
 
   <dl class="title-page-meta">
     <div>

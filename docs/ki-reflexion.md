@@ -1,4 +1,4 @@
-# Reflexion und Fazit
+# Anhang: Reflexion KI-Einsatz und Fazit
 
 ## KI als Teil des Entwicklungsprozesses
 

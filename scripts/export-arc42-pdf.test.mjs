@@ -56,7 +56,7 @@ test("builds a title page with submission and git metadata", () => {
   });
 
   assert.match(html, /Social Cleanup Machine/);
-  assert.match(html, /arc42 Architekturdokumentation/);
+  assert.match(html, /Software Architecture Document \(SAD\) auf Basis von arc42/);
   assert.match(html, /CAS AI-Assisted Software Engineering - FFHS/);
   assert.match(html, /Robert Hämmerli/);
   assert.match(html, /2026-06-30/);
