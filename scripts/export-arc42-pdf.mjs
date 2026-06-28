@@ -22,6 +22,7 @@ export const ARC42_CHAPTERS = [
   "docs/arc42/11_technische_risiken.md",
   "docs/arc42/12_glossar.md",
   "docs/ki-reflexion.md",
+  "docs/selbstaendigkeitserklaerung.md",
 ];
 
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
@@ -163,7 +164,7 @@ export function buildPandocArgs({ cssPath, htmlPath, titlePagePath }) {
 function printHelp() {
   console.log(`Usage: node scripts/export-arc42-pdf.mjs [--output <path>] [--submission-date <date>] [--version <version>]
 
-Exports docs/arc42/*.md plus docs/ki-reflexion.md to an A4 PDF via Pandoc HTML and Playwright/Chromium.
+Exports docs/arc42/*.md plus docs/ki-reflexion.md and docs/selbstaendigkeitserklaerung.md to an A4 PDF via Pandoc HTML and Playwright/Chromium.
 
 Default output:
   docs/arc42/dist/scm-arc42.pdf

@@ -11,10 +11,11 @@ import {
 } from "./export-arc42-pdf.mjs";
 
 test("defines the arc42 chapters in document order", () => {
-  assert.equal(ARC42_CHAPTERS.length, 13);
+  assert.equal(ARC42_CHAPTERS.length, 14);
   assert.equal(ARC42_CHAPTERS[0], "docs/arc42/01_einfuehrung_und_ziele.md");
-  assert.equal(ARC42_CHAPTERS.at(-2), "docs/arc42/12_glossar.md");
-  assert.equal(ARC42_CHAPTERS.at(-1), "docs/ki-reflexion.md");
+  assert.equal(ARC42_CHAPTERS.at(-3), "docs/arc42/12_glossar.md");
+  assert.equal(ARC42_CHAPTERS.at(-2), "docs/ki-reflexion.md");
+  assert.equal(ARC42_CHAPTERS.at(-1), "docs/selbstaendigkeitserklaerung.md");
 });
 
 test("uses the repository arc42 dist folder as default output", () => {
