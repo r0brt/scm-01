@@ -21,6 +21,9 @@ export const ARC42_CHAPTERS = [
   "docs/arc42/10_qualitaetsszenarien.md",
   "docs/arc42/11_technische_risiken.md",
   "docs/arc42/12_glossar.md",
+  "docs/ki-reflexion.md",
+  "docs/hilfsmittelverzeichnis.md",
+  "docs/selbstaendigkeitserklaerung.md",
 ];
 
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
@@ -101,12 +104,16 @@ export function buildTitlePageHtml({
   return `<section class="title-page" aria-label="Titelblatt">
   <div class="title-page-kicker">CAS AI-Assisted Software Engineering - FFHS</div>
   <h1>Social Cleanup Machine (SCM)</h1>
-  <p class="title-page-subtitle">arc42 Architekturdokumentation</p>
+  <p class="title-page-subtitle">Software Architecture Document (SAD) auf Basis von arc42</p>
 
   <dl class="title-page-meta">
     <div>
       <dt>Autor</dt>
       <dd>Robert Hämmerli</dd>
+    </div>
+    <div>
+      <dt>Dozierende</dt>
+      <dd>Werner Schäfer<br>Daniel Senften</dd>
     </div>
     <div>
       <dt>Datum der Abgabe</dt>
@@ -162,7 +169,7 @@ export function buildPandocArgs({ cssPath, htmlPath, titlePagePath }) {
 function printHelp() {
   console.log(`Usage: node scripts/export-arc42-pdf.mjs [--output <path>] [--submission-date <date>] [--version <version>]
 
-Exports docs/arc42/*.md to an A4 PDF via Pandoc HTML and Playwright/Chromium.
+Exports docs/arc42/*.md plus docs/ki-reflexion.md, docs/hilfsmittelverzeichnis.md and docs/selbstaendigkeitserklaerung.md to an A4 PDF via Pandoc HTML and Playwright/Chromium.
 
 Default output:
   docs/arc42/dist/scm-arc42.pdf
