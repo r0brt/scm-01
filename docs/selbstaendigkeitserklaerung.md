@@ -13,7 +13,4 @@ Hiermit erkläre ich,
 <br>
 <br>
 
-<div style="display: flex; align-items: baseline; gap: 96px; white-space: nowrap;">
-  <span>Territet, 01. Juli 2026</span>
-  <span>Unterschrift: ______________________________</span>
-</div>
+Territet, 01. Juli 2026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unterschrift: ______________________________
