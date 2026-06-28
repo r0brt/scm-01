@@ -5,6 +5,7 @@ import {
   ARC42_CHAPTERS,
   buildTitlePageHtml,
   buildPandocArgs,
+  formatLinkRevision,
   formatGitRevision,
   getDefaultOutputPath,
   parseArgs,
@@ -110,6 +111,25 @@ test("rewrites repository-relative PDF links to commit-specific GitHub links", (
       '<a href="https://example.com">External</a>',
       '<img src="../diagrams/rendered/db-erd.svg">',
     ].join(""),
+  );
+});
+
+test("uses an exact git tag for repository links when available", () => {
+  assert.equal(
+    formatLinkRevision({ exactTag: "v1.0.0", revision: "abc1234" }),
+    "v1.0.0",
+  );
+  assert.equal(
+    formatLinkRevision({ exactTag: "", revision: "abc1234" }),
+    "abc1234",
+  );
+  assert.equal(
+    rewriteRepoLinksToGitHub({
+      gitRevision: "v1.0.0",
+      html: '<a href="../diagrams/db-erd.puml">ERD</a>',
+      repoRoot: "/repo",
+    }),
+    '<a href="https://github.com/r0brt/scm-01/blob/v1.0.0/docs/diagrams/db-erd.puml">ERD</a>',
   );
 });
 

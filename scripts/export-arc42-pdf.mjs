@@ -151,6 +151,10 @@ export function formatGitRevision({ isDirty, revision }) {
   return isDirty ? `${revision}-dirty` : revision;
 }
 
+export function formatLinkRevision({ exactTag, revision }) {
+  return exactTag || revision;
+}
+
 export function buildPandocArgs({ cssPath, htmlPath, titlePagePath }) {
   return [
     ...ARC42_CHAPTERS,
@@ -351,7 +355,7 @@ async function resolveTitlePageMetadata({ repoRoot, submissionDate, version }) {
     documentVersion,
     gitReference,
     gitRevision,
-    linkRevision: revision,
+    linkRevision: formatLinkRevision({ exactTag, revision }),
     submissionDate: submissionDate ?? new Date().toISOString().slice(0, 10),
   };
 }
